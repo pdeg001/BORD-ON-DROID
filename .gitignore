@@ -1,3 +1,9 @@
+/Objects/b4xlibs/*
+/Objects/bin/*
+/Objects/gen/*
+/Objects/shell/*
+/Objects/shell/*
+
 # Compiled class file
 *.class
 
