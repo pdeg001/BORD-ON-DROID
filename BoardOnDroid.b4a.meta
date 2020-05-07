@@ -1,0 +1,15 @@
+﻿ModuleBookmarks0=
+ModuleBookmarks1=
+ModuleBookmarks2=
+ModuleBookmarks3=
+ModuleBreakpoints0=
+ModuleBreakpoints1=
+ModuleBreakpoints2=120
+ModuleBreakpoints3=
+ModuleClosedNodes0=
+ModuleClosedNodes1=
+ModuleClosedNodes2=
+ModuleClosedNodes3=
+NavigationStack=Starter,AutoDiscover_PacketArrived,39,6,Main,Activity_Resume,31,0,Main,UpdateState,46,0,Starter,Disconnect,130,0,Main,txtName_TextChanged,53,0,Main,Activity_Create,28,2,Chat,NewMessage,60,6,Starter,client_MessageArrived,111,6,Starter,client_Disconnected,147,0,ServerBoard,UpdateBordWhenClient,122,6
+SelectedBuild=0
+VisibleModules=3,1,2
