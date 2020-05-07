@@ -33,7 +33,7 @@ public class main extends Activity implements B4AActivity{
 		super.onCreate(savedInstanceState);
         mostCurrent = this;
 		if (processBA == null) {
-			processBA = new anywheresoftware.b4a.ShellBA(this.getApplicationContext(), null, null, "nl.pdeg.bordondroid", "nl.pdeg.bordondroid.main");
+			processBA = new BA(this.getApplicationContext(), null, null, "nl.pdeg.bordondroid", "nl.pdeg.bordondroid.main");
 			processBA.loadHtSubs(this.getClass());
 	        float deviceScale = getApplicationContext().getResources().getDisplayMetrics().density;
 	        BALayout.setDeviceScale(deviceScale);
@@ -328,73 +328,20 @@ public class main extends Activity implements B4AActivity{
             
     }
 
+public anywheresoftware.b4a.keywords.Common __c = null;
+public anywheresoftware.b4a.objects.ButtonWrapper _btnclient = null;
+public anywheresoftware.b4a.objects.ButtonWrapper _btnstartserver = null;
+public anywheresoftware.b4a.objects.FloatLabeledEditTextWrapper _txtname = null;
+public nl.pdeg.bordondroid.starter _starter = null;
+public nl.pdeg.bordondroid.chat _chat = null;
+public nl.pdeg.bordondroid.serverboard _serverboard = null;
 
-
-public static void initializeProcessGlobals() {
-    
-    if (main.processGlobalsRun == false) {
-	    main.processGlobalsRun = true;
-		try {
-		        		
-        } catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-    }
-}
 public static boolean isAnyActivityVisible() {
     boolean vis = false;
 vis = vis | (main.mostCurrent != null);
 vis = vis | (chat.mostCurrent != null);
 vis = vis | (serverboard.mostCurrent != null);
 return vis;}
-
-private static BA killProgramHelper(BA ba) {
-    if (ba == null)
-        return null;
-    anywheresoftware.b4a.BA.SharedProcessBA sharedProcessBA = ba.sharedProcessBA;
-    if (sharedProcessBA == null || sharedProcessBA.activityBA == null)
-        return null;
-    return sharedProcessBA.activityBA.get();
-}
-public static void killProgram() {
-     {
-            Activity __a = null;
-            if (main.previousOne != null) {
-				__a = main.previousOne.get();
-			}
-            else {
-                BA ba = killProgramHelper(main.mostCurrent == null ? null : main.mostCurrent.processBA);
-                if (ba != null) __a = ba.activity;
-            }
-            if (__a != null)
-				__a.finish();}
-
-BA.applicationContext.stopService(new android.content.Intent(BA.applicationContext, starter.class));
- {
-            Activity __a = null;
-            if (chat.previousOne != null) {
-				__a = chat.previousOne.get();
-			}
-            else {
-                BA ba = killProgramHelper(chat.mostCurrent == null ? null : chat.mostCurrent.processBA);
-                if (ba != null) __a = ba.activity;
-            }
-            if (__a != null)
-				__a.finish();}
-
- {
-            Activity __a = null;
-            if (serverboard.previousOne != null) {
-				__a = serverboard.previousOne.get();
-			}
-            else {
-                BA ba = killProgramHelper(serverboard.mostCurrent == null ? null : serverboard.mostCurrent.processBA);
-                if (ba != null) __a = ba.activity;
-            }
-            if (__a != null)
-				__a.finish();}
-
-}
 public static class _message{
 public boolean IsInitialized;
 public String Body;
@@ -408,94 +355,82 @@ From = "";
 		public String toString() {
 			return BA.TypeToString(this, false);
 		}}
-public anywheresoftware.b4a.keywords.Common __c = null;
-public anywheresoftware.b4a.objects.ButtonWrapper _btnclient = null;
-public anywheresoftware.b4a.objects.ButtonWrapper _btnstartserver = null;
-public anywheresoftware.b4a.objects.FloatLabeledEditTextWrapper _txtname = null;
-public nl.pdeg.bordondroid.starter _starter = null;
-public nl.pdeg.bordondroid.chat _chat = null;
-public nl.pdeg.bordondroid.serverboard _serverboard = null;
 public static String  _activity_create(boolean _firsttime) throws Exception{
-RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_create", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "activity_create", new Object[] {_firsttime}));}
-RDebugUtils.currentLine=131072;
- //BA.debugLineNum = 131072;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
-RDebugUtils.currentLine=131075;
- //BA.debugLineNum = 131075;BA.debugLine="StartActivity(ServerBoard)";
+ //BA.debugLineNum = 25;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
+ //BA.debugLineNum = 28;BA.debugLine="StartActivity(ServerBoard)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._serverboard.getObject()));
-RDebugUtils.currentLine=131076;
- //BA.debugLineNum = 131076;BA.debugLine="Activity.Finish";
+ //BA.debugLineNum = 29;BA.debugLine="Activity.Finish";
 mostCurrent._activity.Finish();
-RDebugUtils.currentLine=131077;
- //BA.debugLineNum = 131077;BA.debugLine="End Sub";
+ //BA.debugLineNum = 30;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_pause(boolean _userclosed) throws Exception{
-RDebugUtils.currentModule="main";
-RDebugUtils.currentLine=393216;
- //BA.debugLineNum = 393216;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
-RDebugUtils.currentLine=393218;
- //BA.debugLineNum = 393218;BA.debugLine="End Sub";
+ //BA.debugLineNum = 44;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+ //BA.debugLineNum = 46;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
-RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_resume", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "activity_resume", null));}
-RDebugUtils.currentLine=196608;
- //BA.debugLineNum = 196608;BA.debugLine="Sub Activity_Resume";
-RDebugUtils.currentLine=196610;
- //BA.debugLineNum = 196610;BA.debugLine="End Sub";
+ //BA.debugLineNum = 32;BA.debugLine="Sub Activity_Resume";
+ //BA.debugLineNum = 34;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnclient_click() throws Exception{
-RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "btnclient_click", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "btnclient_click", null));}
-RDebugUtils.currentLine=262144;
- //BA.debugLineNum = 262144;BA.debugLine="Sub btnClient_Click";
-RDebugUtils.currentLine=262145;
- //BA.debugLineNum = 262145;BA.debugLine="CallSub2(Starter, \"Connect\", False)";
-anywheresoftware.b4a.keywords.Common.CallSubDebug2(processBA,(Object)(mostCurrent._starter.getObject()),"Connect",(Object)(anywheresoftware.b4a.keywords.Common.False));
-RDebugUtils.currentLine=262146;
- //BA.debugLineNum = 262146;BA.debugLine="End Sub";
+ //BA.debugLineNum = 36;BA.debugLine="Sub btnClient_Click";
+ //BA.debugLineNum = 37;BA.debugLine="CallSub2(Starter, \"Connect\", False)";
+anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._starter.getObject()),"Connect",(Object)(anywheresoftware.b4a.keywords.Common.False));
+ //BA.debugLineNum = 38;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnstartserver_click() throws Exception{
-RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "btnstartserver_click", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "btnstartserver_click", null));}
-RDebugUtils.currentLine=327680;
- //BA.debugLineNum = 327680;BA.debugLine="Sub btnStartServer_Click";
-RDebugUtils.currentLine=327681;
- //BA.debugLineNum = 327681;BA.debugLine="CallSub2(Starter, \"Connect\", True)";
-anywheresoftware.b4a.keywords.Common.CallSubDebug2(processBA,(Object)(mostCurrent._starter.getObject()),"Connect",(Object)(anywheresoftware.b4a.keywords.Common.True));
-RDebugUtils.currentLine=327682;
- //BA.debugLineNum = 327682;BA.debugLine="End Sub";
+ //BA.debugLineNum = 40;BA.debugLine="Sub btnStartServer_Click";
+ //BA.debugLineNum = 41;BA.debugLine="CallSub2(Starter, \"Connect\", True)";
+anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._starter.getObject()),"Connect",(Object)(anywheresoftware.b4a.keywords.Common.True));
+ //BA.debugLineNum = 42;BA.debugLine="End Sub";
+return "";
+}
+public static String  _globals() throws Exception{
+ //BA.debugLineNum = 19;BA.debugLine="Sub Globals";
+ //BA.debugLineNum = 20;BA.debugLine="Private btnClient As Button";
+mostCurrent._btnclient = new anywheresoftware.b4a.objects.ButtonWrapper();
+ //BA.debugLineNum = 21;BA.debugLine="Private btnStartServer As Button";
+mostCurrent._btnstartserver = new anywheresoftware.b4a.objects.ButtonWrapper();
+ //BA.debugLineNum = 22;BA.debugLine="Private txtName As FloatLabeledEditText";
+mostCurrent._txtname = new anywheresoftware.b4a.objects.FloatLabeledEditTextWrapper();
+ //BA.debugLineNum = 23;BA.debugLine="End Sub";
+return "";
+}
+
+public static void initializeProcessGlobals() {
+    
+    if (main.processGlobalsRun == false) {
+	    main.processGlobalsRun = true;
+		try {
+		        main._process_globals();
+starter._process_globals();
+chat._process_globals();
+serverboard._process_globals();
+		
+        } catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+    }
+}public static String  _process_globals() throws Exception{
+ //BA.debugLineNum = 15;BA.debugLine="Sub Process_Globals";
+ //BA.debugLineNum = 16;BA.debugLine="Type Message (Body As String, From As String)";
+;
+ //BA.debugLineNum = 17;BA.debugLine="End Sub";
 return "";
 }
 public static String  _txtname_textchanged(String _old,String _new) throws Exception{
-RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "txtname_textchanged", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "txtname_textchanged", new Object[] {_old,_new}));}
-RDebugUtils.currentLine=524288;
- //BA.debugLineNum = 524288;BA.debugLine="Sub txtName_TextChanged (Old As String, New As Str";
-RDebugUtils.currentLine=524289;
- //BA.debugLineNum = 524289;BA.debugLine="Starter.Name = New";
+ //BA.debugLineNum = 53;BA.debugLine="Sub txtName_TextChanged (Old As String, New As Str";
+ //BA.debugLineNum = 54;BA.debugLine="Starter.Name = New";
 mostCurrent._starter._name /*String*/  = _new;
-RDebugUtils.currentLine=524291;
- //BA.debugLineNum = 524291;BA.debugLine="End Sub";
+ //BA.debugLineNum = 56;BA.debugLine="End Sub";
 return "";
 }
 public static String  _updatestate() throws Exception{
-RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "updatestate", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "updatestate", null));}
-RDebugUtils.currentLine=458752;
- //BA.debugLineNum = 458752;BA.debugLine="Private Sub UpdateState";
-RDebugUtils.currentLine=458755;
- //BA.debugLineNum = 458755;BA.debugLine="End Sub";
+ //BA.debugLineNum = 48;BA.debugLine="Private Sub UpdateState";
+ //BA.debugLineNum = 51;BA.debugLine="End Sub";
 return "";
 }
 }

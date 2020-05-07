@@ -49,7 +49,6 @@ Private Sub AutoDiscover_PacketArrived (Packet As UDPPacket)
 		Dim data(Packet.Length) As Byte
 		bc.ArrayCopy(Packet.Data, Packet.Offset, data, 0, Packet.Length)
 		Dim ds As String = serializator.ConvertBytesToObject(data)
-			Log("Discovered server: " & DiscoveredServer)
 		If ds <> DiscoveredServer Then
 			DiscoveredServer = ds
 			Log("Discovered server: " & DiscoveredServer)

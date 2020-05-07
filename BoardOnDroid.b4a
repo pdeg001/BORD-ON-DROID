@@ -60,9 +60,9 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
-	Private btnClient As Button
-	Private btnStartServer As Button
-	Private txtName As FloatLabeledEditText
+'	Private btnClient As Button
+'	Private btnStartServer As Button
+'	Private txtName As FloatLabeledEditText
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -77,11 +77,11 @@ Sub Activity_Resume
 End Sub
 
 Sub btnClient_Click
-	CallSub2(Starter, "Connect", False)
+'	CallSub2(Starter, "Connect", False)
 End Sub
 
 Sub btnStartServer_Click
-	CallSub2(Starter, "Connect", True)
+'	CallSub2(Starter, "Connect", True)
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
@@ -94,7 +94,7 @@ Private Sub UpdateState
 End Sub
 
 Sub txtName_TextChanged (Old As String, New As String)
-	Starter.Name = New
+'	Starter.Name = New
 '	UpdateState
 End Sub
 
