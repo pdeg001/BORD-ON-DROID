@@ -10,6 +10,6 @@ ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
-NavigationStack=Main,Activity_Create,28,2,Chat,NewMessage,60,6,Starter,client_MessageArrived,111,6,Starter,client_Disconnected,147,0,ServerBoard,UpdateBordWhenClient,122,6,Starter,AutoDiscover_PacketArrived,45,6,Main,Globals,19,0,Main,btnClient_Click,36,0,Main,btnStartServer_Click,40,0,Main,txtName_TextChanged,53,0
+NavigationStack=Main,Activity_Create,28,2,Chat,NewMessage,60,6,Starter,client_MessageArrived,111,6,Starter,client_Disconnected,147,0,ServerBoard,UpdateBordWhenClient,122,6,Starter,AutoDiscover_PacketArrived,45,6,Main,btnClient_Click,36,0,Main,btnStartServer_Click,40,0,Main,txtName_TextChanged,53,0,Main,Globals,22,0
 SelectedBuild=0
 VisibleModules=3,1,2

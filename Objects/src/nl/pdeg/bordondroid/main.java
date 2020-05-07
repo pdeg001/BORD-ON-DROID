@@ -329,9 +329,6 @@ public class main extends Activity implements B4AActivity{
     }
 
 public anywheresoftware.b4a.keywords.Common __c = null;
-public anywheresoftware.b4a.objects.ButtonWrapper _btnclient = null;
-public anywheresoftware.b4a.objects.ButtonWrapper _btnstartserver = null;
-public anywheresoftware.b4a.objects.FloatLabeledEditTextWrapper _txtname = null;
 public nl.pdeg.bordondroid.starter _starter = null;
 public nl.pdeg.bordondroid.chat _chat = null;
 public nl.pdeg.bordondroid.serverboard _serverboard = null;
@@ -376,26 +373,16 @@ return "";
 }
 public static String  _btnclient_click() throws Exception{
  //BA.debugLineNum = 36;BA.debugLine="Sub btnClient_Click";
- //BA.debugLineNum = 37;BA.debugLine="CallSub2(Starter, \"Connect\", False)";
-anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._starter.getObject()),"Connect",(Object)(anywheresoftware.b4a.keywords.Common.False));
  //BA.debugLineNum = 38;BA.debugLine="End Sub";
 return "";
 }
 public static String  _btnstartserver_click() throws Exception{
  //BA.debugLineNum = 40;BA.debugLine="Sub btnStartServer_Click";
- //BA.debugLineNum = 41;BA.debugLine="CallSub2(Starter, \"Connect\", True)";
-anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._starter.getObject()),"Connect",(Object)(anywheresoftware.b4a.keywords.Common.True));
  //BA.debugLineNum = 42;BA.debugLine="End Sub";
 return "";
 }
 public static String  _globals() throws Exception{
  //BA.debugLineNum = 19;BA.debugLine="Sub Globals";
- //BA.debugLineNum = 20;BA.debugLine="Private btnClient As Button";
-mostCurrent._btnclient = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 21;BA.debugLine="Private btnStartServer As Button";
-mostCurrent._btnstartserver = new anywheresoftware.b4a.objects.ButtonWrapper();
- //BA.debugLineNum = 22;BA.debugLine="Private txtName As FloatLabeledEditText";
-mostCurrent._txtname = new anywheresoftware.b4a.objects.FloatLabeledEditTextWrapper();
  //BA.debugLineNum = 23;BA.debugLine="End Sub";
 return "";
 }
@@ -423,8 +410,6 @@ return "";
 }
 public static String  _txtname_textchanged(String _old,String _new) throws Exception{
  //BA.debugLineNum = 53;BA.debugLine="Sub txtName_TextChanged (Old As String, New As Str";
- //BA.debugLineNum = 54;BA.debugLine="Starter.Name = New";
-mostCurrent._starter._name /*String*/  = _new;
  //BA.debugLineNum = 56;BA.debugLine="End Sub";
 return "";
 }
