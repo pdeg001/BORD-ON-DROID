@@ -367,7 +367,7 @@ public static String  _activity_create(boolean _firsttime) throws Exception{
  //BA.debugLineNum = 39;BA.debugLine="Activity.LoadLayout(\"ServerBoard\")";
 mostCurrent._activity.LoadLayout("ServerBoard",mostCurrent.activityBA);
  //BA.debugLineNum = 40;BA.debugLine="Log(100%Y/100%X)";
-anywheresoftware.b4a.keywords.Common.LogImpl("22424834",BA.NumberToString(anywheresoftware.b4a.keywords.Common.PerYToCurrent((float) (100),mostCurrent.activityBA)/(double)anywheresoftware.b4a.keywords.Common.PerXToCurrent((float) (100),mostCurrent.activityBA)),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("72424834",BA.NumberToString(anywheresoftware.b4a.keywords.Common.PerYToCurrent((float) (100),mostCurrent.activityBA)/(double)anywheresoftware.b4a.keywords.Common.PerXToCurrent((float) (100),mostCurrent.activityBA)),0);
  //BA.debugLineNum = 42;BA.debugLine="End Sub";
 return "";
 }

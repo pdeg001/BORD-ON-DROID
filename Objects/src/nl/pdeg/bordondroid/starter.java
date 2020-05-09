@@ -169,7 +169,7 @@ if ((_ds).equals(_discoveredserver) == false) {
  //BA.debugLineNum = 47;BA.debugLine="DiscoveredServer = ds";
 _discoveredserver = _ds;
  //BA.debugLineNum = 48;BA.debugLine="Log(\"Discovered server: \" & DiscoveredServer)";
-anywheresoftware.b4a.keywords.Common.LogImpl("2786440","Discovered server: "+_discoveredserver,0);
+anywheresoftware.b4a.keywords.Common.LogImpl("7786440","Discovered server: "+_discoveredserver,0);
  //BA.debugLineNum = 49;BA.debugLine="If DiscoveredServer <> \"\" Then";
 if ((_discoveredserver).equals("") == false) { 
  //BA.debugLineNum = 50;BA.debugLine="Connect(False)";
@@ -179,7 +179,7 @@ _connect(anywheresoftware.b4a.keywords.Common.False);
  } 
        catch (Exception e14) {
 			processBA.setLastException(e14); //BA.debugLineNum = 55;BA.debugLine="Log(LastException)";
-anywheresoftware.b4a.keywords.Common.LogImpl("2786447",BA.ObjectToString(anywheresoftware.b4a.keywords.Common.LastException(processBA)),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("7786447",BA.ObjectToString(anywheresoftware.b4a.keywords.Common.LastException(processBA)),0);
  };
  //BA.debugLineNum = 57;BA.debugLine="End Sub";
 return "";
@@ -205,7 +205,7 @@ return "";
 public static String  _client_connected(boolean _success) throws Exception{
  //BA.debugLineNum = 86;BA.debugLine="Private Sub client_Connected (Success As Boolean)";
  //BA.debugLineNum = 87;BA.debugLine="Log($\"Connected: ${Success}\"$)";
-anywheresoftware.b4a.keywords.Common.LogImpl("2983041",("Connected: "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_success))+""),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("7983041",("Connected: "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_success))+""),0);
  //BA.debugLineNum = 88;BA.debugLine="If Success Then";
 if (_success) { 
  //BA.debugLineNum = 89;BA.debugLine="connected = True";
@@ -251,7 +251,7 @@ _newuser = BA.ObjectToString(_receivedobject);
  //BA.debugLineNum = 102;BA.debugLine="If isServer Then";
 if (_isserver) { 
  //BA.debugLineNum = 103;BA.debugLine="Log($\"${Topic}: ${newUser}\"$)";
-anywheresoftware.b4a.keywords.Common.LogImpl("21048582",(""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_topic))+": "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_newuser))+""),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("71048582",(""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_topic))+": "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_newuser))+""),0);
  //BA.debugLineNum = 104;BA.debugLine="Dim index As Int = users.IndexOf(newUser)";
 _index = _users.IndexOf((Object)(_newuser));
  //BA.debugLineNum = 105;BA.debugLine="If Topic.EndsWith(\"connect\") And index = -1 The";

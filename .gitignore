@@ -2,7 +2,7 @@
 /Objects/bin/*
 /Objects/gen/*
 /Objects/shell/*
-/Objects/shell/*
+/Objects/src/*
 
 # Compiled class file
 *.class
