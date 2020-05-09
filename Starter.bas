@@ -16,14 +16,15 @@ Sub Process_Globals
 	Private const discoverPort As Int = 51049
 	Private serializator As B4XSerializator
 	Public connected As Boolean
-	Private brokerStarted As Boolean
+'	Private brokerStarted As Boolean
 	Private users As List
 	Public isServer As Boolean
 	Public Name As String
 	Public DiscoveredServer As String
 	Private autodiscover As UDPSocket
-	Private BroadcastTimer As Timer
+'	Private BroadcastTimer As Timer
 	Private server As ServerSocket 'ignore
+	Private serverList As List
 End Sub
 
 Sub Service_Create
@@ -31,7 +32,8 @@ Sub Service_Create
 	broker.DebugLog = False
 	users.Initialize
 	autodiscover.Initialize("autodiscover",discoverPort , 8192)
-	BroadcastTimer.Initialize("BroadcastTimer", 1000)
+	serverList.Initialize
+'	BroadcastTimer.Initialize("BroadcastTimer", 5000)
 End Sub
 
 Private Sub BroadcastTimer_Tick
@@ -49,11 +51,16 @@ Private Sub AutoDiscover_PacketArrived (Packet As UDPPacket)
 		Dim data(Packet.Length) As Byte
 		bc.ArrayCopy(Packet.Data, Packet.Offset, data, 0, Packet.Length)
 		Dim ds As String = serializator.ConvertBytesToObject(data)
+		'	Log("Discovered server: " & ds)
+		If serverList.IndexOf(ds) = -1 Then
+			serverList.Add(ds)
+			Log($"Discovered servers: ${serverList} $DateTime{DateTime.Now}"$)
+		End If
 		If ds <> DiscoveredServer Then
 			DiscoveredServer = ds
-			Log("Discovered server: " & DiscoveredServer)
+			'Log($"Discovered server: ${DiscoveredServer} $DateTime{DateTime.Now}"$)
 			If DiscoveredServer <> "" Then
-				Connect(False)
+			'	Connect(False)
 			End If
 			'CallSub(Main, "UpdateState")
 		End If
@@ -69,16 +76,16 @@ End Sub
 
 Public Sub Connect (AsServer As Boolean)
 	Dim host As String = DiscoveredServer
-	isServer = AsServer
-	If isServer Then
-		If brokerStarted = False Then
-			broker.Start
-			brokerStarted = True
-		End If
-		users.Clear
-		host = "127.0.0.1"
-	End If
-	BroadcastTimer.Enabled = isServer
+'	isServer = AsServer
+'	If isServer Then
+'		If brokerStarted = False Then
+'			broker.Start
+'			brokerStarted = True
+'		End If
+'		users.Clear
+'		host = "127.0.0.1"
+'	End If
+'	BroadcastTimer.Enabled = isServer
 	If connected Then client.Close
 	
 	client.Initialize("client", $"tcp://${host}:${port}"$, "android" & Rnd(1, 10000000))
@@ -131,7 +138,7 @@ Public Sub SendMessage(Body As String)
 End Sub
 
 Public Sub Disconnect
-	BroadcastTimer.Enabled = False
+'	BroadcastTimer.Enabled = False
 	DiscoveredServer = ""
 '	CallSub(Main, "UpdateState")
 	If connected Then 

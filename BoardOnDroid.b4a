@@ -1,15 +1,15 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
-File1=1.bal
+File1=2.bal
 File10=mouse.png
 File11=ServerBoard.bal
-File2=2.bal
-File3=Baloo2-Bold.ttf
-File4=Baloo2-ExtraBold.ttf
-File5=Baloo2-Medium.ttf
-File6=Baloo2-Regular.ttf
-File7=Baloo2-SemiBold.ttf
-File8=digital-7.ttf
-File9=IMG-20200421-WA0000.jpg
+File2=Baloo2-Bold.ttf
+File3=Baloo2-ExtraBold.ttf
+File4=Baloo2-Medium.ttf
+File5=Baloo2-Regular.ttf
+File6=Baloo2-SemiBold.ttf
+File7=digital-7.ttf
+File8=IMG-20200421-WA0000.jpg
+File9=main.bal
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=Default Group
@@ -23,6 +23,7 @@ FileGroup8=Default Group
 FileGroup9=Default Group
 Group=Default Group
 Library1=core
+Library10=customlistview
 Library2=jmqtt
 Library3=randomaccessfile
 Library4=network
@@ -36,14 +37,14 @@ Module1=Chat
 Module2=ServerBoard
 Module3=Starter
 NumberOfFiles=11
-NumberOfLibraries=9
+NumberOfLibraries=10
 NumberOfModules=3
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Board On Droid
 	#VersionCode: 1
-	#VersionName: 0.10
+	#VersionName: 0.11
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: landscape
 	#CanInstallToExternalStorage: False
@@ -62,6 +63,7 @@ Sub Globals
 '	Private btnClient As Button
 '	Private btnStartServer As Button
 '	Private txtName As FloatLabeledEditText
+	Private clvServer As CustomListView
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
