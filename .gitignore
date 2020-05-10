@@ -1,14 +1,16 @@
-/Objects/b4xlibs/*
-/Objects/bin/*
-/Objects/gen/*
-/Objects/shell/*
-/Objects/src/*
-
+/Objects/b4xlibs
+/Objects/bin
+Objects/gen
+Objects/shell
+Objects/src
+AutoBackups/
 # Compiled class file
 *.class
-
+*.java
 # Log file
 *.log
+*.dex
+*.APK
 
 # BlueJ files
 *.ctxt
@@ -24,8 +26,7 @@
 *.zip
 *.tar.gz
 *.rar
-*.java
-*.JAVA
-*.dex
+*.meta
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

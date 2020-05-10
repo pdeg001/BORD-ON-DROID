@@ -126,7 +126,7 @@ Sub CheckIpExits(ip As String)
 	Next
 	
 	If Not(ipFound) Then
-		AddUnkownIp(lst, lst.ip)
+		AddUnkownIp(lst.ip)
 	End If
 	ShowUnits
 End Sub
