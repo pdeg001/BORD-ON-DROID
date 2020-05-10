@@ -1,18 +1,22 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
 File1=2.bal
-File10=mouse.png
-File11=ServerBoard.bal
+File10=main.bal
+File11=materialdesignicons-webfont.ttf
+File12=mouse.png
+File13=ServerBoard.bal
 File2=Baloo2-Bold.ttf
 File3=Baloo2-ExtraBold.ttf
 File4=Baloo2-Medium.ttf
 File5=Baloo2-Regular.ttf
 File6=Baloo2-SemiBold.ttf
-File7=digital-7.ttf
-File8=IMG-20200421-WA0000.jpg
-File9=main.bal
+File7=clvBorden.bal
+File8=digital-7.ttf
+File9=IMG-20200421-WA0000.jpg
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -23,21 +27,20 @@ FileGroup8=Default Group
 FileGroup9=Default Group
 Group=Default Group
 Library1=core
-Library10=customlistview
 Library2=jmqtt
 Library3=randomaccessfile
 Library4=network
 Library5=ime
 Library6=javaobject
 Library7=byteconverter
-Library8=jmqttbroker
-Library9=json
+Library8=json
+Library9=customlistview
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
 Module1=Chat
 Module2=ServerBoard
 Module3=Starter
-NumberOfFiles=11
-NumberOfLibraries=10
+NumberOfFiles=13
+NumberOfLibraries=9
 NumberOfModules=3
 Version=9.801
 @EndOfDesignText@
@@ -57,45 +60,105 @@ Version=9.801
 
 Sub Process_Globals
 	Type Message (Body As String, From As String)
+	Type bordStatus(ip As String, timeStamp As Long, alive As Boolean)
 End Sub
 
 Sub Globals
-'	Private btnClient As Button
-'	Private btnStartServer As Button
-'	Private txtName As FloatLabeledEditText
 	Private clvServer As CustomListView
+	Private lblBordName As Label
+	Private lblViewBord As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	'Activity.LoadLayout("1")
-	'Activity.LoadLayout("ServerBoard")
-	StartActivity(ServerBoard)
-	Activity.Finish
+	Activity.LoadLayout("main")
+	'StartActivity(ServerBoard)
+	'Activity.Finish
 End Sub
 
 Sub Activity_Resume
-'	UpdateState
-End Sub
-
-Sub btnClient_Click
-'	CallSub2(Starter, "Connect", False)
-End Sub
-
-Sub btnStartServer_Click
-'	CallSub2(Starter, "Connect", True)
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
+End Sub
+
+Sub ShowUnits
+	'clvServer.Clear
+	For Each brd As bordStatus In Starter.serverList
+		clvServer.Add(genUnitList(brd.ip, brd.alive),130dip, "")
+	Next
 	
 End Sub
 
-Private Sub UpdateState
-'	btnStartServer.Enabled = Starter.Name <> ""
-	'btnClient.Enabled = Starter.Name <> "" And Starter.DiscoveredServer <> ""
+Sub genUnitList(name As String, alive As Boolean) As Panel
+	Dim p As Panel
+	p.Initialize(Me)
+	p.SetLayout(0dip, 0dip, 100%Y, 145dip) '190
+	p.LoadLayout("clvBorden")
+	p.Tag = name
+	
+	lblBordName.Text = name.Trim
+	If Not(alive) Then
+		lblViewBord.Enabled = False
+	End If
+	Return p
 End Sub
 
-Sub txtName_TextChanged (Old As String, New As String)
-'	Starter.Name = New
-'	UpdateState
+Sub CheckIpExits(ip As String)
+	Dim msNow As Long = DateTime.Now
+	Dim ipFound As Boolean
+	
+	If Starter.serverList.Size = 0 Then
+		AddUnkownIp(ip)
+		Return
+	End If
+	
+	For Each lst As bordStatus In Starter.serverList
+'		Log($"$Time{msNow}> ${lst.ip} ${lst.alive}"$)
+		If lst.ip = ip Then
+			ipFound = True
+			lst.timeStamp = DateTime.Now
+		End If
+		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
+			lst.alive = False
+			'		Log($"${ip} SERVER DIED AT $Time{msNow}"$)
+		End If
+	Next
+	
+	If Not(ipFound) Then
+		AddUnkownIp(lst, lst.ip)
+	End If
+	ShowUnits
 End Sub
 
+Sub AddUnkownIp(ip As String)
+	Dim bordStatus As bordStatus
+	bordStatus.Initialize
+	bordStatus.ip = ip
+	bordStatus.timeStamp = DateTime.Now
+	bordStatus.alive = True
+	Starter.serverList.Add(bordStatus)
+End Sub
+
+Sub CheckIpInClv(bord As bordStatus, findTag As String)
+	Dim p As Panel
+	Dim lbl As Label
+	
+	For i = 0 To clvServer.GetSize-1
+		p = clvServer.GetPanel(i)
+		For Each v As View In p.GetAllViewsRecursive
+			If v.Tag = findTag Then
+				lbl = v
+				If lbl.Text = bord.ip Then
+					
+				End If
+			End If
+		Next
+	Next
+	
+End Sub
+
+
+Sub lblViewBord_Click
+	
+End Sub

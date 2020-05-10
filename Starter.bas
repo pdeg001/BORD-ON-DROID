@@ -10,7 +10,8 @@ Version=6.5
 #End Region
 
 Sub Process_Globals
-	Private broker As MqttBroker
+	
+'	Private broker As MqttBroker
 	Private client As MqttClient
 	Private const port As Int = 51042
 	Private const discoverPort As Int = 51049
@@ -24,12 +25,13 @@ Sub Process_Globals
 	Private autodiscover As UDPSocket
 '	Private BroadcastTimer As Timer
 	Private server As ServerSocket 'ignore
-	Private serverList As List
+	Public serverList As List
+	Public serverDied As Long = 10000
 End Sub
 
 Sub Service_Create
-	broker.Initialize("", port)
-	broker.DebugLog = False
+'	broker.Initialize("", port)
+'	broker.DebugLog = False
 	users.Initialize
 	autodiscover.Initialize("autodiscover",discoverPort , 8192)
 	serverList.Initialize
@@ -51,11 +53,7 @@ Private Sub AutoDiscover_PacketArrived (Packet As UDPPacket)
 		Dim data(Packet.Length) As Byte
 		bc.ArrayCopy(Packet.Data, Packet.Offset, data, 0, Packet.Length)
 		Dim ds As String = serializator.ConvertBytesToObject(data)
-		'	Log("Discovered server: " & ds)
-		If serverList.IndexOf(ds) = -1 Then
-			serverList.Add(ds)
-			Log($"Discovered servers: ${serverList} $DateTime{DateTime.Now}"$)
-		End If
+		CallSub2(Main, "CheckIpExits", ds)
 		If ds <> DiscoveredServer Then
 			DiscoveredServer = ds
 			'Log($"Discovered server: ${DiscoveredServer} $DateTime{DateTime.Now}"$)
@@ -159,8 +157,8 @@ Private Sub client_Disconnected
 	connected = False
 '	CallSub(Chat, "Disconnected")
 	If isServer Then
-		broker.Stop
-		brokerStarted = False
+'		broker.Stop
+'		brokerStarted = False
 	End If
 End Sub
 

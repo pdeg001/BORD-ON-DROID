@@ -39,11 +39,14 @@ Sub Globals
 	Private lblBeurt1 As Label
 	Private imgP2Play As ImageView
 	Private imgP1Play As ImageView
+	Private pnlBord As Panel
+	Private lblBordName As Label
+	Private lblViewBord As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("ServerBoard")
-	Log(100%Y/100%X)
+	'Log(100%Y/100%X)
 
 End Sub
 
@@ -130,4 +133,47 @@ public Sub UpdateBordWhenClient(data As Message)
 	End If
 End Sub
 
+Sub CheckIpExits(ip As String)
+	Dim msNow As Long = DateTime.Now
+	Dim ipFound As Boolean
+	
+	If Starter.serverList.Size = 0 Then
+		AddUnkownIp(ip)
+		Return
+	End If
+	
+	For Each lst As bordStatus In Starter.serverList
+	Log($"$Time{msNow}> ${lst.ip} ${lst.alive}"$)
+		If lst.ip = ip Then
+			ipFound = True
+			lst.timeStamp = DateTime.Now
+		End If
+		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
+			lst.alive = False
+	'		Log($"${ip} SERVER DIED AT $Time{msNow}"$)
+		End If
+	Next
+	
+	If Not(ipFound) Then
+		AddUnkownIp(ip)		
+	End If
+	
+End Sub
 
+Sub AddUnkownIp(ip As String)
+	Dim bordStatus As bordStatus
+	bordStatus.Initialize
+	bordStatus.ip = ip
+	bordStatus.timeStamp = DateTime.Now
+	bordStatus.alive = True
+	Starter.serverList.Add(bordStatus)
+End Sub
+
+
+Sub lblViewBord_LongClick
+	
+End Sub
+
+Sub lblViewBord_Click
+	
+End Sub
