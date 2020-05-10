@@ -10,6 +10,6 @@ ModuleClosedNodes0=
 ModuleClosedNodes1=7
 ModuleClosedNodes2=
 ModuleClosedNodes3=7
-NavigationStack=ServerBoard,CheckIpExits,129,6,Main,Activity_Create,29,2,Starter,AutoDiscover_PacketArrived,49,1,Main,genUnitList,49,6,Main,ShowUnits,39,3,Main,lblViewBord_Click,114,0,Visual Designer,clvBorden.bal,-100,2,Main,AddUnkownIp,94,0,Main,CheckIpInClv,106,6,Main,CheckIpExits,82,5
+NavigationStack=ServerBoard,CheckIpExits,129,6,Main,Activity_Create,29,2,Starter,AutoDiscover_PacketArrived,49,1,Main,genUnitList,49,6,Main,ShowUnits,39,3,Main,lblViewBord_Click,114,0,Visual Designer,clvBorden.bal,-100,2,Main,AddUnkownIp,94,0,Main,CheckIpInClv,106,6,Main,CheckIpExits,70,5
 SelectedBuild=0
 VisibleModules=3,1,2

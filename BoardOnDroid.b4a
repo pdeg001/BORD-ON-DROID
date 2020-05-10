@@ -114,7 +114,7 @@ Sub CheckIpExits(ip As String)
 	End If
 	
 	For Each lst As bordStatus In Starter.serverList
-'		Log($"$Time{msNow}> ${lst.ip} ${lst.alive}"$)
+		Log($"$Time{msNow}> ${lst.ip} ${lst.alive}"$)
 		If lst.ip = ip Then
 			ipFound = True
 			lst.timeStamp = DateTime.Now

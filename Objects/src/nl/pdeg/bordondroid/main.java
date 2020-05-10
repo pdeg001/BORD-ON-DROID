@@ -429,6 +429,8 @@ final int groupLen7 = group7.getSize()
 ;
 for (; index7 < groupLen7;index7++){
 _lst = (nl.pdeg.bordondroid.main._bordstatus)(group7.Get(index7));
+ //BA.debugLineNum = 71;BA.debugLine="Log($\"$Time{msNow}> ${lst.ip} ${lst.alive}\"$)";
+anywheresoftware.b4a.keywords.Common.LogImpl("8851978",(""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("time",(Object)(_msnow))+"> "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_lst.ip /*String*/ ))+" "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_lst.alive /*boolean*/ ))+""),0);
  //BA.debugLineNum = 72;BA.debugLine="If lst.ip = ip Then";
 if ((_lst.ip /*String*/ ).equals(_ip)) { 
  //BA.debugLineNum = 73;BA.debugLine="ipFound = True";
