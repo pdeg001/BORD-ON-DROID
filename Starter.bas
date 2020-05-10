@@ -24,18 +24,30 @@ Sub Process_Globals
 	Public DiscoveredServer As String
 	Private autodiscover As UDPSocket
 '	Private BroadcastTimer As Timer
+	Public connectedTmr As Timer
 	Private server As ServerSocket 'ignore
 	Public serverList As List
 	Public serverDied As Long = 10000
+	Private p As Phone
+	Public selectedBordName As String
 End Sub
 
 Sub Service_Create
+	connectedTmr.Initialize("connected", 3000)
 '	broker.Initialize("", port)
 '	broker.DebugLog = False
 	users.Initialize
 	autodiscover.Initialize("autodiscover",discoverPort , 8192)
 	serverList.Initialize
 '	BroadcastTimer.Initialize("BroadcastTimer", 5000)
+End Sub
+
+Sub connected_Tick
+	If client.Connected = False Then
+		connectedTmr.Enabled = False
+		CallSub(ServerBoard, "ConnectionLost")
+		'ToastMessageShow("Connectie verloren..", True)
+	End If
 End Sub
 
 Private Sub BroadcastTimer_Tick
@@ -48,20 +60,24 @@ Private Sub BroadcastTimer_Tick
 End Sub
 
 Private Sub AutoDiscover_PacketArrived (Packet As UDPPacket)
+	If connected Then Return
 	Try
 		Dim bc As ByteConverter
 		Dim data(Packet.Length) As Byte
 		bc.ArrayCopy(Packet.Data, Packet.Offset, data, 0, Packet.Length)
-		Dim ds As String = serializator.ConvertBytesToObject(data)
+		Dim ds() As Object = serializator.ConvertBytesToObject(data)
+		
+'		Dim ls As Map 	= serializator.ConvertBytesToObject(data)
+		
 		CallSub2(Main, "CheckIpExits", ds)
-		If ds <> DiscoveredServer Then
-			DiscoveredServer = ds
-			'Log($"Discovered server: ${DiscoveredServer} $DateTime{DateTime.Now}"$)
-			If DiscoveredServer <> "" Then
-			'	Connect(False)
-			End If
-			'CallSub(Main, "UpdateState")
-		End If
+'		If ds <> DiscoveredServer Then
+'			DiscoveredServer = ds
+'			'Log($"Discovered server: ${DiscoveredServer} $DateTime{DateTime.Now}"$)
+'			If DiscoveredServer <> "" Then
+'			'	Connect(False)
+'			End If
+'			'CallSub(Main, "UpdateState")
+'		End If
 	Catch
 		Log(LastException)
 	End Try
@@ -74,6 +90,8 @@ End Sub
 
 Public Sub Connect (AsServer As Boolean)
 	Dim host As String = DiscoveredServer
+	
+'	Log("HOST : " & host)
 '	isServer = AsServer
 '	If isServer Then
 '		If brokerStarted = False Then
@@ -90,18 +108,22 @@ Public Sub Connect (AsServer As Boolean)
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
-	mo.SetLastWill("all/disconnect", serializator.ConvertObjectToBytes(Name), 0, False)
+	mo.SetLastWill("all/disconnect", serializator.ConvertObjectToBytes(p.Model), 0, False)
 	client.Connect2(mo)
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-	Log($"Connected: ${Success}"$)
+'	Log($"Connected: ${Success}"$)
 	If Success Then
+		SendMessage("data please")
+		connectedTmr.Enabled = True
 		connected = True
 		client.Subscribe("all/#", 0)
 		client.Publish2("all/connect", serializator.ConvertObjectToBytes(Name), 0, False)
+		
 	Else
-		ToastMessageShow("Error connecting: " & LastException, True)
+'		CallSub(ServerBoard, "ConnectionLost")
+		'ToastMessageShow("Error connecting: " & LastException, True)
 	End If
 End Sub
 
@@ -110,6 +132,7 @@ Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
 	If Topic = "all/connect" Or Topic = "all/disconnect" Then
 		'new client has connected or disconnected
 		Dim newUser As String = receivedObject
+		Log(newUser)
 		If isServer Then
 			Log($"${Topic}: ${newUser}"$)
 			Dim index As Int = users.IndexOf(newUser)
@@ -120,6 +143,8 @@ Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
 	Else if Topic = "all/users" Then
 		Dim newUsers As List = receivedObject
 '		CallSubDelayed2(Chat, "NewUsers", newUsers) 'this will start the chat activity if it wasn't started yet.
+		'CallSubDelayed2(Main, "NewUsers", newUsers)
+'		Log($"CONNECTED DEVICES : ${newUsers.Size-1}"$)
 	Else
 		Dim m As Message = receivedObject
 '		CallSub2(Chat, "NewMessage", m)
@@ -142,6 +167,7 @@ Public Sub Disconnect
 	If connected Then 
 		client.Publish2("all/disconnect", serializator.ConvertObjectToBytes(Name), 0, False)
 		client.Close
+		connected = False
 	End If
 End Sub
 
@@ -156,10 +182,10 @@ End Sub
 Private Sub client_Disconnected
 	connected = False
 '	CallSub(Chat, "Disconnected")
-	If isServer Then
-'		broker.Stop
-'		brokerStarted = False
-	End If
+'	If isServer Then
+''		broker.Stop
+''		brokerStarted = False
+'	End If
 End Sub
 
 'Returns the UDP broadcast address.

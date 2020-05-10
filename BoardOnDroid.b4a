@@ -4,6 +4,7 @@ File10=main.bal
 File11=materialdesignicons-webfont.ttf
 File12=mouse.png
 File13=ServerBoard.bal
+File14=wacht_op_data.png
 File2=Baloo2-Bold.ttf
 File3=Baloo2-ExtraBold.ttf
 File4=Baloo2-Medium.ttf
@@ -17,6 +18,7 @@ FileGroup10=Default Group
 FileGroup11=Default Group
 FileGroup12=Default Group
 FileGroup13=Default Group
+FileGroup14=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -27,6 +29,7 @@ FileGroup8=Default Group
 FileGroup9=Default Group
 Group=Default Group
 Library1=core
+Library10=phone
 Library2=jmqtt
 Library3=randomaccessfile
 Library4=network
@@ -39,8 +42,8 @@ ManifestCode='This code will be applied to the manifest file during compilation.
 Module1=Chat
 Module2=ServerBoard
 Module3=Starter
-NumberOfFiles=13
-NumberOfLibraries=9
+NumberOfFiles=14
+NumberOfLibraries=10
 NumberOfModules=3
 Version=9.801
 @EndOfDesignText@
@@ -60,13 +63,16 @@ Version=9.801
 
 Sub Process_Globals
 	Type Message (Body As String, From As String)
-	Type bordStatus(ip As String, timeStamp As Long, alive As Boolean)
+	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
+	Type bordFound(name As String, ip As String)
 End Sub
 
 Sub Globals
 	Private clvServer As CustomListView
 	Private lblBordName As Label
 	Private lblViewBord As Label
+	Private pnlBord As Panel
+	Private lblIP As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -82,83 +88,167 @@ End Sub
 Sub Activity_Pause (UserClosed As Boolean)
 End Sub
 
+Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
+	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		Activity.Finish
+		
+		Return False
+	Else
+		Return False
+	End If
+End Sub
+
 Sub ShowUnits
 	'clvServer.Clear
 	For Each brd As bordStatus In Starter.serverList
-		clvServer.Add(genUnitList(brd.ip, brd.alive),130dip, "")
+		clvServer.Add(genUnitList(brd.ip, brd.alive, ""),130dip, "")
 	Next
 	
 End Sub
 
-Sub genUnitList(name As String, alive As Boolean) As Panel
+Sub genUnitList(name As String, alive As Boolean, ip As String) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, 100%Y, 145dip) '190
+	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 85dip) '190
 	p.LoadLayout("clvBorden")
-	p.Tag = name
+	p.Tag = ip
 	
 	lblBordName.Text = name.Trim
+	lblIP.Text = ip
 	If Not(alive) Then
 		lblViewBord.Enabled = False
 	End If
 	Return p
 End Sub
 
-Sub CheckIpExits(ip As String)
+Sub CheckIpExits(data() As Object)
 	Dim msNow As Long = DateTime.Now
-	Dim ipFound As Boolean
+	Dim ipFound As Boolean = False
+	Dim ip, name As String = ""
 	
+	If data.Length = 0 Then Return
+	
+	ip = data(0)
+	name = data(1)
+
 	If Starter.serverList.Size = 0 Then
-		AddUnkownIp(ip)
+		'Log("- LIST EMPTY " & ip)
+		AddUnkownIp(ip, name)
 		Return
 	End If
 	
 	For Each lst As bordStatus In Starter.serverList
-		Log($"$Time{msNow}> ${lst.ip} ${lst.alive}"$)
+	'	Log("-- LOCATE BORD " &lst.ip)
 		If lst.ip = ip Then
 			ipFound = True
 			lst.timeStamp = DateTime.Now
+			lst.alive = True
+			'Return
 		End If
+	Next
+	
+	For Each lst As bordStatus In Starter.serverList
+		'Log($"${msNow-lst.timeStamp}"$)
 		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
 			lst.alive = False
-			'		Log($"${ip} SERVER DIED AT $Time{msNow}"$)
+			CheckIpInClv(lst)
+			Return
+		Else
+			CheckIpInClv(lst)
 		End If
 	Next
 	
 	If Not(ipFound) Then
-		AddUnkownIp(lst.ip)
+'		Log("--- IP NOT FOUND " & ip)
+		AddUnkownIp(ip, name)
+		Return
 	End If
-	ShowUnits
+	'CheckIpInClv(lst)
 End Sub
 
-Sub AddUnkownIp(ip As String)
+Sub AddUnkownIp(ip As String, name As String)
 	Dim bordStatus As bordStatus
 	bordStatus.Initialize
 	bordStatus.ip = ip
+	bordStatus.name = name
 	bordStatus.timeStamp = DateTime.Now
 	bordStatus.alive = True
 	Starter.serverList.Add(bordStatus)
+'	Log("---- ADD UNKNOWN TO LIST " & ip)
+	CheckIpInClv(bordStatus)
 End Sub
 
-Sub CheckIpInClv(bord As bordStatus, findTag As String)
+Sub CheckIpInClv(bord As bordStatus)
 	Dim p As Panel
 	Dim lbl As Label
+'	Log("----- CHECK IP IN LIST " & bord.ip)
+'	Log("++ BORD FOUND " & bord.ip &" " & bord.alive)
 	
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
-		For Each v As View In p.GetAllViewsRecursive
-			If v.Tag = findTag Then
-				lbl = v
-				If lbl.Text = bord.ip Then
-					
+	'	Log(p.Tag)
+		If p.Tag = bord.ip Then
+			For Each v As View In p.GetAllViewsRecursive
+				If v.Tag = "viewbord" Then
+					lbl = v
+					If bord.alive = False Then
+						lbl.Enabled = False
+						lbl.TextColor = Colors.Red
+					Else
+						lbl.Enabled = True
+						lbl.TextColor = Colors.Black
+					End If
+					Return
 				End If
-			End If
-		Next
+			Next
+		End If
 	Next
 	
+'	Log("------ ADD BORD TO LIST")
+	clvServer.Add(genUnitList(bord.name, bord.alive, bord.ip),130dip, "")
 End Sub
 
 
 Sub lblViewBord_Click
+	Dim v As View = Sender
+	Dim p As Panel = v.Parent
+	Dim lbl As Label
 	
+	For Each c As View In p.GetAllViewsRecursive
+		If c.Tag = "name" Then
+			lbl = c
+			Starter.selectedBordName = lbl.Text
+			Exit
+		End If
+	Next
+	
+	For Each c As View In p.GetAllViewsRecursive
+		If c.Tag = "ipnumber" Then
+			lbl = c
+			Starter.DiscoveredServer = lbl.Text
+			StartActivity(ServerBoard)
+			Exit
+		End If
+	Next
 End Sub
+
+
+Public Sub NewUsers(Users1 As List)
+	Dim userCount As Int = 0
+'	Log(Users1)
+	'users = Users1
+	'lstUsers.Clear
+'	For Each u As List In Users1
+'		userCount = userCount+1
+''		'lstUsers.AddSingleLine(u)
+''		Log("USERS " & u.Get(0))
+'	Next
+	Log($"USER COUNT ${Users1.Size}"$)
+End Sub
+
+
+
+
+
+
+

@@ -329,6 +329,10 @@ public class serverboard extends Activity implements B4AActivity{
     }
 
 public anywheresoftware.b4a.keywords.Common __c = null;
+public static anywheresoftware.b4a.objects.Timer _datatmr = null;
+public static int _dotcount = 0;
+public static String _waittext = "";
+public anywheresoftware.b4a.objects.LabelWrapper[] _lbllist = null;
 public anywheresoftware.b4a.objects.collections.JSONParser _parser = null;
 public anywheresoftware.b4a.objects.LabelWrapper _lblp1name = null;
 public anywheresoftware.b4a.objects.LabelWrapper _lblp2name = null;
@@ -351,9 +355,9 @@ public anywheresoftware.b4a.objects.LabelWrapper _lblbeurt10 = null;
 public anywheresoftware.b4a.objects.LabelWrapper _lblbeurt1 = null;
 public anywheresoftware.b4a.objects.ImageViewWrapper _imgp2play = null;
 public anywheresoftware.b4a.objects.ImageViewWrapper _imgp1play = null;
-public anywheresoftware.b4a.objects.PanelWrapper _pnlbord = null;
-public anywheresoftware.b4a.objects.LabelWrapper _lblbordname = null;
-public anywheresoftware.b4a.objects.LabelWrapper _lblviewbord = null;
+public static boolean _waitingfordata = false;
+public anywheresoftware.b4a.objects.ImageViewWrapper _imgnodata = null;
+public anywheresoftware.b4a.objects.LabelWrapper _lblnodata = null;
 public nl.pdeg.bordondroid.main _main = null;
 public nl.pdeg.bordondroid.starter _starter = null;
 public nl.pdeg.bordondroid.chat _chat = null;
@@ -366,91 +370,162 @@ public static void initializeProcessGlobals() {
             }
 }
 public static String  _activity_create(boolean _firsttime) throws Exception{
- //BA.debugLineNum = 41;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
- //BA.debugLineNum = 42;BA.debugLine="Activity.LoadLayout(\"ServerBoard\")";
+ //BA.debugLineNum = 45;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
+ //BA.debugLineNum = 47;BA.debugLine="dataTmr.Initialize(\"dataTmr\", 1000)";
+_datatmr.Initialize(processBA,"dataTmr",(long) (1000));
+ //BA.debugLineNum = 48;BA.debugLine="dataTmr.Enabled = True";
+_datatmr.setEnabled(anywheresoftware.b4a.keywords.Common.True);
+ //BA.debugLineNum = 49;BA.debugLine="Activity.LoadLayout(\"ServerBoard\")";
 mostCurrent._activity.LoadLayout("ServerBoard",mostCurrent.activityBA);
- //BA.debugLineNum = 45;BA.debugLine="End Sub";
+ //BA.debugLineNum = 50;BA.debugLine="Starter.Connect(False)";
+mostCurrent._starter._connect /*String*/ (anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 52;BA.debugLine="lblNoData.TextColor = Colors.Red";
+mostCurrent._lblnodata.setTextColor(anywheresoftware.b4a.keywords.Common.Colors.Red);
+ //BA.debugLineNum = 53;BA.debugLine="imgNoData.SetVisibleAnimated(1000, True)";
+mostCurrent._imgnodata.SetVisibleAnimated((int) (1000),anywheresoftware.b4a.keywords.Common.True);
+ //BA.debugLineNum = 54;BA.debugLine="lblNoData.SetVisibleAnimated(1000, True)";
+mostCurrent._lblnodata.SetVisibleAnimated((int) (1000),anywheresoftware.b4a.keywords.Common.True);
+ //BA.debugLineNum = 56;BA.debugLine="End Sub";
 return "";
 }
+public static boolean  _activity_keypress(int _keycode) throws Exception{
+ //BA.debugLineNum = 81;BA.debugLine="Private Sub Activity_KeyPress(KeyCode As Int) As B";
+ //BA.debugLineNum = 82;BA.debugLine="If KeyCode = KeyCodes.KEYCODE_BACK Then";
+if (_keycode==anywheresoftware.b4a.keywords.Common.KeyCodes.KEYCODE_BACK) { 
+ //BA.debugLineNum = 83;BA.debugLine="Starter.Disconnect";
+mostCurrent._starter._disconnect /*String*/ ();
+ //BA.debugLineNum = 84;BA.debugLine="Return False";
+if (true) return anywheresoftware.b4a.keywords.Common.False;
+ }else {
+ //BA.debugLineNum = 86;BA.debugLine="Return True";
+if (true) return anywheresoftware.b4a.keywords.Common.True;
+ };
+ //BA.debugLineNum = 88;BA.debugLine="End Sub";
+return false;
+}
 public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 51;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 53;BA.debugLine="End Sub";
+ //BA.debugLineNum = 78;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+ //BA.debugLineNum = 79;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 47;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 49;BA.debugLine="End Sub";
+ //BA.debugLineNum = 72;BA.debugLine="Sub Activity_Resume";
+ //BA.debugLineNum = 73;BA.debugLine="waitText = $\"Wachten op ${Starter.selectedBordNam";
+_waittext = ("Wachten op "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(mostCurrent._starter._selectedbordname /*String*/ ))+"");
+ //BA.debugLineNum = 74;BA.debugLine="dotCount = 0";
+_dotcount = (int) (0);
+ //BA.debugLineNum = 76;BA.debugLine="End Sub";
 return "";
 }
-public static String  _addunkownip(String _ip) throws Exception{
-nl.pdeg.bordondroid.main._bordstatus _bordstatus = null;
- //BA.debugLineNum = 157;BA.debugLine="Sub AddUnkownIp(ip As String)";
- //BA.debugLineNum = 158;BA.debugLine="Dim bordStatus As bordStatus";
-_bordstatus = new nl.pdeg.bordondroid.main._bordstatus();
- //BA.debugLineNum = 159;BA.debugLine="bordStatus.Initialize";
-_bordstatus.Initialize();
- //BA.debugLineNum = 160;BA.debugLine="bordStatus.ip = ip";
-_bordstatus.ip /*String*/  = _ip;
- //BA.debugLineNum = 161;BA.debugLine="bordStatus.timeStamp = DateTime.Now";
-_bordstatus.timeStamp /*long*/  = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
- //BA.debugLineNum = 162;BA.debugLine="bordStatus.alive = True";
-_bordstatus.alive /*boolean*/  = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 163;BA.debugLine="Starter.serverList.Add(bordStatus)";
-mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .Add((Object)(_bordstatus));
- //BA.debugLineNum = 164;BA.debugLine="End Sub";
-return "";
+public static void  _connectionlost() throws Exception{
+ResumableSub_ConnectionLost rsub = new ResumableSub_ConnectionLost(null);
+rsub.resume(processBA, null);
 }
-public static String  _checkipexits(String _ip) throws Exception{
-long _msnow = 0L;
-boolean _ipfound = false;
-nl.pdeg.bordondroid.main._bordstatus _lst = null;
- //BA.debugLineNum = 130;BA.debugLine="Sub CheckIpExits(ip As String)";
- //BA.debugLineNum = 131;BA.debugLine="Dim msNow As Long = DateTime.Now";
-_msnow = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
- //BA.debugLineNum = 132;BA.debugLine="Dim ipFound As Boolean";
-_ipfound = false;
- //BA.debugLineNum = 134;BA.debugLine="If Starter.serverList.Size = 0 Then";
-if (mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .getSize()==0) { 
- //BA.debugLineNum = 135;BA.debugLine="AddUnkownIp(ip)";
-_addunkownip(_ip);
- //BA.debugLineNum = 136;BA.debugLine="Return";
+public static class ResumableSub_ConnectionLost extends BA.ResumableSub {
+public ResumableSub_ConnectionLost(nl.pdeg.bordondroid.serverboard parent) {
+this.parent = parent;
+}
+nl.pdeg.bordondroid.serverboard parent;
+int _result = 0;
+
+@Override
+public void resume(BA ba, Object[] result) throws Exception{
+
+    while (true) {
+        switch (state) {
+            case -1:
+return;
+
+case 0:
+//C
+this.state = 1;
+ //BA.debugLineNum = 174;BA.debugLine="Msgbox2Async($\"Verbinding met ${Starter.selectedB";
+anywheresoftware.b4a.keywords.Common.Msgbox2Async(BA.ObjectToCharSequence(("Verbinding met "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent.mostCurrent._starter._selectedbordname /*String*/ ))+" verloren"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(anywheresoftware.b4a.keywords.Common.CRLF))+"Probeer het later nog eens")),BA.ObjectToCharSequence("Bord Op Droid"),"OKE","","",(anywheresoftware.b4a.objects.drawable.CanvasWrapper.BitmapWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.drawable.CanvasWrapper.BitmapWrapper(), (android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.Null)),processBA,anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 175;BA.debugLine="Wait For Msgbox_Result (Result As Int)";
+anywheresoftware.b4a.keywords.Common.WaitFor("msgbox_result", processBA, this, null);
+this.state = 5;
+return;
+case 5:
+//C
+this.state = 1;
+_result = (Integer) result[0];
+;
+ //BA.debugLineNum = 176;BA.debugLine="If DialogResponse.POSITIVE Then";
+if (true) break;
+
+case 1:
+//if
+this.state = 4;
+if (BA.ObjectToBoolean(anywheresoftware.b4a.keywords.Common.DialogResponse.POSITIVE)) { 
+this.state = 3;
+}if (true) break;
+
+case 3:
+//C
+this.state = 4;
+ //BA.debugLineNum = 177;BA.debugLine="Starter.Disconnect";
+parent.mostCurrent._starter._disconnect /*String*/ ();
+ //BA.debugLineNum = 178;BA.debugLine="Activity.Finish";
+parent.mostCurrent._activity.Finish();
+ if (true) break;
+
+case 4:
+//C
+this.state = -1;
+;
+ //BA.debugLineNum = 181;BA.debugLine="End Sub";
+if (true) break;
+
+            }
+        }
+    }
+}
+public static void  _msgbox_result(int _result) throws Exception{
+}
+public static String  _datatmr_tick() throws Exception{
+String _dot = "";
+int _i = 0;
+ //BA.debugLineNum = 58;BA.debugLine="Sub dataTmr_Tick";
+ //BA.debugLineNum = 59;BA.debugLine="Dim dot As String";
+_dot = "";
+ //BA.debugLineNum = 60;BA.debugLine="dotCount=dotCount+1";
+_dotcount = (int) (_dotcount+1);
+ //BA.debugLineNum = 61;BA.debugLine="If dotCount >= 10 Then";
+if (_dotcount>=10) { 
+ //BA.debugLineNum = 62;BA.debugLine="dotCount = 0";
+_dotcount = (int) (0);
+ //BA.debugLineNum = 63;BA.debugLine="lblNoData.Text = waitText";
+mostCurrent._lblnodata.setText(BA.ObjectToCharSequence(_waittext));
+ //BA.debugLineNum = 64;BA.debugLine="Return";
 if (true) return "";
  };
- //BA.debugLineNum = 139;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
+ //BA.debugLineNum = 66;BA.debugLine="For i = 0 To dotCount";
 {
-final anywheresoftware.b4a.BA.IterableList group7 = mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ ;
-final int groupLen7 = group7.getSize()
-;int index7 = 0;
-;
-for (; index7 < groupLen7;index7++){
-_lst = (nl.pdeg.bordondroid.main._bordstatus)(group7.Get(index7));
- //BA.debugLineNum = 140;BA.debugLine="Log($\"$Time{msNow}> ${lst.ip} ${lst.alive}\"$)";
-anywheresoftware.b4a.keywords.Common.LogImpl("82883594",(""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("time",(Object)(_msnow))+"> "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_lst.ip /*String*/ ))+" "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_lst.alive /*boolean*/ ))+""),0);
- //BA.debugLineNum = 141;BA.debugLine="If lst.ip = ip Then";
-if ((_lst.ip /*String*/ ).equals(_ip)) { 
- //BA.debugLineNum = 142;BA.debugLine="ipFound = True";
-_ipfound = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 143;BA.debugLine="lst.timeStamp = DateTime.Now";
-_lst.timeStamp /*long*/  = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
- };
- //BA.debugLineNum = 145;BA.debugLine="If(msNow - lst.timeStamp) > Starter.serverDied A";
-if ((_msnow-_lst.timeStamp /*long*/ )>mostCurrent._starter._serverdied /*long*/  && _lst.alive /*boolean*/ ==anywheresoftware.b4a.keywords.Common.True) { 
- //BA.debugLineNum = 146;BA.debugLine="lst.alive = False";
-_lst.alive /*boolean*/  = anywheresoftware.b4a.keywords.Common.False;
- };
+final int step8 = 1;
+final int limit8 = _dotcount;
+_i = (int) (0) ;
+for (;_i <= limit8 ;_i = _i + step8 ) {
+ //BA.debugLineNum = 67;BA.debugLine="dot = dot &\"*\"";
+_dot = _dot+"*";
  }
 };
- //BA.debugLineNum = 151;BA.debugLine="If Not(ipFound) Then";
-if (anywheresoftware.b4a.keywords.Common.Not(_ipfound)) { 
- //BA.debugLineNum = 152;BA.debugLine="AddUnkownIp(ip)";
-_addunkownip(_ip);
- };
- //BA.debugLineNum = 155;BA.debugLine="End Sub";
+ //BA.debugLineNum = 69;BA.debugLine="lblNoData.Text = $\"${dot} ${waitText} ${dot}\"$";
+mostCurrent._lblnodata.setText(BA.ObjectToCharSequence((""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_dot))+" "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_waittext))+" "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_dot))+"")));
+ //BA.debugLineNum = 70;BA.debugLine="End Sub";
 return "";
 }
 public static String  _globals() throws Exception{
  //BA.debugLineNum = 12;BA.debugLine="Sub Globals";
- //BA.debugLineNum = 13;BA.debugLine="Dim parser As JSONParser";
+ //BA.debugLineNum = 13;BA.debugLine="Dim lblList() As Label";
+mostCurrent._lbllist = new anywheresoftware.b4a.objects.LabelWrapper[(int) (0)];
+{
+int d0 = mostCurrent._lbllist.length;
+for (int i0 = 0;i0 < d0;i0++) {
+mostCurrent._lbllist[i0] = new anywheresoftware.b4a.objects.LabelWrapper();
+}
+}
+;
+ //BA.debugLineNum = 14;BA.debugLine="Dim parser As JSONParser";
 mostCurrent._parser = new anywheresoftware.b4a.objects.collections.JSONParser();
  //BA.debugLineNum = 15;BA.debugLine="Private lblP1Name As Label";
 mostCurrent._lblp1name = new anywheresoftware.b4a.objects.LabelWrapper();
@@ -494,27 +569,23 @@ mostCurrent._lblbeurt1 = new anywheresoftware.b4a.objects.LabelWrapper();
 mostCurrent._imgp2play = new anywheresoftware.b4a.objects.ImageViewWrapper();
  //BA.debugLineNum = 35;BA.debugLine="Private imgP1Play As ImageView";
 mostCurrent._imgp1play = new anywheresoftware.b4a.objects.ImageViewWrapper();
- //BA.debugLineNum = 36;BA.debugLine="Private pnlBord As Panel";
-mostCurrent._pnlbord = new anywheresoftware.b4a.objects.PanelWrapper();
- //BA.debugLineNum = 37;BA.debugLine="Private lblBordName As Label";
-mostCurrent._lblbordname = new anywheresoftware.b4a.objects.LabelWrapper();
- //BA.debugLineNum = 38;BA.debugLine="Private lblViewBord As Label";
-mostCurrent._lblviewbord = new anywheresoftware.b4a.objects.LabelWrapper();
- //BA.debugLineNum = 39;BA.debugLine="End Sub";
-return "";
-}
-public static String  _lblviewbord_click() throws Exception{
- //BA.debugLineNum = 171;BA.debugLine="Sub lblViewBord_Click";
- //BA.debugLineNum = 173;BA.debugLine="End Sub";
-return "";
-}
-public static String  _lblviewbord_longclick() throws Exception{
- //BA.debugLineNum = 167;BA.debugLine="Sub lblViewBord_LongClick";
- //BA.debugLineNum = 169;BA.debugLine="End Sub";
+ //BA.debugLineNum = 39;BA.debugLine="Private waitingForData As Boolean = True";
+_waitingfordata = anywheresoftware.b4a.keywords.Common.True;
+ //BA.debugLineNum = 41;BA.debugLine="Private imgNoData As ImageView";
+mostCurrent._imgnodata = new anywheresoftware.b4a.objects.ImageViewWrapper();
+ //BA.debugLineNum = 42;BA.debugLine="Private lblNoData As Label";
+mostCurrent._lblnodata = new anywheresoftware.b4a.objects.LabelWrapper();
+ //BA.debugLineNum = 43;BA.debugLine="End Sub";
 return "";
 }
 public static String  _process_globals() throws Exception{
  //BA.debugLineNum = 6;BA.debugLine="Sub Process_Globals";
+ //BA.debugLineNum = 7;BA.debugLine="Dim dataTmr As Timer";
+_datatmr = new anywheresoftware.b4a.objects.Timer();
+ //BA.debugLineNum = 8;BA.debugLine="Dim dotCount As Int = 0";
+_dotcount = (int) (0);
+ //BA.debugLineNum = 9;BA.debugLine="Dim waitText As String";
+_waittext = "";
  //BA.debugLineNum = 10;BA.debugLine="End Sub";
 return "";
 }
@@ -532,98 +603,108 @@ anywheresoftware.b4a.objects.collections.Map _spelduur = null;
 String _tijd = "";
 anywheresoftware.b4a.objects.collections.Map _beurten = null;
 String _aantal = "";
- //BA.debugLineNum = 55;BA.debugLine="public Sub UpdateBordWhenClient(data As Message)";
- //BA.debugLineNum = 56;BA.debugLine="Dim number, str As String";
+ //BA.debugLineNum = 90;BA.debugLine="public Sub UpdateBordWhenClient(data As Message)";
+ //BA.debugLineNum = 91;BA.debugLine="dataTmr.Enabled = False";
+_datatmr.setEnabled(anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 92;BA.debugLine="imgNoData.SetVisibleAnimated(1000, False)";
+mostCurrent._imgnodata.SetVisibleAnimated((int) (1000),anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 95;BA.debugLine="lblNoData.Text = $\"U kijkt naar ${Starter.selecte";
+mostCurrent._lblnodata.setText(BA.ObjectToCharSequence(("U kijkt naar "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(mostCurrent._starter._selectedbordname /*String*/ ))+"")));
+ //BA.debugLineNum = 96;BA.debugLine="lblNoData.TextColor = Colors.White";
+mostCurrent._lblnodata.setTextColor(anywheresoftware.b4a.keywords.Common.Colors.White);
+ //BA.debugLineNum = 97;BA.debugLine="lblNoData.Visible = True";
+mostCurrent._lblnodata.setVisible(anywheresoftware.b4a.keywords.Common.True);
+ //BA.debugLineNum = 99;BA.debugLine="Dim Number, str As String";
 _number = "";
 _str = "";
- //BA.debugLineNum = 58;BA.debugLine="str = data.Body";
+ //BA.debugLineNum = 100;BA.debugLine="str = data.Body";
 _str = _data.Body /*String*/ ;
- //BA.debugLineNum = 60;BA.debugLine="parser.Initialize(str)";
+ //BA.debugLineNum = 102;BA.debugLine="parser.Initialize(str)";
 mostCurrent._parser.Initialize(_str);
- //BA.debugLineNum = 61;BA.debugLine="Dim root As Map = parser.NextObject";
+ //BA.debugLineNum = 103;BA.debugLine="Dim root As Map = parser.NextObject";
 _root = new anywheresoftware.b4a.objects.collections.Map();
 _root = mostCurrent._parser.NextObject();
- //BA.debugLineNum = 62;BA.debugLine="Dim score As Map = root.Get(\"score\")";
+ //BA.debugLineNum = 104;BA.debugLine="Dim score As Map = root.Get(\"score\")";
 _score = new anywheresoftware.b4a.objects.collections.Map();
 _score.setObject((anywheresoftware.b4a.objects.collections.Map.MyMap)(_root.Get((Object)("score"))));
- //BA.debugLineNum = 63;BA.debugLine="Dim p1 As Map = score.Get(\"p1\")";
+ //BA.debugLineNum = 105;BA.debugLine="Dim p1 As Map = score.Get(\"p1\")";
 _p1 = new anywheresoftware.b4a.objects.collections.Map();
 _p1.setObject((anywheresoftware.b4a.objects.collections.Map.MyMap)(_score.Get((Object)("p1"))));
- //BA.debugLineNum = 69;BA.debugLine="Dim p2 As Map = score.Get(\"p2\")";
+ //BA.debugLineNum = 111;BA.debugLine="Dim p2 As Map = score.Get(\"p2\")";
 _p2 = new anywheresoftware.b4a.objects.collections.Map();
 _p2.setObject((anywheresoftware.b4a.objects.collections.Map.MyMap)(_score.Get((Object)("p2"))));
- //BA.debugLineNum = 74;BA.debugLine="Dim moyenne As String = p2.Get(\"moyenne\")";
+ //BA.debugLineNum = 116;BA.debugLine="Dim moyenne As String = p2.Get(\"moyenne\")";
 _moyenne = BA.ObjectToString(_p2.Get((Object)("moyenne")));
- //BA.debugLineNum = 75;BA.debugLine="Dim aan_stoot As Map = score.Get(\"aan_stoot\")";
+ //BA.debugLineNum = 117;BA.debugLine="Dim aan_stoot As Map = score.Get(\"aan_stoot\")";
 _aan_stoot = new anywheresoftware.b4a.objects.collections.Map();
 _aan_stoot.setObject((anywheresoftware.b4a.objects.collections.Map.MyMap)(_score.Get((Object)("aan_stoot"))));
- //BA.debugLineNum = 76;BA.debugLine="Dim speler As String = aan_stoot.Get(\"speler\")";
+ //BA.debugLineNum = 118;BA.debugLine="Dim speler As String = aan_stoot.Get(\"speler\")";
 _speler = BA.ObjectToString(_aan_stoot.Get((Object)("speler")));
- //BA.debugLineNum = 77;BA.debugLine="Dim spelduur As Map = score.Get(\"spelduur\")";
+ //BA.debugLineNum = 119;BA.debugLine="Dim spelduur As Map = score.Get(\"spelduur\")";
 _spelduur = new anywheresoftware.b4a.objects.collections.Map();
 _spelduur.setObject((anywheresoftware.b4a.objects.collections.Map.MyMap)(_score.Get((Object)("spelduur"))));
- //BA.debugLineNum = 78;BA.debugLine="Dim tijd As String = spelduur.Get(\"tijd\")";
+ //BA.debugLineNum = 120;BA.debugLine="Dim tijd As String = spelduur.Get(\"tijd\")";
 _tijd = BA.ObjectToString(_spelduur.Get((Object)("tijd")));
- //BA.debugLineNum = 81;BA.debugLine="Dim beurten As Map = score.Get(\"beurten\")";
+ //BA.debugLineNum = 123;BA.debugLine="Dim beurten As Map = score.Get(\"beurten\")";
 _beurten = new anywheresoftware.b4a.objects.collections.Map();
 _beurten.setObject((anywheresoftware.b4a.objects.collections.Map.MyMap)(_score.Get((Object)("beurten"))));
- //BA.debugLineNum = 82;BA.debugLine="Dim aantal As String = beurten.Get(\"aantal\")";
+ //BA.debugLineNum = 124;BA.debugLine="Dim aantal As String = beurten.Get(\"aantal\")";
 _aantal = BA.ObjectToString(_beurten.Get((Object)("aantal")));
- //BA.debugLineNum = 87;BA.debugLine="number = p1.Get(\"caram\")";
+ //BA.debugLineNum = 129;BA.debugLine="Number = p1.Get(\"caram\")";
 _number = BA.ObjectToString(_p1.Get((Object)("caram")));
- //BA.debugLineNum = 88;BA.debugLine="lblP1100.Text = number.SubString2(0,1)";
+ //BA.debugLineNum = 130;BA.debugLine="lblP1100.Text = Number.SubString2(0,1)";
 mostCurrent._lblp1100.setText(BA.ObjectToCharSequence(_number.substring((int) (0),(int) (1))));
- //BA.debugLineNum = 89;BA.debugLine="lblP110.Text = number.SubString2(1,2)";
+ //BA.debugLineNum = 131;BA.debugLine="lblP110.Text = Number.SubString2(1,2)";
 mostCurrent._lblp110.setText(BA.ObjectToCharSequence(_number.substring((int) (1),(int) (2))));
- //BA.debugLineNum = 90;BA.debugLine="lblP11.Text = number.SubString2(2,3)";
+ //BA.debugLineNum = 132;BA.debugLine="lblP11.Text = Number.SubString2(2,3)";
 mostCurrent._lblp11.setText(BA.ObjectToCharSequence(_number.substring((int) (2),(int) (3))));
- //BA.debugLineNum = 91;BA.debugLine="number = p1.Get(\"maken\")";
+ //BA.debugLineNum = 133;BA.debugLine="Number = p1.Get(\"maken\")";
 _number = BA.ObjectToString(_p1.Get((Object)("maken")));
- //BA.debugLineNum = 92;BA.debugLine="lblP1Maken100.Text = number.SubString2(0,1)";
+ //BA.debugLineNum = 134;BA.debugLine="lblP1Maken100.Text = Number.SubString2(0,1)";
 mostCurrent._lblp1maken100.setText(BA.ObjectToCharSequence(_number.substring((int) (0),(int) (1))));
- //BA.debugLineNum = 93;BA.debugLine="lblP1Maken10.Text = number.SubString2(1,2)";
+ //BA.debugLineNum = 135;BA.debugLine="lblP1Maken10.Text = Number.SubString2(1,2)";
 mostCurrent._lblp1maken10.setText(BA.ObjectToCharSequence(_number.substring((int) (1),(int) (2))));
- //BA.debugLineNum = 94;BA.debugLine="lblP1Maken1.Text = number.SubString2(2,3)";
+ //BA.debugLineNum = 136;BA.debugLine="lblP1Maken1.Text = Number.SubString2(2,3)";
 mostCurrent._lblp1maken1.setText(BA.ObjectToCharSequence(_number.substring((int) (2),(int) (3))));
- //BA.debugLineNum = 95;BA.debugLine="lblP1Moy.Text = p1.Get(\"moyenne\")";
+ //BA.debugLineNum = 137;BA.debugLine="lblP1Moy.Text = p1.Get(\"moyenne\")";
 mostCurrent._lblp1moy.setText(BA.ObjectToCharSequence(_p1.Get((Object)("moyenne"))));
- //BA.debugLineNum = 102;BA.debugLine="number = p2.Get(\"caram\")";
+ //BA.debugLineNum = 144;BA.debugLine="Number = p2.Get(\"caram\")";
 _number = BA.ObjectToString(_p2.Get((Object)("caram")));
- //BA.debugLineNum = 103;BA.debugLine="lblP2100.Text = number.SubString2(0,1)";
+ //BA.debugLineNum = 145;BA.debugLine="lblP2100.Text = Number.SubString2(0,1)";
 mostCurrent._lblp2100.setText(BA.ObjectToCharSequence(_number.substring((int) (0),(int) (1))));
- //BA.debugLineNum = 104;BA.debugLine="lblP210.Text = number.SubString2(1,2)";
+ //BA.debugLineNum = 146;BA.debugLine="lblP210.Text = Number.SubString2(1,2)";
 mostCurrent._lblp210.setText(BA.ObjectToCharSequence(_number.substring((int) (1),(int) (2))));
- //BA.debugLineNum = 105;BA.debugLine="lblP21.Text = number.SubString2(2,3)";
+ //BA.debugLineNum = 147;BA.debugLine="lblP21.Text = Number.SubString2(2,3)";
 mostCurrent._lblp21.setText(BA.ObjectToCharSequence(_number.substring((int) (2),(int) (3))));
- //BA.debugLineNum = 106;BA.debugLine="number = p2.Get(\"maken\")";
+ //BA.debugLineNum = 148;BA.debugLine="Number = p2.Get(\"maken\")";
 _number = BA.ObjectToString(_p2.Get((Object)("maken")));
- //BA.debugLineNum = 107;BA.debugLine="lblP2Maken100.Text = number.SubString2(0,1)";
+ //BA.debugLineNum = 149;BA.debugLine="lblP2Maken100.Text = Number.SubString2(0,1)";
 mostCurrent._lblp2maken100.setText(BA.ObjectToCharSequence(_number.substring((int) (0),(int) (1))));
- //BA.debugLineNum = 108;BA.debugLine="lblP2Maken10.Text = number.SubString2(1,2)";
+ //BA.debugLineNum = 150;BA.debugLine="lblP2Maken10.Text = Number.SubString2(1,2)";
 mostCurrent._lblp2maken10.setText(BA.ObjectToCharSequence(_number.substring((int) (1),(int) (2))));
- //BA.debugLineNum = 109;BA.debugLine="lblP2Maken1.Text = number.SubString2(2,3)";
+ //BA.debugLineNum = 151;BA.debugLine="lblP2Maken1.Text = Number.SubString2(2,3)";
 mostCurrent._lblp2maken1.setText(BA.ObjectToCharSequence(_number.substring((int) (2),(int) (3))));
- //BA.debugLineNum = 110;BA.debugLine="lblP2Moy.Text = p2.Get(\"moyenne\")";
+ //BA.debugLineNum = 152;BA.debugLine="lblP2Moy.Text = p2.Get(\"moyenne\")";
 mostCurrent._lblp2moy.setText(BA.ObjectToCharSequence(_p2.Get((Object)("moyenne"))));
- //BA.debugLineNum = 113;BA.debugLine="lblBeurt100.Text = aantal.SubString2(0,1)";
+ //BA.debugLineNum = 155;BA.debugLine="lblBeurt100.Text = aantal.SubString2(0,1)";
 mostCurrent._lblbeurt100.setText(BA.ObjectToCharSequence(_aantal.substring((int) (0),(int) (1))));
- //BA.debugLineNum = 114;BA.debugLine="lblBeurt10.Text = aantal.SubString2(1,2)";
+ //BA.debugLineNum = 156;BA.debugLine="lblBeurt10.Text = aantal.SubString2(1,2)";
 mostCurrent._lblbeurt10.setText(BA.ObjectToCharSequence(_aantal.substring((int) (1),(int) (2))));
- //BA.debugLineNum = 115;BA.debugLine="lblBeurt1.Text = aantal.SubString2(2,3)";
+ //BA.debugLineNum = 157;BA.debugLine="lblBeurt1.Text = aantal.SubString2(2,3)";
 mostCurrent._lblbeurt1.setText(BA.ObjectToCharSequence(_aantal.substring((int) (2),(int) (3))));
- //BA.debugLineNum = 121;BA.debugLine="imgP1Play.Visible = False";
+ //BA.debugLineNum = 163;BA.debugLine="imgP1Play.Visible = False";
 mostCurrent._imgp1play.setVisible(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 122;BA.debugLine="imgP2Play.Visible = False";
+ //BA.debugLineNum = 164;BA.debugLine="imgP2Play.Visible = False";
 mostCurrent._imgp2play.setVisible(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 123;BA.debugLine="If speler = 1 Then";
+ //BA.debugLineNum = 165;BA.debugLine="If speler = 1 Then";
 if ((_speler).equals(BA.NumberToString(1))) { 
- //BA.debugLineNum = 124;BA.debugLine="imgP1Play.Visible = True";
+ //BA.debugLineNum = 166;BA.debugLine="imgP1Play.Visible = True";
 mostCurrent._imgp1play.setVisible(anywheresoftware.b4a.keywords.Common.True);
  }else {
- //BA.debugLineNum = 126;BA.debugLine="imgP2Play.Visible = True";
+ //BA.debugLineNum = 168;BA.debugLine="imgP2Play.Visible = True";
 mostCurrent._imgp2play.setVisible(anywheresoftware.b4a.keywords.Common.True);
  };
- //BA.debugLineNum = 128;BA.debugLine="End Sub";
+ //BA.debugLineNum = 170;BA.debugLine="End Sub";
 return "";
 }
 }

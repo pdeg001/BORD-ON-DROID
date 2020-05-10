@@ -10,14 +10,14 @@ Version=9.801
 #End Region
 
 Sub Process_Globals
-	'These global variables will be declared once when the application starts.
-	'These variables can be accessed from all modules.
-
+	Dim dataTmr As Timer
+	Dim dotCount As Int = 0
+	Dim waitText As String 
 End Sub
 
 Sub Globals
+	Dim lblList() As Label
 	Dim parser As JSONParser
-
 	Private lblP1Name As Label
 	Private lblP2Name As Label
 	Private lblP1Maken100 As Label
@@ -39,28 +39,70 @@ Sub Globals
 	Private lblBeurt1 As Label
 	Private imgP2Play As ImageView
 	Private imgP1Play As ImageView
-	Private pnlBord As Panel
-	Private lblBordName As Label
-	Private lblViewBord As Label
+'	Private pnlBord As Panel
+'	Private lblBordName As Label
+'	Private lblViewBord As Label
+	Private waitingForData As Boolean = True
+	
+	Private imgNoData As ImageView
+	Private lblNoData As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	
+	dataTmr.Initialize("dataTmr", 1000)
+	dataTmr.Enabled = True
 	Activity.LoadLayout("ServerBoard")
-	'Log(100%Y/100%X)
+	Starter.Connect(False)
+'	Starter.SendMessage("data please")
+	lblNoData.TextColor = Colors.Red
+	imgNoData.SetVisibleAnimated(1000, True)
+	lblNoData.SetVisibleAnimated(1000, True)
+	
+End Sub
 
+Sub dataTmr_Tick
+	Dim dot As String
+	dotCount=dotCount+1
+	If dotCount >= 10 Then
+		dotCount = 0
+		lblNoData.Text = waitText
+		Return
+	End If
+	For i = 0 To dotCount
+		dot = dot &"*"
+	Next
+	lblNoData.Text = $"${dot} ${waitText} ${dot}"$
 End Sub
 
 Sub Activity_Resume
-
+	waitText = $"Wachten op ${Starter.selectedBordName}"$
+	dotCount = 0
+'	Starter.SendMessage("data please")
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
+End Sub
 
+Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
+	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		Starter.Disconnect
+		Return False
+	Else
+		Return True
+	End If
 End Sub
 
 public Sub UpdateBordWhenClient(data As Message)
-	Dim number, str As String
+	dataTmr.Enabled = False
+	imgNoData.SetVisibleAnimated(1000, False)
+	'lblNoData.SetVisibleAnimated(1000, False)
+	'Sleep(500)
+	lblNoData.Text = $"U kijkt naar ${Starter.selectedBordName}"$
+	lblNoData.TextColor = Colors.White
+	lblNoData.Visible = True
 	
+	Dim Number, str As String
 	str = data.Body
 	
 	parser.Initialize(str)
@@ -90,14 +132,14 @@ public Sub UpdateBordWhenClient(data As Message)
 	
 	
 '	lbl_player_one_name.Text = p1.Get("naam")
-	number = p1.Get("caram")
-	lblP1100.Text = number.SubString2(0,1)
-	lblP110.Text = number.SubString2(1,2)
-	lblP11.Text = number.SubString2(2,3)
-	number = p1.Get("maken")
-	lblP1Maken100.Text = number.SubString2(0,1)
-	lblP1Maken10.Text = number.SubString2(1,2)
-	lblP1Maken1.Text = number.SubString2(2,3)
+	Number = p1.Get("caram")
+	lblP1100.Text = Number.SubString2(0,1)
+	lblP110.Text = Number.SubString2(1,2)
+	lblP11.Text = Number.SubString2(2,3)
+	Number = p1.Get("maken")
+	lblP1Maken100.Text = Number.SubString2(0,1)
+	lblP1Maken10.Text = Number.SubString2(1,2)
+	lblP1Maken1.Text = Number.SubString2(2,3)
 	lblP1Moy.Text = p1.Get("moyenne")
 '	lbl_player_one_perc.Text = p1.Get("percentage")
 	
@@ -105,14 +147,14 @@ public Sub UpdateBordWhenClient(data As Message)
 '	funcScorebord.p2_progress = ( p2.Get("caram")/p2.Get("maken"))*100
 	
 '	lbl_player_two_name.Text = p2.Get("naam")
-	number = p2.Get("caram")
-	lblP2100.Text = number.SubString2(0,1)
-	lblP210.Text = number.SubString2(1,2)
-	lblP21.Text = number.SubString2(2,3)
-	number = p2.Get("maken")
-	lblP2Maken100.Text = number.SubString2(0,1)
-	lblP2Maken10.Text = number.SubString2(1,2)
-	lblP2Maken1.Text = number.SubString2(2,3)
+	Number = p2.Get("caram")
+	lblP2100.Text = Number.SubString2(0,1)
+	lblP210.Text = Number.SubString2(1,2)
+	lblP21.Text = Number.SubString2(2,3)
+	Number = p2.Get("maken")
+	lblP2Maken100.Text = Number.SubString2(0,1)
+	lblP2Maken10.Text = Number.SubString2(1,2)
+	lblP2Maken1.Text = Number.SubString2(2,3)
 	lblP2Moy.Text = p2.Get("moyenne")
 '	lbl_player_two_perc.Text = p2.Get("percentage")
 	
@@ -133,47 +175,13 @@ public Sub UpdateBordWhenClient(data As Message)
 	End If
 End Sub
 
-Sub CheckIpExits(ip As String)
-	Dim msNow As Long = DateTime.Now
-	Dim ipFound As Boolean
-	
-	If Starter.serverList.Size = 0 Then
-		AddUnkownIp(ip)
-		Return
+
+Public Sub ConnectionLost
+	Msgbox2Async($"Verbinding met ${Starter.selectedBordName} verloren${CRLF}Probeer het later nog eens"$, "Bord Op Droid", "OKE", "", "", Null, False)
+	Wait For Msgbox_Result (Result As Int)
+	If DialogResponse.POSITIVE Then
+		Starter.Disconnect
+		Activity.Finish
+		
 	End If
-	
-	For Each lst As bordStatus In Starter.serverList
-	Log($"$Time{msNow}> ${lst.ip} ${lst.alive}"$)
-		If lst.ip = ip Then
-			ipFound = True
-			lst.timeStamp = DateTime.Now
-		End If
-		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
-			lst.alive = False
-	'		Log($"${ip} SERVER DIED AT $Time{msNow}"$)
-		End If
-	Next
-	
-	If Not(ipFound) Then
-		AddUnkownIp(ip)		
-	End If
-	
-End Sub
-
-Sub AddUnkownIp(ip As String)
-	Dim bordStatus As bordStatus
-	bordStatus.Initialize
-	bordStatus.ip = ip
-	bordStatus.timeStamp = DateTime.Now
-	bordStatus.alive = True
-	Starter.serverList.Add(bordStatus)
-End Sub
-
-
-Sub lblViewBord_LongClick
-	
-End Sub
-
-Sub lblViewBord_Click
-	
 End Sub
