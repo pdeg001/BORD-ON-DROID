@@ -1,9 +1,10 @@
 Objects/b4xlibs/**
 Objects/bin/**
-Objects/gen/**
-Objects/shell/**
-Objects/src/**
-AutoBackups/**
+Objects/gen
+Objects/shell
+Objects/src
+AutoBackups
+src
 # Compiled class file
 *.class
 *.java
