@@ -33,7 +33,7 @@ public class chat extends Activity implements B4AActivity{
 		super.onCreate(savedInstanceState);
         mostCurrent = this;
 		if (processBA == null) {
-			processBA = new BA(this.getApplicationContext(), null, null, "nl.pdeg.bordondroid", "nl.pdeg.bordondroid.chat");
+			processBA = new anywheresoftware.b4a.ShellBA(this.getApplicationContext(), null, null, "nl.pdeg.bordondroid", "nl.pdeg.bordondroid.chat");
 			processBA.loadHtSubs(this.getClass());
 	        float deviceScale = getApplicationContext().getResources().getDisplayMetrics().density;
 	        BALayout.setDeviceScale(deviceScale);
@@ -328,6 +328,15 @@ public class chat extends Activity implements B4AActivity{
             
     }
 
+
+
+public static void initializeProcessGlobals() {
+             try {
+                Class.forName(BA.applicationContext.getPackageName() + ".main").getMethod("initializeProcessGlobals").invoke(null, null);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+}
 public anywheresoftware.b4a.keywords.Common __c = null;
 public static anywheresoftware.b4a.objects.collections.List _users = null;
 public anywheresoftware.b4a.objects.EditTextWrapper _txtmessage = null;
@@ -337,132 +346,57 @@ public anywheresoftware.b4a.objects.IME _ime = null;
 public nl.pdeg.bordondroid.main _main = null;
 public nl.pdeg.bordondroid.starter _starter = null;
 public nl.pdeg.bordondroid.serverboard _serverboard = null;
-
-public static void initializeProcessGlobals() {
-             try {
-                Class.forName(BA.applicationContext.getPackageName() + ".main").getMethod("initializeProcessGlobals").invoke(null, null);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-}
 public static String  _activity_create(boolean _firsttime) throws Exception{
- //BA.debugLineNum = 19;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
- //BA.debugLineNum = 20;BA.debugLine="Activity.LoadLayout(\"2\")";
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_create", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "activity_create", new Object[] {_firsttime}));}
+RDebugUtils.currentLine=2621440;
+ //BA.debugLineNum = 2621440;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
+RDebugUtils.currentLine=2621441;
+ //BA.debugLineNum = 2621441;BA.debugLine="Activity.LoadLayout(\"2\")";
 mostCurrent._activity.LoadLayout("2",mostCurrent.activityBA);
- //BA.debugLineNum = 21;BA.debugLine="If users.IsInitialized Then NewUsers(users)";
+RDebugUtils.currentLine=2621442;
+ //BA.debugLineNum = 2621442;BA.debugLine="If users.IsInitialized Then NewUsers(users)";
 if (_users.IsInitialized()) { 
 _newusers(_users);};
- //BA.debugLineNum = 22;BA.debugLine="ime.Initialize(\"ime\")";
+RDebugUtils.currentLine=2621443;
+ //BA.debugLineNum = 2621443;BA.debugLine="ime.Initialize(\"ime\")";
 mostCurrent._ime.Initialize("ime");
- //BA.debugLineNum = 23;BA.debugLine="ime.AddHandleActionEvent(txtMessage)";
+RDebugUtils.currentLine=2621444;
+ //BA.debugLineNum = 2621444;BA.debugLine="ime.AddHandleActionEvent(txtMessage)";
 mostCurrent._ime.AddHandleActionEvent((android.widget.EditText)(mostCurrent._txtmessage.getObject()),mostCurrent.activityBA);
- //BA.debugLineNum = 24;BA.debugLine="ime.AddHeightChangedEvent";
+RDebugUtils.currentLine=2621445;
+ //BA.debugLineNum = 2621445;BA.debugLine="ime.AddHeightChangedEvent";
 mostCurrent._ime.AddHeightChangedEvent(mostCurrent.activityBA);
- //BA.debugLineNum = 25;BA.debugLine="lstUsers.SingleLineLayout.Label.TextSize = 14";
+RDebugUtils.currentLine=2621446;
+ //BA.debugLineNum = 2621446;BA.debugLine="lstUsers.SingleLineLayout.Label.TextSize = 14";
 mostCurrent._lstusers.getSingleLineLayout().Label.setTextSize((float) (14));
- //BA.debugLineNum = 26;BA.debugLine="If FirstTime Then";
+RDebugUtils.currentLine=2621447;
+ //BA.debugLineNum = 2621447;BA.debugLine="If FirstTime Then";
 if (_firsttime) { 
- //BA.debugLineNum = 27;BA.debugLine="txtLogs.Text = \"\" 'don't restore old logs";
+RDebugUtils.currentLine=2621448;
+ //BA.debugLineNum = 2621448;BA.debugLine="txtLogs.Text = \"\" 'don't restore old logs";
 mostCurrent._txtlogs.setText(BA.ObjectToCharSequence(""));
  };
- //BA.debugLineNum = 29;BA.debugLine="End Sub";
-return "";
-}
-public static boolean  _activity_keypress(int _keycode) throws Exception{
- //BA.debugLineNum = 36;BA.debugLine="Sub Activity_KeyPress (KeyCode As Int) As Boolean";
- //BA.debugLineNum = 37;BA.debugLine="If KeyCode = KeyCodes.KEYCODE_BACK Then";
-if (_keycode==anywheresoftware.b4a.keywords.Common.KeyCodes.KEYCODE_BACK) { 
- //BA.debugLineNum = 38;BA.debugLine="If Starter.isServer Then";
-if (mostCurrent._starter._isserver /*boolean*/ ) { 
- //BA.debugLineNum = 39;BA.debugLine="If Msgbox2(\"The broker will be closed. Continue";
-if (anywheresoftware.b4a.keywords.Common.Msgbox2(BA.ObjectToCharSequence("The broker will be closed. Continue?"),BA.ObjectToCharSequence(""),"Yes","Cancel","No",(android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.Null),mostCurrent.activityBA)!=anywheresoftware.b4a.keywords.Common.DialogResponse.POSITIVE) { 
- //BA.debugLineNum = 40;BA.debugLine="Return True";
-if (true) return anywheresoftware.b4a.keywords.Common.True;
- };
- };
- };
- //BA.debugLineNum = 44;BA.debugLine="Return False";
-if (true) return anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 45;BA.debugLine="End Sub";
-return false;
-}
-public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 47;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 48;BA.debugLine="If UserClosed Then";
-if (_userclosed) { 
- //BA.debugLineNum = 49;BA.debugLine="CallSubDelayed(Starter, \"Disconnect\")";
-anywheresoftware.b4a.keywords.Common.CallSubDelayed(processBA,(Object)(mostCurrent._starter.getObject()),"Disconnect");
- //BA.debugLineNum = 50;BA.debugLine="StartActivity(Main)";
-anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._main.getObject()));
- };
- //BA.debugLineNum = 52;BA.debugLine="End Sub";
-return "";
-}
-public static String  _btnsend_click() throws Exception{
- //BA.debugLineNum = 72;BA.debugLine="Sub btnSend_Click";
- //BA.debugLineNum = 73;BA.debugLine="If txtMessage.Text <> \"\" Then CallSub2(Starter, \"";
-if ((mostCurrent._txtmessage.getText()).equals("") == false) { 
-anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._starter.getObject()),"SendMessage",(Object)(mostCurrent._txtmessage.getText()));};
- //BA.debugLineNum = 74;BA.debugLine="txtMessage.SelectAll";
-mostCurrent._txtmessage.SelectAll();
- //BA.debugLineNum = 75;BA.debugLine="End Sub";
-return "";
-}
-public static String  _disconnected() throws Exception{
- //BA.debugLineNum = 77;BA.debugLine="Public Sub Disconnected";
- //BA.debugLineNum = 78;BA.debugLine="Activity.Finish";
-mostCurrent._activity.Finish();
- //BA.debugLineNum = 79;BA.debugLine="End Sub";
-return "";
-}
-public static String  _globals() throws Exception{
- //BA.debugLineNum = 11;BA.debugLine="Sub Globals";
- //BA.debugLineNum = 12;BA.debugLine="Private txtMessage As EditText";
-mostCurrent._txtmessage = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 13;BA.debugLine="Private lstUsers As ListView";
-mostCurrent._lstusers = new anywheresoftware.b4a.objects.ListViewWrapper();
- //BA.debugLineNum = 14;BA.debugLine="Private txtLogs As EditText";
-mostCurrent._txtlogs = new anywheresoftware.b4a.objects.EditTextWrapper();
- //BA.debugLineNum = 15;BA.debugLine="Private ime As IME";
-mostCurrent._ime = new anywheresoftware.b4a.objects.IME();
- //BA.debugLineNum = 17;BA.debugLine="End Sub";
-return "";
-}
-public static boolean  _ime_handleaction() throws Exception{
- //BA.debugLineNum = 54;BA.debugLine="Sub ime_HandleAction As Boolean";
- //BA.debugLineNum = 55;BA.debugLine="btnSend_Click";
-_btnsend_click();
- //BA.debugLineNum = 56;BA.debugLine="Return True 'leave the keyboard open";
-if (true) return anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 57;BA.debugLine="End Sub";
-return false;
-}
-public static String  _ime_heightchanged(int _newheight,int _oldheight) throws Exception{
- //BA.debugLineNum = 31;BA.debugLine="Sub ime_HeightChanged (NewHeight As Int, OldHeight";
- //BA.debugLineNum = 32;BA.debugLine="lstUsers.Height = NewHeight - lstUsers.Top";
-mostCurrent._lstusers.setHeight((int) (_newheight-mostCurrent._lstusers.getTop()));
- //BA.debugLineNum = 33;BA.debugLine="txtLogs.Height = NewHeight - txtLogs.Top";
-mostCurrent._txtlogs.setHeight((int) (_newheight-mostCurrent._txtlogs.getTop()));
- //BA.debugLineNum = 34;BA.debugLine="End Sub";
-return "";
-}
-public static String  _newmessage(nl.pdeg.bordondroid.main._message _msg) throws Exception{
- //BA.debugLineNum = 59;BA.debugLine="Public Sub NewMessage(msg As Message)";
- //BA.debugLineNum = 60;BA.debugLine="txtLogs.Text = $\"${msg.From}: ${msg.Body}\"$ & CRL";
-mostCurrent._txtlogs.setText(BA.ObjectToCharSequence((""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_msg.From /*String*/ ))+": "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_msg.Body /*String*/ ))+"")+anywheresoftware.b4a.keywords.Common.CRLF+mostCurrent._txtlogs.getText()));
- //BA.debugLineNum = 61;BA.debugLine="CallSub2(ServerBoard, \"UpdateBordWhenClient\", msg";
-anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._serverboard.getObject()),"UpdateBordWhenClient",(Object)(_msg.Body /*String*/ ));
- //BA.debugLineNum = 62;BA.debugLine="End Sub";
+RDebugUtils.currentLine=2621450;
+ //BA.debugLineNum = 2621450;BA.debugLine="End Sub";
 return "";
 }
 public static String  _newusers(anywheresoftware.b4a.objects.collections.List _users1) throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "newusers", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "newusers", new Object[] {_users1}));}
 String _u = "";
- //BA.debugLineNum = 64;BA.debugLine="Public Sub NewUsers(Users1 As List)";
- //BA.debugLineNum = 65;BA.debugLine="users = Users1";
+RDebugUtils.currentLine=3014656;
+ //BA.debugLineNum = 3014656;BA.debugLine="Public Sub NewUsers(Users1 As List)";
+RDebugUtils.currentLine=3014657;
+ //BA.debugLineNum = 3014657;BA.debugLine="users = Users1";
 _users = _users1;
- //BA.debugLineNum = 66;BA.debugLine="lstUsers.Clear";
+RDebugUtils.currentLine=3014658;
+ //BA.debugLineNum = 3014658;BA.debugLine="lstUsers.Clear";
 mostCurrent._lstusers.Clear();
- //BA.debugLineNum = 67;BA.debugLine="For Each u As String In users";
+RDebugUtils.currentLine=3014659;
+ //BA.debugLineNum = 3014659;BA.debugLine="For Each u As String In users";
 {
 final anywheresoftware.b4a.BA.IterableList group3 = _users;
 final int groupLen3 = group3.getSize()
@@ -470,18 +404,137 @@ final int groupLen3 = group3.getSize()
 ;
 for (; index3 < groupLen3;index3++){
 _u = BA.ObjectToString(group3.Get(index3));
- //BA.debugLineNum = 68;BA.debugLine="lstUsers.AddSingleLine(u)";
+RDebugUtils.currentLine=3014660;
+ //BA.debugLineNum = 3014660;BA.debugLine="lstUsers.AddSingleLine(u)";
 mostCurrent._lstusers.AddSingleLine(BA.ObjectToCharSequence(_u));
  }
 };
- //BA.debugLineNum = 70;BA.debugLine="End Sub";
+RDebugUtils.currentLine=3014662;
+ //BA.debugLineNum = 3014662;BA.debugLine="End Sub";
 return "";
 }
-public static String  _process_globals() throws Exception{
- //BA.debugLineNum = 6;BA.debugLine="Sub Process_Globals";
- //BA.debugLineNum = 7;BA.debugLine="Private users As List";
-_users = new anywheresoftware.b4a.objects.collections.List();
- //BA.debugLineNum = 9;BA.debugLine="End Sub";
+public static boolean  _activity_keypress(int _keycode) throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "activity_keypress", false))
+	 {return ((Boolean) Debug.delegate(mostCurrent.activityBA, "activity_keypress", new Object[] {_keycode}));}
+RDebugUtils.currentLine=2752512;
+ //BA.debugLineNum = 2752512;BA.debugLine="Sub Activity_KeyPress (KeyCode As Int) As Boolean";
+RDebugUtils.currentLine=2752513;
+ //BA.debugLineNum = 2752513;BA.debugLine="If KeyCode = KeyCodes.KEYCODE_BACK Then";
+if (_keycode==anywheresoftware.b4a.keywords.Common.KeyCodes.KEYCODE_BACK) { 
+RDebugUtils.currentLine=2752514;
+ //BA.debugLineNum = 2752514;BA.debugLine="If Starter.isServer Then";
+if (mostCurrent._starter._isserver /*boolean*/ ) { 
+RDebugUtils.currentLine=2752515;
+ //BA.debugLineNum = 2752515;BA.debugLine="If Msgbox2(\"The broker will be closed. Continue";
+if (anywheresoftware.b4a.keywords.Common.Msgbox2(BA.ObjectToCharSequence("The broker will be closed. Continue?"),BA.ObjectToCharSequence(""),"Yes","Cancel","No",(android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.Null),mostCurrent.activityBA)!=anywheresoftware.b4a.keywords.Common.DialogResponse.POSITIVE) { 
+RDebugUtils.currentLine=2752516;
+ //BA.debugLineNum = 2752516;BA.debugLine="Return True";
+if (true) return anywheresoftware.b4a.keywords.Common.True;
+ };
+ };
+ };
+RDebugUtils.currentLine=2752520;
+ //BA.debugLineNum = 2752520;BA.debugLine="Return False";
+if (true) return anywheresoftware.b4a.keywords.Common.False;
+RDebugUtils.currentLine=2752521;
+ //BA.debugLineNum = 2752521;BA.debugLine="End Sub";
+return false;
+}
+public static String  _activity_pause(boolean _userclosed) throws Exception{
+RDebugUtils.currentModule="chat";
+RDebugUtils.currentLine=2818048;
+ //BA.debugLineNum = 2818048;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+RDebugUtils.currentLine=2818049;
+ //BA.debugLineNum = 2818049;BA.debugLine="If UserClosed Then";
+if (_userclosed) { 
+RDebugUtils.currentLine=2818050;
+ //BA.debugLineNum = 2818050;BA.debugLine="CallSubDelayed(Starter, \"Disconnect\")";
+anywheresoftware.b4a.keywords.Common.CallSubDelayed(processBA,(Object)(mostCurrent._starter.getObject()),"Disconnect");
+RDebugUtils.currentLine=2818051;
+ //BA.debugLineNum = 2818051;BA.debugLine="StartActivity(Main)";
+anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._main.getObject()));
+ };
+RDebugUtils.currentLine=2818053;
+ //BA.debugLineNum = 2818053;BA.debugLine="End Sub";
+return "";
+}
+public static String  _btnsend_click() throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "btnsend_click", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "btnsend_click", null));}
+RDebugUtils.currentLine=3080192;
+ //BA.debugLineNum = 3080192;BA.debugLine="Sub btnSend_Click";
+RDebugUtils.currentLine=3080193;
+ //BA.debugLineNum = 3080193;BA.debugLine="If txtMessage.Text <> \"\" Then CallSub2(Starter, \"";
+if ((mostCurrent._txtmessage.getText()).equals("") == false) { 
+anywheresoftware.b4a.keywords.Common.CallSubDebug2(processBA,(Object)(mostCurrent._starter.getObject()),"SendMessage",(Object)(mostCurrent._txtmessage.getText()));};
+RDebugUtils.currentLine=3080194;
+ //BA.debugLineNum = 3080194;BA.debugLine="txtMessage.SelectAll";
+mostCurrent._txtmessage.SelectAll();
+RDebugUtils.currentLine=3080195;
+ //BA.debugLineNum = 3080195;BA.debugLine="End Sub";
+return "";
+}
+public static String  _disconnected() throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "disconnected", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "disconnected", null));}
+RDebugUtils.currentLine=3145728;
+ //BA.debugLineNum = 3145728;BA.debugLine="Public Sub Disconnected";
+RDebugUtils.currentLine=3145729;
+ //BA.debugLineNum = 3145729;BA.debugLine="Activity.Finish";
+mostCurrent._activity.Finish();
+RDebugUtils.currentLine=3145730;
+ //BA.debugLineNum = 3145730;BA.debugLine="End Sub";
+return "";
+}
+public static boolean  _ime_handleaction() throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "ime_handleaction", false))
+	 {return ((Boolean) Debug.delegate(mostCurrent.activityBA, "ime_handleaction", null));}
+RDebugUtils.currentLine=2883584;
+ //BA.debugLineNum = 2883584;BA.debugLine="Sub ime_HandleAction As Boolean";
+RDebugUtils.currentLine=2883585;
+ //BA.debugLineNum = 2883585;BA.debugLine="btnSend_Click";
+_btnsend_click();
+RDebugUtils.currentLine=2883586;
+ //BA.debugLineNum = 2883586;BA.debugLine="Return True 'leave the keyboard open";
+if (true) return anywheresoftware.b4a.keywords.Common.True;
+RDebugUtils.currentLine=2883587;
+ //BA.debugLineNum = 2883587;BA.debugLine="End Sub";
+return false;
+}
+public static String  _ime_heightchanged(int _newheight,int _oldheight) throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "ime_heightchanged", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "ime_heightchanged", new Object[] {_newheight,_oldheight}));}
+RDebugUtils.currentLine=2686976;
+ //BA.debugLineNum = 2686976;BA.debugLine="Sub ime_HeightChanged (NewHeight As Int, OldHeight";
+RDebugUtils.currentLine=2686977;
+ //BA.debugLineNum = 2686977;BA.debugLine="lstUsers.Height = NewHeight - lstUsers.Top";
+mostCurrent._lstusers.setHeight((int) (_newheight-mostCurrent._lstusers.getTop()));
+RDebugUtils.currentLine=2686978;
+ //BA.debugLineNum = 2686978;BA.debugLine="txtLogs.Height = NewHeight - txtLogs.Top";
+mostCurrent._txtlogs.setHeight((int) (_newheight-mostCurrent._txtlogs.getTop()));
+RDebugUtils.currentLine=2686979;
+ //BA.debugLineNum = 2686979;BA.debugLine="End Sub";
+return "";
+}
+public static String  _newmessage(nl.pdeg.bordondroid.main._message _msg) throws Exception{
+RDebugUtils.currentModule="chat";
+if (Debug.shouldDelegate(mostCurrent.activityBA, "newmessage", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "newmessage", new Object[] {_msg}));}
+RDebugUtils.currentLine=2949120;
+ //BA.debugLineNum = 2949120;BA.debugLine="Public Sub NewMessage(msg As Message)";
+RDebugUtils.currentLine=2949121;
+ //BA.debugLineNum = 2949121;BA.debugLine="txtLogs.Text = $\"${msg.From}: ${msg.Body}\"$ & CRL";
+mostCurrent._txtlogs.setText(BA.ObjectToCharSequence((""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_msg.From /*String*/ ))+": "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_msg.Body /*String*/ ))+"")+anywheresoftware.b4a.keywords.Common.CRLF+mostCurrent._txtlogs.getText()));
+RDebugUtils.currentLine=2949122;
+ //BA.debugLineNum = 2949122;BA.debugLine="CallSub2(ServerBoard, \"UpdateBordWhenClient\", msg";
+anywheresoftware.b4a.keywords.Common.CallSubDebug2(processBA,(Object)(mostCurrent._serverboard.getObject()),"UpdateBordWhenClient",(Object)(_msg.Body /*String*/ ));
+RDebugUtils.currentLine=2949123;
+ //BA.debugLineNum = 2949123;BA.debugLine="End Sub";
 return "";
 }
 }

@@ -13,7 +13,7 @@ Sub Process_Globals
 	
 '	Private broker As MqttBroker
 	Private client As MqttClient
-	Private const port As Int = 51042
+	Private const port As Int = 1883   '51042
 	Private const discoverPort As Int = 51049
 	Private serializator As B4XSerializator
 	Public connected As Boolean
@@ -30,6 +30,7 @@ Sub Process_Globals
 	Public serverDied As Long = 10000
 	Private p As Phone
 	Public selectedBordName As String
+	Private topicName As String
 End Sub
 
 Sub Service_Create
@@ -40,6 +41,7 @@ Sub Service_Create
 	autodiscover.Initialize("autodiscover",discoverPort , 8192)
 	serverList.Initialize
 '	BroadcastTimer.Initialize("BroadcastTimer", 5000)
+Name = p.Model
 End Sub
 
 Sub connected_Tick
@@ -66,7 +68,7 @@ Private Sub AutoDiscover_PacketArrived (Packet As UDPPacket)
 		Dim data(Packet.Length) As Byte
 		bc.ArrayCopy(Packet.Data, Packet.Offset, data, 0, Packet.Length)
 		Dim ds() As Object = serializator.ConvertBytesToObject(data)
-		
+		Log(ds(0))
 '		Dim ls As Map 	= serializator.ConvertBytesToObject(data)
 		
 		CallSub2(Main, "CheckIpExits", ds)
@@ -89,19 +91,10 @@ End Sub
 
 
 Public Sub Connect (AsServer As Boolean)
-	Dim host As String = DiscoveredServer
-	
-'	Log("HOST : " & host)
-'	isServer = AsServer
-'	If isServer Then
-'		If brokerStarted = False Then
-'			broker.Start
-'			brokerStarted = True
-'		End If
-'		users.Clear
-'		host = "127.0.0.1"
-'	End If
-'	BroadcastTimer.Enabled = isServer
+	Dim host As String' = DiscoveredServer
+	host = "pdeg3005.mynetgear.com"
+	Log("HOST : " & host)
+
 	If connected Then client.Close
 	
 	client.Initialize("client", $"tcp://${host}:${port}"$, "android" & Rnd(1, 10000000))
@@ -113,13 +106,16 @@ Public Sub Connect (AsServer As Boolean)
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-'	Log($"Connected: ${Success}"$)
+	Log($"Connected: ${Success}"$)
 	If Success Then
 		SendMessage("data please")
 		connectedTmr.Enabled = True
 		connected = True
-		client.Subscribe("all/#", 0)
-		client.Publish2("all/connect", serializator.ConvertObjectToBytes(Name), 0, False)
+'		client.Subscribe("all/#", 0)
+		client.Subscribe($"${selectedBordName}/#"$, 0)
+		
+'		client.Publish2("all/connect", serializator.ConvertObjectToBytes(Name), 0, False)
+		client.Publish2(selectedBordName, serializator.ConvertObjectToBytes(Name), 0, False)
 		
 	Else
 '		CallSub(ServerBoard, "ConnectionLost")
@@ -128,6 +124,7 @@ Private Sub client_Connected (Success As Boolean)
 End Sub
 
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
+	Log("TOPIC " & Topic)
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	If Topic = "all/connect" Or Topic = "all/disconnect" Then
 		'new client has connected or disconnected
@@ -148,7 +145,8 @@ Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
 	Else
 		Dim m As Message = receivedObject
 '		CallSub2(Chat, "NewMessage", m)
-'		Log(m.Body)
+		Log(m)
+
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)
 	End If
 		

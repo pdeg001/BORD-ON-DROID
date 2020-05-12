@@ -10,6 +10,7 @@ Version=9.801
 #End Region
 
 Sub Process_Globals
+	Dim mqttGetData As mqttGetBordData
 	Dim dataTmr As Timer
 	Dim dotCount As Int = 0
 	Dim waitText As String 
@@ -49,12 +50,13 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	
+	mqttGetData.Initialize
 	dataTmr.Initialize("dataTmr", 1000)
 	dataTmr.Enabled = True
 	Activity.LoadLayout("ServerBoard")
-	Starter.Connect(False)
-'	Starter.SendMessage("data please")
+	'Starter.Connect(False)
+	mqttGetData.Connect
+'	mqttGetData.SendMessage("data please")
 	lblNoData.TextColor = Colors.Red
 	imgNoData.SetVisibleAnimated(1000, True)
 	lblNoData.SetVisibleAnimated(1000, True)
@@ -86,7 +88,8 @@ End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		Starter.Disconnect
+		'Starter.Disconnect
+		mqttGetData.Disconnect
 		Return False
 	Else
 		Return True

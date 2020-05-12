@@ -40,11 +40,13 @@ Library8=json
 Library9=customlistview
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
 Module1=Chat
-Module2=ServerBoard
-Module3=Starter
+Module2=mqttGetBordData
+Module3=mqttGetBords
+Module4=ServerBoard
+Module5=Starter
 NumberOfFiles=14
 NumberOfLibraries=10
-NumberOfModules=3
+NumberOfModules=5
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -65,6 +67,7 @@ Sub Process_Globals
 	Type Message (Body As String, From As String)
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
 	Type bordFound(name As String, ip As String)
+	Private mqttGetBord As mqttGetBords
 End Sub
 
 Sub Globals
@@ -76,10 +79,9 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	'Activity.LoadLayout("1")
 	Activity.LoadLayout("main")
-	'StartActivity(ServerBoard)
-	'Activity.Finish
+	mqttGetBord.Initialize
+	mqttGetBord.Connect
 End Sub
 
 Sub Activity_Resume
@@ -121,34 +123,30 @@ Sub genUnitList(name As String, alive As Boolean, ip As String) As Panel
 	Return p
 End Sub
 
-Sub CheckIpExits(data() As Object)
+'Sub CheckIpExits(data() As Object)
+Sub CheckIpExits(bord As String)
 	Dim msNow As Long = DateTime.Now
 	Dim ipFound As Boolean = False
-	Dim ip, name As String = ""
+	Dim name As String = ""
 	
-	If data.Length = 0 Then Return
+	If bord.Length = 0 Then Return
 	
-	ip = data(0)
-	name = data(1)
+	name = bord
 
 	If Starter.serverList.Size = 0 Then
-		'Log("- LIST EMPTY " & ip)
-		AddUnkownIp(ip, name)
+		AddUnkownIp("", name)
 		Return
 	End If
 	
 	For Each lst As bordStatus In Starter.serverList
-	'	Log("-- LOCATE BORD " &lst.ip)
-		If lst.ip = ip Then
+		If lst.name = name Then
 			ipFound = True
 			lst.timeStamp = DateTime.Now
 			lst.alive = True
-			'Return
 		End If
 	Next
 	
 	For Each lst As bordStatus In Starter.serverList
-		'Log($"${msNow-lst.timeStamp}"$)
 		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
 			lst.alive = False
 			CheckIpInClv(lst)
@@ -159,11 +157,9 @@ Sub CheckIpExits(data() As Object)
 	Next
 	
 	If Not(ipFound) Then
-'		Log("--- IP NOT FOUND " & ip)
-		AddUnkownIp(ip, name)
+		AddUnkownIp("", name)
 		Return
 	End If
-	'CheckIpInClv(lst)
 End Sub
 
 Sub AddUnkownIp(ip As String, name As String)
@@ -174,19 +170,15 @@ Sub AddUnkownIp(ip As String, name As String)
 	bordStatus.timeStamp = DateTime.Now
 	bordStatus.alive = True
 	Starter.serverList.Add(bordStatus)
-'	Log("---- ADD UNKNOWN TO LIST " & ip)
 	CheckIpInClv(bordStatus)
 End Sub
 
 Sub CheckIpInClv(bord As bordStatus)
 	Dim p As Panel
 	Dim lbl As Label
-'	Log("----- CHECK IP IN LIST " & bord.ip)
-'	Log("++ BORD FOUND " & bord.ip &" " & bord.alive)
 	
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
-	'	Log(p.Tag)
 		If p.Tag = bord.ip Then
 			For Each v As View In p.GetAllViewsRecursive
 				If v.Tag = "viewbord" Then
@@ -214,10 +206,11 @@ Sub lblViewBord_Click
 	Dim p As Panel = v.Parent
 	Dim lbl As Label
 	
+	
 	For Each c As View In p.GetAllViewsRecursive
 		If c.Tag = "name" Then
 			lbl = c
-			Starter.selectedBordName = lbl.Text
+			Starter.selectedBordName = PrepTopicName(lbl.Text)
 			Exit
 		End If
 	Next
@@ -226,24 +219,17 @@ Sub lblViewBord_Click
 		If c.Tag = "ipnumber" Then
 			lbl = c
 			Starter.DiscoveredServer = lbl.Text
+			mqttGetBord.Disconnect
+			Sleep(100)
 			StartActivity(ServerBoard)
 			Exit
 		End If
 	Next
 End Sub
 
-
-Public Sub NewUsers(Users1 As List)
-	Dim userCount As Int = 0
-'	Log(Users1)
-	'users = Users1
-	'lstUsers.Clear
-'	For Each u As List In Users1
-'		userCount = userCount+1
-''		'lstUsers.AddSingleLine(u)
-''		Log("USERS " & u.Get(0))
-'	Next
-	Log($"USER COUNT ${Users1.Size}"$)
+Private Sub PrepTopicName(bord As String) As String
+	Log($"SUBBORD : ${bord.Replace(" ", "")}"$)
+	Return bord.Replace(" ", "")
 End Sub
 
 
