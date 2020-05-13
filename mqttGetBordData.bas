@@ -52,12 +52,13 @@ Public Sub Disconnect
 	End If
 End Sub
 
-Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
+Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	'Log($"topic: ${Topic} SUB-BORD: ${Starter.selectedBordName}"$)
+	
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As Message = receivedObject
 	
-	if m.Body = "data please" then Return
+	If m.From = phone.Model Then Return
 	
 	If Topic = Starter.selectedBordName Then
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)

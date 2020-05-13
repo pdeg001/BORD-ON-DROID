@@ -70,7 +70,7 @@ Sub dataTmr_Tick
 	dotCount=dotCount+1
 	If dotCount >= 10 Then
 		dotCount = 0
-		lblNoData.Text = Starter.selectedBordName
+		lblNoData.Text = Starter.DiscoveredServer
 		Return
 	End If
 	For i = 0 To dotCount
@@ -80,7 +80,7 @@ Sub dataTmr_Tick
 End Sub
 
 Sub Activity_Resume
-	waitText = $"Wachten op ${Starter.selectedBordName}"$
+	waitText = $"Wachten op ${Starter.DiscoveredServer}"$
 	dotCount = 0
 '	Starter.SendMessage("data please")
 End Sub
@@ -101,11 +101,10 @@ End Sub
 public Sub UpdateBordWhenClient(data As Message)
 	dataTmr.Enabled = False
 	imgNoData.SetVisibleAnimated(1000, False)
-	'lblNoData.SetVisibleAnimated(1000, False)
-	'Sleep(500)
-	lblNoData.Text = $"U kijkt naar ${Starter.selectedBordName}"$
+	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
 	lblNoData.TextColor = Colors.White
 	lblNoData.Visible = True
+	Sleep(1200)
 	
 	Dim Number, str As String
 	str = data.Body

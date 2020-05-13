@@ -271,22 +271,6 @@ Sub lblViewBord_Click
 	Sleep(100)
 
 	StartActivity(ServerBoard)
-	
-	
-'	For Each c As View In p.GetAllViewsRecursive
-'		If c.Tag = "ipnumber" Then
-'			lbl = c
-'			Starter.DiscoveredServer = lbl.Text
-'			If mqttGetBord.connected Then
-'				mqttGetBord.Disconnect
-'			End If
-'			Sleep(100)
-'
-'			StartActivity(ServerBoard)
-'			Exit
-'		End If
-'	Next
-	
 End Sub
 
 Private Sub PrepTopicName(bord As String) As String
