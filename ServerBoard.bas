@@ -56,11 +56,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("ServerBoard")
 	'Starter.Connect(False)
 	mqttGetData.Connect
-'	mqttGetData.SendMessage("data please")
+	
 	lblNoData.TextColor = Colors.Red
 	imgNoData.SetVisibleAnimated(1000, True)
 	lblNoData.SetVisibleAnimated(1000, True)
 	
+	Sleep(1000)
+	mqttGetData.SendMessage("data please")
 End Sub
 
 Sub dataTmr_Tick
@@ -68,7 +70,7 @@ Sub dataTmr_Tick
 	dotCount=dotCount+1
 	If dotCount >= 10 Then
 		dotCount = 0
-		lblNoData.Text = waitText
+		lblNoData.Text = Starter.selectedBordName
 		Return
 	End If
 	For i = 0 To dotCount

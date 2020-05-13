@@ -12,7 +12,6 @@ anywheresoftware.b4a.keywords.LayoutBuilder.setScaleRate((100d / 100 * height)/(
 anywheresoftware.b4a.keywords.LayoutBuilder.scaleAll(views);
 anywheresoftware.b4a.keywords.LayoutBuilder.scaleView(views.get("imgnodata"));
 anywheresoftware.b4a.keywords.LayoutBuilder.scaleView(views.get("lblnodata"));
-//BA.debugLineNum = 8;BA.debugLine="AutoScale(pnlMain)"[ServerBoard/General script]
 anywheresoftware.b4a.keywords.LayoutBuilder.scaleView(views.get("pnlmain"));
 //BA.debugLineNum = 9;BA.debugLine="AutoScale(imgP1Play)"[ServerBoard/General script]
 anywheresoftware.b4a.keywords.LayoutBuilder.scaleView(views.get("imgp1play"));

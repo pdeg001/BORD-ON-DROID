@@ -67,7 +67,10 @@ Sub Process_Globals
 	Type Message (Body As String, From As String)
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
 	Type bordFound(name As String, ip As String)
+	
 	Private mqttGetBord As mqttGetBords
+	Private mqttGetData As mqttGetBordData
+	Private tmrBordLastAlive As Timer
 End Sub
 
 Sub Globals
@@ -76,22 +79,39 @@ Sub Globals
 	Private lblViewBord As Label
 	Private pnlBord As Panel
 	Private lblIP As Label
+	Private lblLastCheck As Label
+	Private pnlNobords As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	mqttGetData.Initialize
 	mqttGetBord.Initialize
 	mqttGetBord.Connect
+
+	tmrBordLastAlive.Initialize("tmrBordAlive", 10000)
+	tmrBordLastAlive.Enabled = True
+End Sub
+
+Sub tmrBordAlive_Tick
+	ServerAlive
 End Sub
 
 Sub Activity_Resume
+	If Starter.mqttGetBordsActive Then
+		mqttGetBord.Connect
+	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
+ 	If Starter.mqttGetBordsActive Then
+		mqttGetBord.Disconnect
+	End If
 End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		tmrBordLastAlive.Enabled = False
 		Activity.Finish
 		
 		Return False
@@ -113,19 +133,19 @@ Sub genUnitList(name As String, alive As Boolean, ip As String) As Panel
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 85dip) '190
 	p.LoadLayout("clvBorden")
-	p.Tag = ip
+	p.Tag = name
 	
 	lblBordName.Text = name.Trim
-	lblIP.Text = ip
+	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 	If Not(alive) Then
 		lblViewBord.Enabled = False
 	End If
 	Return p
 End Sub
 
-'Sub CheckIpExits(data() As Object)
-Sub CheckIpExits(bord As String)
-	Dim msNow As Long = DateTime.Now
+
+Sub CheckIpExits(bord As String, bordDied As Boolean)
+	
 	Dim ipFound As Boolean = False
 	Dim name As String = ""
 	
@@ -146,6 +166,26 @@ Sub CheckIpExits(bord As String)
 		End If
 	Next
 	
+	ServerAlive
+'	For Each lst As bordStatus In Starter.serverList
+'		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
+'			lst.alive = False
+'			CheckIpInClv(lst)
+'			Return
+'		Else
+'			CheckIpInClv(lst)
+'		End If
+'	Next
+	
+	If Not(ipFound) Then
+		AddUnkownIp("", name)
+		Return
+	End If
+End Sub
+
+Sub ServerAlive
+'	Log($"BORD ALIVE TEST at $Time{DateTime.Now}"$)
+	Dim msNow As Long = DateTime.Now
 	For Each lst As bordStatus In Starter.serverList
 		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
 			lst.alive = False
@@ -155,11 +195,6 @@ Sub CheckIpExits(bord As String)
 			CheckIpInClv(lst)
 		End If
 	Next
-	
-	If Not(ipFound) Then
-		AddUnkownIp("", name)
-		Return
-	End If
 End Sub
 
 Sub AddUnkownIp(ip As String, name As String)
@@ -171,6 +206,14 @@ Sub AddUnkownIp(ip As String, name As String)
 	bordStatus.alive = True
 	Starter.serverList.Add(bordStatus)
 	CheckIpInClv(bordStatus)
+	
+	If clvServer.GetSize > 0 Then
+		pnlNobords.SetVisibleAnimated(1000, False)
+	Else 
+		pnlNobords.SetVisibleAnimated(1000, True)	
+	End If
+	Sleep(1000)
+	
 End Sub
 
 Sub CheckIpInClv(bord As bordStatus)
@@ -179,7 +222,14 @@ Sub CheckIpInClv(bord As bordStatus)
 	
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
-		If p.Tag = bord.ip Then
+		If p.Tag = bord.name Then
+			For Each v As View In p.GetAllViewsRecursive
+			If v.Tag = "lblLastCheck" Then
+				lbl = v
+				lbl.Text = $"Laatste controle $Time{DateTime.Now}"$
+			End If
+			Next
+			
 			For Each v As View In p.GetAllViewsRecursive
 				If v.Tag = "viewbord" Then
 					lbl = v
@@ -200,7 +250,6 @@ Sub CheckIpInClv(bord As bordStatus)
 	clvServer.Add(genUnitList(bord.name, bord.alive, bord.ip),130dip, "")
 End Sub
 
-
 Sub lblViewBord_Click
 	Dim v As View = Sender
 	Dim p As Panel = v.Parent
@@ -211,20 +260,33 @@ Sub lblViewBord_Click
 		If c.Tag = "name" Then
 			lbl = c
 			Starter.selectedBordName = PrepTopicName(lbl.Text)
+			Starter.DiscoveredServer = lbl.Text
 			Exit
 		End If
 	Next
 	
-	For Each c As View In p.GetAllViewsRecursive
-		If c.Tag = "ipnumber" Then
-			lbl = c
-			Starter.DiscoveredServer = lbl.Text
-			mqttGetBord.Disconnect
-			Sleep(100)
-			StartActivity(ServerBoard)
-			Exit
-		End If
-	Next
+	If mqttGetBord.connected Then
+		mqttGetBord.Disconnect
+	End If
+	Sleep(100)
+
+	StartActivity(ServerBoard)
+	
+	
+'	For Each c As View In p.GetAllViewsRecursive
+'		If c.Tag = "ipnumber" Then
+'			lbl = c
+'			Starter.DiscoveredServer = lbl.Text
+'			If mqttGetBord.connected Then
+'				mqttGetBord.Disconnect
+'			End If
+'			Sleep(100)
+'
+'			StartActivity(ServerBoard)
+'			Exit
+'		End If
+'	Next
+	
 End Sub
 
 Private Sub PrepTopicName(bord As String) As String

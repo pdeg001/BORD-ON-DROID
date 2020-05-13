@@ -6,7 +6,7 @@ Version=9.801
 @EndOfDesignText@
 Sub Class_Globals
 	Private client As MqttClient
-	Private connected As Boolean
+	Public connected As Boolean
 	Private serializator As B4XSerializator
 	Private phone As Phone
 	
@@ -28,15 +28,21 @@ Public Sub Connect ()
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
-	mo.SetLastWill("pubBord/disconnect", serializator.ConvertObjectToBytes(phone.Model), 0, False)
+	mo.SetLastWill("pubbord/disconnect", serializator.ConvertObjectToBytes(phone.Model), 0, False)
 	client.Connect2(mo)
 End Sub
 
 Public Sub Disconnect
 	If connected Then
-		client.Publish2("pubBord/disconnect", serializator.ConvertObjectToBytes(phone.Model), 0, False)
-		client.Close
-		connected = False
+		Try
+			client.Publish2("pubbord/disconnect", serializator.ConvertObjectToBytes(phone.Model), 0, False)
+			client.Close
+			connected = False
+		Catch
+			Log(LastException)
+			connected = False
+			client.Close
+		End Try
 	End If
 End Sub
 
@@ -44,19 +50,24 @@ Private Sub client_Connected (Success As Boolean)
 
 	If Success Then
 		connected = True
-		client.Subscribe("pubBord/#", 0)
+		Starter.mqttGetBordsActive = connected
+		client.Subscribe("pubbord/#", 0)
 	Else
 		ToastMessageShow("Error connecting: " & LastException, True)
 	End If
 End Sub
 
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
-	Log($"Connected: ${Topic}"$)
+	Dim bordDied As Boolean
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As String = receivedObject
 
-	If Topic = "pubBord" Then
-		CallSub2(Main, "CheckIpExits", m)
+'	Log($"MESSAGE: ${m} $Time{DateTime.Now} ${bordDied}"$)
+	If Topic = "pubbord" Then
+		If m.IndexOf("died") > -1 Then
+			Return
+		End If
+		CallSub3(Main, "CheckIpExits", m, bordDied)
 	End If
 		
 End Sub

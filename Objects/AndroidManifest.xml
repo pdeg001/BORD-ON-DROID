@@ -37,14 +37,14 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".chat"
+			android:name=".serverboard"
 			android:label="Board On Droid"
 			android:screenOrientation="landscape">
 		</activity>
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".serverboard"
+			android:name=".chat"
 			android:label="Board On Droid"
 			android:screenOrientation="landscape">
 		</activity>

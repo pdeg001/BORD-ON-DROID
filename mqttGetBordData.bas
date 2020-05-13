@@ -12,14 +12,15 @@ Sub Class_Globals
 	
 	Private const port As Int = 1883
 	Private host As String = "pdeg3005.mynetgear.com"
-	Private subBord As String
-	Private subBordDisconnect As String
+	Public subto As String
+	Private subBordData As String
+	Private subBordDataDisconnect As String
 	
 End Sub
 
 Public Sub Initialize
-	subBord = $"${Starter.selectedBordName}/#"$
-	subBordDisconnect = $"${Starter.selectedBordName}/disconnect"$
+	subBordData = $"pubdata/#"$
+	subBordDataDisconnect = $"pubdata/disconnect"$
 End Sub
 
 Public Sub Connect ()
@@ -29,7 +30,7 @@ Public Sub Connect ()
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
-	mo.SetLastWill(subBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+	mo.SetLastWill(subBordDataDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 	client.Connect2(mo)
 End Sub
 
@@ -37,7 +38,7 @@ Private Sub client_Connected (Success As Boolean)
 	Log("Connected " & Success)
 	If Success Then
 		connected = True
-		client.Subscribe(subBord, 0)
+		client.Subscribe(Starter.selectedBordName, 0)
 	Else
 		ToastMessageShow("Error connecting: " & LastException, True)
 	End If
@@ -45,16 +46,18 @@ End Sub
 
 Public Sub Disconnect
 	If connected Then
-		client.Publish2(subBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+		client.Publish2(subBordDataDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 		client.Close
 		connected = False
 	End If
 End Sub
 
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
-	Log($"$Time{DateTime.now} Connected: ${Topic} SUB-BORD: ${Starter.selectedBordName}"$)
+	'Log($"topic: ${Topic} SUB-BORD: ${Starter.selectedBordName}"$)
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As Message = receivedObject
+	
+	if m.Body = "data please" then Return
 	
 	If Topic = Starter.selectedBordName Then
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)
@@ -63,7 +66,7 @@ End Sub
 
 Public Sub SendMessage(Body As String)
 	If connected Then
-		client.Publish2(subBord, CreateMessage(Body), 0, False)
+		client.Publish2(Starter.selectedBordName, CreateMessage(Body), 0, False)
 	End If
 End Sub
 

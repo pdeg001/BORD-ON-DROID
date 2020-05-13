@@ -31,6 +31,7 @@ Sub Process_Globals
 	Private p As Phone
 	Public selectedBordName As String
 	Private topicName As String
+	Public mqttGetBordsActive, mqttGetBordDataActive as Boolean
 End Sub
 
 Sub Service_Create
