@@ -31,15 +31,15 @@ Sub Process_Globals
 	Private p As Phone
 	Public selectedBordName As String
 	Private topicName As String
-	Public mqttGetBordsActive, mqttGetBordDataActive as Boolean
+	Public mqttGetBordsActive, mqttGetBordDataActive As Boolean
 End Sub
 
 Sub Service_Create
-	connectedTmr.Initialize("connected", 3000)
+'	connectedTmr.Initialize("connected", 3000)
 '	broker.Initialize("", port)
 '	broker.DebugLog = False
-	users.Initialize
-	autodiscover.Initialize("autodiscover",discoverPort , 8192)
+'	users.Initialize
+'	autodiscover.Initialize("autodiscover",discoverPort , 8192)
 	serverList.Initialize
 '	BroadcastTimer.Initialize("BroadcastTimer", 5000)
 Name = p.Model

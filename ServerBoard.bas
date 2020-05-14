@@ -47,19 +47,28 @@ Sub Globals
 	
 	Private imgNoData As ImageView
 	Private lblNoData As Label
+	Private imgSponsor As ImageView
+	
+	Private lblTafelNaam As Label
+	Private lblSpelduur As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("ServerBoard")
+	
+	Dim bmp As Bitmap = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
+	imgSponsor.SetBackgroundImage(bmp)
+	
 	mqttGetData.Initialize
 	dataTmr.Initialize("dataTmr", 1000)
 	dataTmr.Enabled = True
-	Activity.LoadLayout("ServerBoard")
 	'Starter.Connect(False)
 	mqttGetData.Connect
 	
 	lblNoData.TextColor = Colors.Red
-	imgNoData.SetVisibleAnimated(1000, True)
+	imgNoData.SetVisibleAnimated(1, True)
 	lblNoData.SetVisibleAnimated(1000, True)
+	lblTafelNaam.Text = Starter.DiscoveredServer
 	
 	Sleep(1000)
 	mqttGetData.SendMessage("data please")
@@ -86,12 +95,23 @@ Sub Activity_Resume
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
+	Log("pause")
+	If mqttGetData.connected Then
+		mqttGetData.Disconnect
+	End If
+	Activity.Finish
+End Sub
+
+Sub DisconnetMqtt
+	If mqttGetData.connected Then
+		mqttGetData.Disconnect
+	End If
+	Activity.Finish
 End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		'Starter.Disconnect
-		mqttGetData.Disconnect
+		DisconnetMqtt
 		Return False
 	Else
 		Return True
@@ -99,13 +119,15 @@ Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 End Sub
 
 public Sub UpdateBordWhenClient(data As Message)
-	dataTmr.Enabled = False
-	imgNoData.SetVisibleAnimated(1000, False)
-	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
-	lblNoData.TextColor = Colors.White
-	lblNoData.Visible = True
-	Sleep(1200)
-	
+	If imgNoData.Visible Then
+		dataTmr.Enabled = False
+		imgNoData.SetVisibleAnimated(1000, False)
+		lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
+		lblNoData.TextColor = Colors.White
+		lblNoData.Visible = True
+		Sleep(1200)
+	End If
+	lblSpelduur.TextColor = Colors.Yellow
 	Dim Number, str As String
 	str = data.Body
 	
@@ -166,7 +188,7 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblBeurt10.Text = aantal.SubString2(1,2)
 	lblBeurt1.Text = aantal.SubString2(2,3)
 '	lbl_innings.Text = aantal'score.Get("beurten")
-'	lbl_partij_duur.Text = tijd'score.Get("spelduur")
+	lblSpelduur.Text = tijd'score.Get("spelduur")
 	'setProgress(p1_progressBar, p1_progress)
 	
 '	CallSub(funcScorebord, "SetProgressBarForMirror")
@@ -179,7 +201,6 @@ public Sub UpdateBordWhenClient(data As Message)
 	End If
 End Sub
 
-
 Public Sub ConnectionLost
 	Msgbox2Async($"Verbinding met ${Starter.selectedBordName} verloren${CRLF}Probeer het later nog eens"$, "Bord Op Droid", "OKE", "", "", Null, False)
 	Wait For Msgbox_Result (Result As Int)
@@ -188,4 +209,14 @@ Public Sub ConnectionLost
 		Activity.Finish
 		
 	End If
+End Sub
+
+Public Sub GamedEnded
+	lblSpelduur.TextColor = Colors.Red
+	'lblNoData.Text = $"Partij op tafel ${Starter.DiscoveredServer} beëindigd"$
+End Sub
+
+Public Sub GamedInProgress
+	lblNoData.TextColor = Colors.White
+	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
 End Sub

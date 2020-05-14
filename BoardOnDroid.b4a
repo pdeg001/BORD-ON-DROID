@@ -1,10 +1,11 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
 File1=2.bal
-File10=main.bal
-File11=materialdesignicons-webfont.ttf
-File12=mouse.png
-File13=ServerBoard.bal
-File14=wacht_op_data.png
+File10=materialdesignicons-webfont.ttf
+File11=mouse.png
+File12=ServerBoard.bal
+File13=sven_oud.jpg
+File14=sven1.jpg
+File15=wacht_op_data.png
 File2=Baloo2-Bold.ttf
 File3=Baloo2-ExtraBold.ttf
 File4=Baloo2-Medium.ttf
@@ -12,13 +13,14 @@ File5=Baloo2-Regular.ttf
 File6=Baloo2-SemiBold.ttf
 File7=clvBorden.bal
 File8=digital-7.ttf
-File9=IMG-20200421-WA0000.jpg
+File9=main.bal
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=Default Group
 FileGroup12=Default Group
 FileGroup13=Default Group
 FileGroup14=Default Group
+FileGroup15=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -44,7 +46,7 @@ Module2=mqttGetBordData
 Module3=mqttGetBords
 Module4=ServerBoard
 Module5=Starter
-NumberOfFiles=14
+NumberOfFiles=15
 NumberOfLibraries=10
 NumberOfModules=5
 Version=9.801
@@ -78,13 +80,14 @@ Sub Globals
 	Private lblBordName As Label
 	Private lblViewBord As Label
 	Private pnlBord As Panel
-	Private lblIP As Label
 	Private lblLastCheck As Label
 	Private pnlNobords As Panel
+'	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	clvServer.Clear
 	mqttGetData.Initialize
 	mqttGetBord.Initialize
 	mqttGetBord.Connect
@@ -104,9 +107,7 @@ Sub Activity_Resume
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
- 	If Starter.mqttGetBordsActive Then
-		mqttGetBord.Disconnect
-	End If
+ 	DisconnectMqtt
 End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
@@ -120,11 +121,10 @@ Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	End If
 End Sub
 
-Sub ShowUnits
-	'clvServer.Clear
-	For Each brd As bordStatus In Starter.serverList
-		clvServer.Add(genUnitList(brd.ip, brd.alive, ""),130dip, "")
-	Next
+Sub DisconnectMqtt
+	If mqttGetBord.Connected Then
+		mqttGetBord.Disconnect
+	End If
 	
 End Sub
 
@@ -142,7 +142,6 @@ Sub genUnitList(name As String, alive As Boolean, ip As String) As Panel
 	End If
 	Return p
 End Sub
-
 
 Sub CheckIpExits(bord As String, bordDied As Boolean)
 	
@@ -167,15 +166,6 @@ Sub CheckIpExits(bord As String, bordDied As Boolean)
 	Next
 	
 	ServerAlive
-'	For Each lst As bordStatus In Starter.serverList
-'		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
-'			lst.alive = False
-'			CheckIpInClv(lst)
-'			Return
-'		Else
-'			CheckIpInClv(lst)
-'		End If
-'	Next
 	
 	If Not(ipFound) Then
 		AddUnkownIp("", name)
@@ -224,10 +214,10 @@ Sub CheckIpInClv(bord As bordStatus)
 		p = clvServer.GetPanel(i)
 		If p.Tag = bord.name Then
 			For Each v As View In p.GetAllViewsRecursive
-			If v.Tag = "lblLastCheck" Then
-				lbl = v
-				lbl.Text = $"Laatste controle $Time{DateTime.Now}"$
-			End If
+				If v.Tag = "lblLastCheck" Then
+					lbl = v
+					lbl.Text = $"Laatste controle $Time{DateTime.Now}"$
+				End If
 			Next
 			
 			For Each v As View In p.GetAllViewsRecursive
@@ -238,7 +228,7 @@ Sub CheckIpInClv(bord As bordStatus)
 						lbl.TextColor = Colors.Red
 					Else
 						lbl.Enabled = True
-						lbl.TextColor = Colors.Black
+						lbl.TextColor = 0xFF027F00
 					End If
 					Return
 				End If
@@ -247,7 +237,8 @@ Sub CheckIpInClv(bord As bordStatus)
 	Next
 	
 '	Log("------ ADD BORD TO LIST")
-	clvServer.Add(genUnitList(bord.name, bord.alive, bord.ip),130dip, "")
+	pnlNobords.SetVisibleAnimated(1000, False)
+	clvServer.Add(genUnitList(bord.name, bord.alive, bord.ip), 130dip, "")
 End Sub
 
 Sub lblViewBord_Click
@@ -265,9 +256,7 @@ Sub lblViewBord_Click
 		End If
 	Next
 	
-	If mqttGetBord.connected Then
-		mqttGetBord.Disconnect
-	End If
+	DisconnectMqtt
 	Sleep(100)
 
 	StartActivity(ServerBoard)

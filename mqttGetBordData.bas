@@ -6,7 +6,7 @@ Version=9.801
 @EndOfDesignText@
 Sub Class_Globals
 	Private client As MqttClient
-	Private connected As Boolean
+	Public connected As Boolean
 	Private serializator As B4XSerializator
 	Private phone As Phone
 	
@@ -15,6 +15,7 @@ Sub Class_Globals
 	Public subto As String
 	Private subBordData As String
 	Private subBordDataDisconnect As String
+	
 	
 End Sub
 
@@ -53,14 +54,19 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
-	'Log($"topic: ${Topic} SUB-BORD: ${Starter.selectedBordName}"$)
+'	Log($"DATA RECEIVED : $Time{DateTime.Now}"$)
 	
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As Message = receivedObject
 	
-	If m.From = phone.Model Then Return
+	If m.From.IndexOf("game-ended") > -1 Then
+		CallSub(ServerBoard, "GamedEnded")
+		Return
+	End If
+	If m.Body = "data please" Then Return
 	
 	If Topic = Starter.selectedBordName Then
+		CallSubDelayed(ServerBoard, "GamedInProgress")
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)
 	End If
 End Sub
