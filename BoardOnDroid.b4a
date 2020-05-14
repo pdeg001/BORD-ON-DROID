@@ -1,26 +1,16 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
-File1=2.bal
-File10=materialdesignicons-webfont.ttf
-File11=mouse.png
-File12=ServerBoard.bal
-File13=sven_oud.jpg
-File14=sven1.jpg
-File15=wacht_op_data.png
-File2=Baloo2-Bold.ttf
-File3=Baloo2-ExtraBold.ttf
-File4=Baloo2-Medium.ttf
-File5=Baloo2-Regular.ttf
-File6=Baloo2-SemiBold.ttf
-File7=clvBorden.bal
-File8=digital-7.ttf
-File9=main.bal
+File1=Baloo2-Regular.ttf
+File10=wacht_op_data.png
+File2=clvBorden.bal
+File3=digital-7.ttf
+File4=main.bal
+File5=materialdesignicons-webfont.ttf
+File6=mouse.png
+File7=ServerBoard.bal
+File8=sven_oud.jpg
+File9=sven1.jpg
 FileGroup1=Default Group
 FileGroup10=Default Group
-FileGroup11=Default Group
-FileGroup12=Default Group
-FileGroup13=Default Group
-FileGroup14=Default Group
-FileGroup15=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -31,24 +21,19 @@ FileGroup8=Default Group
 FileGroup9=Default Group
 Group=Default Group
 Library1=core
-Library10=phone
 Library2=jmqtt
 Library3=randomaccessfile
-Library4=network
-Library5=ime
-Library6=javaobject
-Library7=byteconverter
-Library8=json
-Library9=customlistview
+Library4=json
+Library5=customlistview
+Library6=phone
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
-Module1=Chat
-Module2=mqttGetBordData
-Module3=mqttGetBords
-Module4=ServerBoard
-Module5=Starter
-NumberOfFiles=15
-NumberOfLibraries=10
-NumberOfModules=5
+Module1=mqttGetBordData
+Module2=mqttGetBords
+Module3=ServerBoard
+Module4=Starter
+NumberOfFiles=10
+NumberOfLibraries=6
+NumberOfModules=4
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -58,6 +43,7 @@ Version=9.801
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: landscape
 	#CanInstallToExternalStorage: False
+	#BridgeLogger: true
 #End Region
 
 #Region  Activity Attributes 
@@ -128,7 +114,7 @@ Sub DisconnectMqtt
 	
 End Sub
 
-Sub genUnitList(name As String, alive As Boolean, ip As String) As Panel
+Sub genUnitList(name As String, alive As Boolean) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 85dip) '190
@@ -143,7 +129,7 @@ Sub genUnitList(name As String, alive As Boolean, ip As String) As Panel
 	Return p
 End Sub
 
-Sub CheckIpExits(bord As String, bordDied As Boolean)
+Sub CheckIpExits(bord As String)
 	
 	Dim ipFound As Boolean = False
 	Dim name As String = ""
@@ -238,7 +224,7 @@ Sub CheckIpInClv(bord As bordStatus)
 	
 '	Log("------ ADD BORD TO LIST")
 	pnlNobords.SetVisibleAnimated(1000, False)
-	clvServer.Add(genUnitList(bord.name, bord.alive, bord.ip), 130dip, "")
+	clvServer.Add(genUnitList(bord.name, bord.alive), 130dip, "")
 End Sub
 
 Sub lblViewBord_Click

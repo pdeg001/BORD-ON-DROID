@@ -17,7 +17,7 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
-	Dim lblList() As Label
+'	Dim lblList() As Label
 	Dim parser As JSONParser
 	Private lblP1Name As Label
 	Private lblP2Name As Label
@@ -43,7 +43,7 @@ Sub Globals
 '	Private pnlBord As Panel
 '	Private lblBordName As Label
 '	Private lblViewBord As Label
-	Private waitingForData As Boolean = True
+'	Private waitingForData As Boolean = True
 	
 	Private imgNoData As ImageView
 	Private lblNoData As Label
@@ -61,13 +61,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	mqttGetData.Initialize
 	dataTmr.Initialize("dataTmr", 1000)
-	dataTmr.Enabled = True
+'	dataTmr.Enabled = True
 	'Starter.Connect(False)
 	mqttGetData.Connect
 	
-	lblNoData.TextColor = Colors.Red
+'	lblNoData.TextColor = Colors.Red
 	imgNoData.SetVisibleAnimated(1, True)
-	lblNoData.SetVisibleAnimated(1000, True)
+'	lblNoData.SetVisibleAnimated(1000, True)
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
 	Sleep(1000)
@@ -79,13 +79,13 @@ Sub dataTmr_Tick
 	dotCount=dotCount+1
 	If dotCount >= 10 Then
 		dotCount = 0
-		lblNoData.Text = Starter.DiscoveredServer
+		'lblNoData.Text = Starter.DiscoveredServer
 		Return
 	End If
 	For i = 0 To dotCount
 		dot = dot &"*"
 	Next
-	lblNoData.Text = $"${dot} ${waitText} ${dot}"$
+'	lblNoData.Text = $"${dot} ${waitText} ${dot}"$
 End Sub
 
 Sub Activity_Resume
@@ -122,9 +122,9 @@ public Sub UpdateBordWhenClient(data As Message)
 	If imgNoData.Visible Then
 		dataTmr.Enabled = False
 		imgNoData.SetVisibleAnimated(1000, False)
-		lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
-		lblNoData.TextColor = Colors.White
-		lblNoData.Visible = True
+'		lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
+'		lblNoData.TextColor = Colors.White
+'		lblNoData.Visible = True
 		Sleep(1200)
 	End If
 	lblSpelduur.TextColor = Colors.Yellow
@@ -201,22 +201,12 @@ public Sub UpdateBordWhenClient(data As Message)
 	End If
 End Sub
 
-Public Sub ConnectionLost
-	Msgbox2Async($"Verbinding met ${Starter.selectedBordName} verloren${CRLF}Probeer het later nog eens"$, "Bord Op Droid", "OKE", "", "", Null, False)
-	Wait For Msgbox_Result (Result As Int)
-	If DialogResponse.POSITIVE Then
-		Starter.Disconnect
-		Activity.Finish
-		
-	End If
-End Sub
-
 Public Sub GamedEnded
 	lblSpelduur.TextColor = Colors.Red
 	'lblNoData.Text = $"Partij op tafel ${Starter.DiscoveredServer} beëindigd"$
 End Sub
 
 Public Sub GamedInProgress
-	lblNoData.TextColor = Colors.White
-	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
+'	lblNoData.TextColor = Colors.White
+'	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
 End Sub

@@ -9,10 +9,6 @@ Sub Class_Globals
 	Public connected As Boolean
 	Private serializator As B4XSerializator
 	Private phone As Phone
-	
-	Private const port As Int = 1883
-	Private host As String = "pdeg3005.mynetgear.com"
-	
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -24,7 +20,7 @@ End Sub
 Public Sub Connect ()
 	If connected Then client.Close
 	
-	client.Initialize("client", $"tcp://${host}:${port}"$, phone.Model & Rnd(1, 10000000))
+	client.Initialize("client", $"tcp://${Starter.host}:${Starter.port}"$, phone.Model & Rnd(1, 10000000))
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
@@ -58,16 +54,14 @@ Private Sub client_Connected (Success As Boolean)
 End Sub
 
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
-	Dim bordDied As Boolean
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As String = receivedObject
 
-'	Log($"MESSAGE: ${m} $Time{DateTime.Now} ${bordDied}"$)
 	If Topic = "pubbord" Then
 		If m.IndexOf("died") > -1 Then
 			Return
 		End If
-		CallSub3(Main, "CheckIpExits", m, bordDied)
+		CallSub2(Main, "CheckIpExits", m)
 	End If
 		
 End Sub

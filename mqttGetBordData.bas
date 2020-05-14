@@ -10,24 +10,22 @@ Sub Class_Globals
 	Private serializator As B4XSerializator
 	Private phone As Phone
 	
-	Private const port As Int = 1883
-	Private host As String = "pdeg3005.mynetgear.com"
-	Public subto As String
-	Private subBordData As String
+'	Public subto As String
+'	Private subBordData As String
 	Private subBordDataDisconnect As String
 	
 	
 End Sub
 
 Public Sub Initialize
-	subBordData = $"pubdata/#"$
+'	subBordData = $"pubdata/#"$
 	subBordDataDisconnect = $"pubdata/disconnect"$
 End Sub
 
 Public Sub Connect ()
 	If connected Then client.Close
 	
-	client.Initialize("client", $"tcp://${host}:${port}"$, phone.Model & Rnd(1, 10000000))
+	client.Initialize("client", $"tcp://${Starter.host}:${Starter.port}"$, phone.Model & Rnd(1, 10000000))
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
