@@ -18,6 +18,7 @@ Sub Process_Globals
 	Public serverDied As Long = 10000
 	Public selectedBordName As String
 	Public mqttGetBordsActive, mqttGetBordDataActive As Boolean
+	Public diedIndex As Int = -1
 End Sub
 
 Sub Service_Create

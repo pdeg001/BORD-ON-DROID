@@ -58,7 +58,7 @@ Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
 	Dim m As String = receivedObject
 
 	If Topic = "pubbord" Then
-		If m.IndexOf("died") > -1 Then
+		If m.IndexOf("DIED") > -1 Then
 			Return
 		End If
 		CallSub2(Main, "CheckIpExits", m)

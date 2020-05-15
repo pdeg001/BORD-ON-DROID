@@ -134,13 +134,14 @@ public static long _serverdied = 0L;
 public static String _selectedbordname = "";
 public static boolean _mqttgetbordsactive = false;
 public static boolean _mqttgetborddataactive = false;
+public static int _diedindex = 0;
 public nl.pdeg.bordondroid.main _main = null;
 public nl.pdeg.bordondroid.serverboard _serverboard = null;
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
- //BA.debugLineNum = 25;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
- //BA.debugLineNum = 26;BA.debugLine="Return True";
+ //BA.debugLineNum = 26;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
+ //BA.debugLineNum = 27;BA.debugLine="Return True";
 if (true) return anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 27;BA.debugLine="End Sub";
+ //BA.debugLineNum = 28;BA.debugLine="End Sub";
 return false;
 }
 public static String  _process_globals() throws Exception{
@@ -162,24 +163,26 @@ _selectedbordname = "";
  //BA.debugLineNum = 14;BA.debugLine="Public mqttGetBordsActive, mqttGetBordDataActive";
 _mqttgetbordsactive = false;
 _mqttgetborddataactive = false;
- //BA.debugLineNum = 15;BA.debugLine="End Sub";
+ //BA.debugLineNum = 15;BA.debugLine="Public diedIndex As Int = -1";
+_diedindex = (int) (-1);
+ //BA.debugLineNum = 16;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_create() throws Exception{
- //BA.debugLineNum = 17;BA.debugLine="Sub Service_Create";
- //BA.debugLineNum = 18;BA.debugLine="serverList.Initialize";
+ //BA.debugLineNum = 18;BA.debugLine="Sub Service_Create";
+ //BA.debugLineNum = 19;BA.debugLine="serverList.Initialize";
 _serverlist.Initialize();
- //BA.debugLineNum = 19;BA.debugLine="End Sub";
+ //BA.debugLineNum = 20;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_destroy() throws Exception{
- //BA.debugLineNum = 29;BA.debugLine="Sub Service_Destroy";
- //BA.debugLineNum = 31;BA.debugLine="End Sub";
+ //BA.debugLineNum = 30;BA.debugLine="Sub Service_Destroy";
+ //BA.debugLineNum = 32;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
- //BA.debugLineNum = 21;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
- //BA.debugLineNum = 23;BA.debugLine="End Sub";
+ //BA.debugLineNum = 22;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
+ //BA.debugLineNum = 24;BA.debugLine="End Sub";
 return "";
 }
 }

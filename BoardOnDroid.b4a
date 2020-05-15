@@ -26,7 +26,7 @@ Library3=randomaccessfile
 Library4=json
 Library5=customlistview
 Library6=phone
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
 Module1=mqttGetBordData
 Module2=mqttGetBords
 Module3=ServerBoard
@@ -69,10 +69,12 @@ Sub Globals
 	Private lblLastCheck As Label
 	Private pnlNobords As Panel
 '	Private B4XLoadingIndicator1 As B4XLoadingIndicator
+	Private lblVersion As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	lblVersion.Text = "v"&Application.VersionName
 	clvServer.Clear
 	mqttGetData.Initialize
 	mqttGetBord.Initialize
@@ -83,6 +85,11 @@ Sub Activity_Create(FirstTime As Boolean)
 End Sub
 
 Sub tmrBordAlive_Tick
+	If Starter.diedIndex > -1 Then
+		clvServer.RemoveAt(Starter.diedIndex)
+		Starter.serverList.RemoveAt(Starter.diedIndex)
+		Starter.diedIndex = -1
+	End If
 	ServerAlive
 End Sub
 
@@ -117,7 +124,7 @@ End Sub
 Sub genUnitList(name As String, alive As Boolean) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 85dip) '190
+	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 10dip) '190
 	p.LoadLayout("clvBorden")
 	p.Tag = name
 	
@@ -212,6 +219,7 @@ Sub CheckIpInClv(bord As bordStatus)
 					If bord.alive = False Then
 						lbl.Enabled = False
 						lbl.TextColor = Colors.Red
+						Starter.diedIndex = i
 					Else
 						lbl.Enabled = True
 						lbl.TextColor = 0xFF027F00
@@ -224,7 +232,7 @@ Sub CheckIpInClv(bord As bordStatus)
 	
 '	Log("------ ADD BORD TO LIST")
 	pnlNobords.SetVisibleAnimated(1000, False)
-	clvServer.Add(genUnitList(bord.name, bord.alive), 130dip, "")
+	clvServer.Add(genUnitList(bord.name, bord.alive), 100dip, "")
 End Sub
 
 Sub lblViewBord_Click
@@ -254,8 +262,24 @@ Private Sub PrepTopicName(bord As String) As String
 End Sub
 
 
+Sub clvServer_ItemClick (Index As Int, Value As Object)
+	Dim p As Panel = clvServer.GetPanel(Index)
+	Dim lbl As Label
+	
+	
+	For Each c As View In p.GetAllViewsRecursive
+		If c.Tag = "name" Then
+			lbl = c
+			Starter.selectedBordName = PrepTopicName(lbl.Text)
+			Starter.DiscoveredServer = lbl.Text
+			Exit
+		End If
+	Next
+	
+	DisconnectMqtt
+	Sleep(100)
 
-
-
+	StartActivity(ServerBoard)
+End Sub
 
 

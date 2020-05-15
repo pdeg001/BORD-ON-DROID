@@ -14,6 +14,7 @@ Sub Process_Globals
 	Dim dataTmr As Timer
 	Dim dotCount As Int = 0
 	Dim waitText As String 
+	Dim cs As CSBuilder
 End Sub
 
 Sub Globals
@@ -54,10 +55,21 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	Activity.LoadLayout("ServerBoard")
+	Dim p As Phone
+	Dim bmp As Bitmap
 	
-	Dim bmp As Bitmap = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
+	p.SetScreenOrientation(0)
+	Activity.LoadLayout("ServerBoard")
+	Dim nuleen As Int = Rnd(0,2)
+	Log("RND " & nuleen)
+	
+	If nuleen = 0 Then
+		bmp = LoadBitmapResize(File.DirAssets, "sven1.jpg", imgSponsor.Width, imgSponsor.Height, True)
+	Else
+		bmp = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
+	End If
 	imgSponsor.SetBackgroundImage(bmp)
+	'imgSponsor.Bitmap = LoadBitmap(File.DirAssets, "sven_oud.jpg")
 	
 	mqttGetData.Initialize
 	dataTmr.Initialize("dataTmr", 1000)
@@ -127,7 +139,7 @@ public Sub UpdateBordWhenClient(data As Message)
 '		lblNoData.Visible = True
 		Sleep(1200)
 	End If
-	lblSpelduur.TextColor = Colors.Yellow
+	lblSpelduur.TextColor = Colors.White
 	Dim Number, str As String
 	str = data.Body
 	
@@ -157,7 +169,7 @@ public Sub UpdateBordWhenClient(data As Message)
 	
 	
 	
-'	lbl_player_one_name.Text = p1.Get("naam")
+	lblP1Name.Text = p1.Get("naam")
 	Number = p1.Get("caram")
 	lblP1100.Text = Number.SubString2(0,1)
 	lblP110.Text = Number.SubString2(1,2)
@@ -166,13 +178,14 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblP1Maken100.Text = Number.SubString2(0,1)
 	lblP1Maken10.Text = Number.SubString2(1,2)
 	lblP1Maken1.Text = Number.SubString2(2,3)
-	lblP1Moy.Text = p1.Get("moyenne")
+	'lblP1Moy.Text = p1.Get("moyenne")
+	lblP1Moy.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).Append("  ").Append(p1.Get("moyenne")).PopAll
 '	lbl_player_one_perc.Text = p1.Get("percentage")
 	
 '	funcScorebord.p1_progress = ( p1.Get("caram")/p1.Get("maken"))*100
 '	funcScorebord.p2_progress = ( p2.Get("caram")/p2.Get("maken"))*100
 	
-'	lbl_player_two_name.Text = p2.Get("naam")
+	lblp2name.Text = p2.Get("naam")
 	Number = p2.Get("caram")
 	lblP2100.Text = Number.SubString2(0,1)
 	lblP210.Text = Number.SubString2(1,2)
@@ -181,7 +194,15 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblP2Maken100.Text = Number.SubString2(0,1)
 	lblP2Maken10.Text = Number.SubString2(1,2)
 	lblP2Maken1.Text = Number.SubString2(2,3)
-	lblP2Moy.Text = p2.Get("moyenne")
+	cs.Initialize.Append("").Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).PopAll
+	
+'	cs.Image(LoadBitmap(File.DirAssets, "myimage.png"), 40dip, 40dip, False).Append(CRLF).Append("Police")
+'	cs.PopAll
+'	btnImg.Text = cs
+	'Chr(0xE6E1)
+	'lblP2Moy.Text = $"${cs.ToString} ${p2.Get("moyenne")}"$
+	lblP2Moy.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).Append("  ").Append(p2.Get("moyenne")).PopAll
+	'lblP2Moy.Text = cs.ToString
 '	lbl_player_two_perc.Text = p2.Get("percentage")
 	
 	lblBeurt100.Text = aantal.SubString2(0,1)
@@ -189,6 +210,7 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblBeurt1.Text = aantal.SubString2(2,3)
 '	lbl_innings.Text = aantal'score.Get("beurten")
 	lblSpelduur.Text = tijd'score.Get("spelduur")
+	lblSpelduur.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF253)).Append("  ").Append(tijd).PopAll
 	'setProgress(p1_progressBar, p1_progress)
 	
 '	CallSub(funcScorebord, "SetProgressBarForMirror")
