@@ -38,11 +38,13 @@ End Sub
 Public Sub Disconnect
 	If connected Then
 		Try
+			Log("CLOSE BORDS")
 			client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 			client.Close
 			connected = False
 		Catch
-			Log(LastException)
+			Log("BORD DATA " &LastException)
+			client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 			connected = False
 			client.Close
 		End Try
@@ -50,17 +52,22 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-	connected = False
-	If Success Then
-		connected = True
-		Starter.mqttGetBordsActive = connected
-		client.Subscribe(pubBord, 0)
-	Else
-		ToastMessageShow("Error connecting: " & LastException, True)
-	End If
+	Try
+		connected = False
+		If Success Then
+			connected = True
+			Starter.mqttGetBordsActive = connected
+			client.Subscribe(pubBord, 0)
+		Else
+			ToastMessageShow("Error connecting: " & LastException, True)
+		End If
+	Catch
+		Log(LastException)	
+	End Try
 End Sub
 
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
+	If connected = False Then Return
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As String = receivedObject
 	Dim baseName As String = $"${CallSub(Starter, "GetBase")}/pubbord"$

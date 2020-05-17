@@ -417,52 +417,79 @@ isdefault = "";
 			return BA.TypeToString(this, false);
 		}}
 public static String  _activity_create(boolean _firsttime) throws Exception{
+anywheresoftware.b4a.phone.Phone _ph = null;
  //BA.debugLineNum = 48;BA.debugLine="Sub Activity_Create(FirstTime As Boolean)";
- //BA.debugLineNum = 49;BA.debugLine="Activity.LoadLayout(\"main\")";
+ //BA.debugLineNum = 49;BA.debugLine="Dim ph As Phone";
+_ph = new anywheresoftware.b4a.phone.Phone();
+ //BA.debugLineNum = 50;BA.debugLine="ph.SetScreenOrientation(1)";
+_ph.SetScreenOrientation(processBA,(int) (1));
+ //BA.debugLineNum = 51;BA.debugLine="Activity.LoadLayout(\"main\")";
 mostCurrent._activity.LoadLayout("main",mostCurrent.activityBA);
- //BA.debugLineNum = 51;BA.debugLine="baseFile.Initialize";
+ //BA.debugLineNum = 53;BA.debugLine="baseFile.Initialize";
 _basefile._initialize /*String*/ (processBA);
- //BA.debugLineNum = 54;BA.debugLine="lblVersion.Text = \"v\"&Application.VersionName";
+ //BA.debugLineNum = 56;BA.debugLine="lblVersion.Text = \"v\"&Application.VersionName";
 mostCurrent._lblversion.setText(BA.ObjectToCharSequence("v"+anywheresoftware.b4a.keywords.Common.Application.getVersionName()));
- //BA.debugLineNum = 55;BA.debugLine="pnlNobords.Visible = False";
+ //BA.debugLineNum = 57;BA.debugLine="pnlNobords.Visible = False";
 mostCurrent._pnlnobords.setVisible(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 57;BA.debugLine="getBaseList";
+ //BA.debugLineNum = 59;BA.debugLine="getBaseList";
 _getbaselist();
- //BA.debugLineNum = 59;BA.debugLine="End Sub";
+ //BA.debugLineNum = 61;BA.debugLine="End Sub";
 return "";
 }
 public static boolean  _activity_keypress(int _keycode) throws Exception{
- //BA.debugLineNum = 127;BA.debugLine="Private Sub Activity_KeyPress(KeyCode As Int) As B";
- //BA.debugLineNum = 128;BA.debugLine="If KeyCode = KeyCodes.KEYCODE_BACK Then";
+ //BA.debugLineNum = 146;BA.debugLine="Private Sub Activity_KeyPress(KeyCode As Int) As B";
+ //BA.debugLineNum = 147;BA.debugLine="If KeyCode = KeyCodes.KEYCODE_BACK Then";
 if (_keycode==anywheresoftware.b4a.keywords.Common.KeyCodes.KEYCODE_BACK) { 
- //BA.debugLineNum = 129;BA.debugLine="tmrBordLastAlive.Enabled = False";
+ //BA.debugLineNum = 148;BA.debugLine="tmrBordLastAlive.Enabled = False";
 _tmrbordlastalive.setEnabled(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 130;BA.debugLine="Activity.Finish";
+ //BA.debugLineNum = 149;BA.debugLine="DisconnectMqtt";
+_disconnectmqtt();
+ //BA.debugLineNum = 150;BA.debugLine="Activity.Finish";
 mostCurrent._activity.Finish();
- //BA.debugLineNum = 132;BA.debugLine="Return False";
+ //BA.debugLineNum = 152;BA.debugLine="Return False";
 if (true) return anywheresoftware.b4a.keywords.Common.False;
  }else {
- //BA.debugLineNum = 134;BA.debugLine="Return False";
+ //BA.debugLineNum = 154;BA.debugLine="Return False";
 if (true) return anywheresoftware.b4a.keywords.Common.False;
  };
- //BA.debugLineNum = 136;BA.debugLine="End Sub";
+ //BA.debugLineNum = 156;BA.debugLine="End Sub";
 return false;
 }
 public static String  _activity_pause(boolean _userclosed) throws Exception{
- //BA.debugLineNum = 123;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
- //BA.debugLineNum = 124;BA.debugLine="DisconnectMqtt";
-_disconnectmqtt();
- //BA.debugLineNum = 125;BA.debugLine="End Sub";
+ //BA.debugLineNum = 133;BA.debugLine="Sub Activity_Pause (UserClosed As Boolean)";
+ //BA.debugLineNum = 134;BA.debugLine="tmrBordLastAlive.Enabled = False";
+_tmrbordlastalive.setEnabled(anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 144;BA.debugLine="End Sub";
 return "";
 }
 public static String  _activity_resume() throws Exception{
- //BA.debugLineNum = 117;BA.debugLine="Sub Activity_Resume";
- //BA.debugLineNum = 118;BA.debugLine="If Starter.mqttGetBordsActive Then";
+nl.pdeg.bordondroid.main._bordstatus _bd = null;
+ //BA.debugLineNum = 119;BA.debugLine="Sub Activity_Resume";
+ //BA.debugLineNum = 120;BA.debugLine="If Starter.mqttGetBordsActive Then";
 if (mostCurrent._starter._mqttgetbordsactive /*boolean*/ ) { 
- //BA.debugLineNum = 119;BA.debugLine="mqttGetBord.Connect";
+ //BA.debugLineNum = 121;BA.debugLine="If Starter.serverList.Size > 0 Then";
+if (mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .getSize()>0) { 
+ //BA.debugLineNum = 123;BA.debugLine="clvServer.Clear";
+mostCurrent._clvserver._clear();
+ //BA.debugLineNum = 124;BA.debugLine="pnlNobords.SetVisibleAnimated(100, False)";
+mostCurrent._pnlnobords.SetVisibleAnimated((int) (100),anywheresoftware.b4a.keywords.Common.False);
+ //BA.debugLineNum = 125;BA.debugLine="For Each bd As bordStatus In Starter.serverList";
+{
+final anywheresoftware.b4a.BA.IterableList group5 = mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ ;
+final int groupLen5 = group5.getSize()
+;int index5 = 0;
+;
+for (; index5 < groupLen5;index5++){
+_bd = (nl.pdeg.bordondroid.main._bordstatus)(group5.Get(index5));
+ //BA.debugLineNum = 126;BA.debugLine="clvServer.Add(genUnitList(bd.name, bd.alive),";
+mostCurrent._clvserver._add((anywheresoftware.b4a.objects.B4XViewWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.B4XViewWrapper(), (java.lang.Object)(_genunitlist(_bd.name /*String*/ ,_bd.alive /*boolean*/ ).getObject())),(Object)(""));
+ }
+};
+ };
+ //BA.debugLineNum = 129;BA.debugLine="mqttGetBord.Connect";
 _mqttgetbord._connect /*String*/ ();
  };
- //BA.debugLineNum = 121;BA.debugLine="End Sub";
+ //BA.debugLineNum = 131;BA.debugLine="End Sub";
 return "";
 }
 public static void  _addunkownip(String _ip,String _name) throws Exception{
@@ -491,23 +518,23 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 205;BA.debugLine="Dim bordStatus As bordStatus";
+ //BA.debugLineNum = 228;BA.debugLine="Dim bordStatus As bordStatus";
 _bordstatus = new nl.pdeg.bordondroid.main._bordstatus();
- //BA.debugLineNum = 206;BA.debugLine="bordStatus.Initialize";
+ //BA.debugLineNum = 229;BA.debugLine="bordStatus.Initialize";
 _bordstatus.Initialize();
- //BA.debugLineNum = 207;BA.debugLine="bordStatus.ip = ip";
+ //BA.debugLineNum = 230;BA.debugLine="bordStatus.ip = ip";
 _bordstatus.ip /*String*/  = _ip;
- //BA.debugLineNum = 208;BA.debugLine="bordStatus.name = name";
+ //BA.debugLineNum = 231;BA.debugLine="bordStatus.name = name";
 _bordstatus.name /*String*/  = _name;
- //BA.debugLineNum = 209;BA.debugLine="bordStatus.timeStamp = DateTime.Now";
+ //BA.debugLineNum = 232;BA.debugLine="bordStatus.timeStamp = DateTime.Now";
 _bordstatus.timeStamp /*long*/  = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
- //BA.debugLineNum = 210;BA.debugLine="bordStatus.alive = True";
+ //BA.debugLineNum = 233;BA.debugLine="bordStatus.alive = True";
 _bordstatus.alive /*boolean*/  = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 211;BA.debugLine="Starter.serverList.Add(bordStatus)";
+ //BA.debugLineNum = 234;BA.debugLine="Starter.serverList.Add(bordStatus)";
 parent.mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .Add((Object)(_bordstatus));
- //BA.debugLineNum = 212;BA.debugLine="CheckIpInClv(bordStatus)";
+ //BA.debugLineNum = 235;BA.debugLine="CheckIpInClv(bordStatus)";
 _checkipinclv(_bordstatus);
- //BA.debugLineNum = 214;BA.debugLine="If clvServer.GetSize > 0 Then";
+ //BA.debugLineNum = 237;BA.debugLine="If clvServer.GetSize > 0 Then";
 if (true) break;
 
 case 1:
@@ -522,14 +549,14 @@ this.state = 5;
 case 3:
 //C
 this.state = 6;
- //BA.debugLineNum = 215;BA.debugLine="pnlNobords.SetVisibleAnimated(1000, False)";
+ //BA.debugLineNum = 238;BA.debugLine="pnlNobords.SetVisibleAnimated(1000, False)";
 parent.mostCurrent._pnlnobords.SetVisibleAnimated((int) (1000),anywheresoftware.b4a.keywords.Common.False);
  if (true) break;
 
 case 5:
 //C
 this.state = 6;
- //BA.debugLineNum = 217;BA.debugLine="pnlNobords.SetVisibleAnimated(1000, True)";
+ //BA.debugLineNum = 240;BA.debugLine="pnlNobords.SetVisibleAnimated(1000, True)";
 parent.mostCurrent._pnlnobords.SetVisibleAnimated((int) (1000),anywheresoftware.b4a.keywords.Common.True);
  if (true) break;
 
@@ -537,7 +564,7 @@ case 6:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 219;BA.debugLine="Sleep(1000)";
+ //BA.debugLineNum = 242;BA.debugLine="Sleep(1000)";
 anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (1000));
 this.state = 7;
 return;
@@ -545,7 +572,7 @@ case 7:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 221;BA.debugLine="End Sub";
+ //BA.debugLineNum = 244;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -574,9 +601,9 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 312;BA.debugLine="Msgbox2Async(\"Applicatie afsluiten?\", \"Bord Op Dr";
+ //BA.debugLineNum = 337;BA.debugLine="Msgbox2Async(\"Applicatie afsluiten?\", \"Bord Op Dr";
 anywheresoftware.b4a.keywords.Common.Msgbox2Async(BA.ObjectToCharSequence("Applicatie afsluiten?"),BA.ObjectToCharSequence("Bord Op Droid"),"JA","","NEE",(anywheresoftware.b4a.objects.drawable.CanvasWrapper.BitmapWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.drawable.CanvasWrapper.BitmapWrapper(), (android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.Null)),processBA,anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 313;BA.debugLine="Wait For Msgbox_Result(Result As Int)";
+ //BA.debugLineNum = 338;BA.debugLine="Wait For Msgbox_Result(Result As Int)";
 anywheresoftware.b4a.keywords.Common.WaitFor("msgbox_result", processBA, this, null);
 this.state = 5;
 return;
@@ -585,7 +612,7 @@ case 5:
 this.state = 1;
 _result = (Integer) result[0];
 ;
- //BA.debugLineNum = 314;BA.debugLine="If Result = DialogResponse.POSITIVE Then";
+ //BA.debugLineNum = 339;BA.debugLine="If Result = DialogResponse.POSITIVE Then";
 if (true) break;
 
 case 1:
@@ -598,7 +625,7 @@ this.state = 3;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 315;BA.debugLine="Activity.Finish";
+ //BA.debugLineNum = 340;BA.debugLine="Activity.Finish";
 parent.mostCurrent._activity.Finish();
  if (true) break;
 
@@ -606,7 +633,7 @@ case 4:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 317;BA.debugLine="End Sub";
+ //BA.debugLineNum = 342;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -637,17 +664,17 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 320;BA.debugLine="Starter.testBaseName = True";
+ //BA.debugLineNum = 345;BA.debugLine="Starter.testBaseName = True";
 parent.mostCurrent._starter._testbasename /*boolean*/  = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 321;BA.debugLine="mqttGetBord.Initialize";
+ //BA.debugLineNum = 346;BA.debugLine="mqttGetBord.Initialize";
 parent._mqttgetbord._initialize /*String*/ (processBA);
- //BA.debugLineNum = 322;BA.debugLine="CallSub2(Starter, \"SetSubBase\", edtLocationCode.T";
+ //BA.debugLineNum = 347;BA.debugLine="CallSub2(Starter, \"SetSubBase\", edtLocationCode.T";
 anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(parent.mostCurrent._starter.getObject()),"SetSubBase",(Object)(parent.mostCurrent._edtlocationcode.getText()));
- //BA.debugLineNum = 323;BA.debugLine="CallSub(Starter, \"SetSubGetUnits\")";
+ //BA.debugLineNum = 348;BA.debugLine="CallSub(Starter, \"SetSubGetUnits\")";
 anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(parent.mostCurrent._starter.getObject()),"SetSubGetUnits");
- //BA.debugLineNum = 324;BA.debugLine="mqttGetBord.SetPubBord";
+ //BA.debugLineNum = 349;BA.debugLine="mqttGetBord.SetPubBord";
 parent._mqttgetbord._setpubbord /*String*/ ();
- //BA.debugLineNum = 325;BA.debugLine="Sleep(100)";
+ //BA.debugLineNum = 350;BA.debugLine="Sleep(100)";
 anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (100));
 this.state = 7;
 return;
@@ -655,9 +682,9 @@ case 7:
 //C
 this.state = 1;
 ;
- //BA.debugLineNum = 326;BA.debugLine="mqttGetBord.Connect";
+ //BA.debugLineNum = 351;BA.debugLine="mqttGetBord.Connect";
 parent._mqttgetbord._connect /*String*/ ();
- //BA.debugLineNum = 328;BA.debugLine="Sleep(1000)";
+ //BA.debugLineNum = 353;BA.debugLine="Sleep(1000)";
 anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (1000));
 this.state = 8;
 return;
@@ -665,7 +692,7 @@ case 8:
 //C
 this.state = 1;
 ;
- //BA.debugLineNum = 330;BA.debugLine="If mqttGetBord.connected = False Then";
+ //BA.debugLineNum = 355;BA.debugLine="If mqttGetBord.connected = False Then";
 if (true) break;
 
 case 1:
@@ -680,9 +707,9 @@ this.state = 5;
 case 3:
 //C
 this.state = 6;
- //BA.debugLineNum = 331;BA.debugLine="Msgbox2Async(\"Kan geen verbinding maken met loca";
+ //BA.debugLineNum = 356;BA.debugLine="Msgbox2Async(\"Kan geen verbinding maken met loca";
 anywheresoftware.b4a.keywords.Common.Msgbox2Async(BA.ObjectToCharSequence("Kan geen verbinding maken met locatie"),BA.ObjectToCharSequence("Bord Op Droid"),"OKE","","",(anywheresoftware.b4a.objects.drawable.CanvasWrapper.BitmapWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.drawable.CanvasWrapper.BitmapWrapper(), (android.graphics.Bitmap)(anywheresoftware.b4a.keywords.Common.Null)),processBA,anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 332;BA.debugLine="Wait For Msgbox_Result(Result As Int)";
+ //BA.debugLineNum = 357;BA.debugLine="Wait For Msgbox_Result(Result As Int)";
 anywheresoftware.b4a.keywords.Common.WaitFor("msgbox_result", processBA, this, null);
 this.state = 9;
 return;
@@ -696,15 +723,15 @@ _result = (Integer) result[0];
 case 5:
 //C
 this.state = 6;
- //BA.debugLineNum = 334;BA.debugLine="ToastMessageShow(\"Verbonden met locatie\", True)";
+ //BA.debugLineNum = 359;BA.debugLine="ToastMessageShow(\"Verbonden met locatie\", True)";
 anywheresoftware.b4a.keywords.Common.ToastMessageShow(BA.ObjectToCharSequence("Verbonden met locatie"),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 335;BA.debugLine="mqttGetBord.Disconnect";
+ //BA.debugLineNum = 360;BA.debugLine="mqttGetBord.Disconnect";
 parent._mqttgetbord._disconnect /*String*/ ();
- //BA.debugLineNum = 336;BA.debugLine="pnlLocationCOde.Visible = False";
+ //BA.debugLineNum = 361;BA.debugLine="pnlLocationCOde.Visible = False";
 parent.mostCurrent._pnllocationcode.setVisible(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 337;BA.debugLine="baseFile.SetBase(edtLocationCode.Text)";
+ //BA.debugLineNum = 362;BA.debugLine="baseFile.SetBase(edtLocationCode.Text)";
 parent._basefile._setbase /*String*/ (parent.mostCurrent._edtlocationcode.getText());
- //BA.debugLineNum = 338;BA.debugLine="StartConnection";
+ //BA.debugLineNum = 363;BA.debugLine="StartConnection";
 _startconnection();
  if (true) break;
 
@@ -712,7 +739,7 @@ case 6:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 340;BA.debugLine="End Sub";
+ //BA.debugLineNum = 365;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -723,24 +750,24 @@ public static String  _checkipexits(String _bord) throws Exception{
 boolean _ipfound = false;
 String _name = "";
 nl.pdeg.bordondroid.main._bordstatus _lst = null;
- //BA.debugLineNum = 160;BA.debugLine="Sub CheckIpExits(bord As String)";
- //BA.debugLineNum = 162;BA.debugLine="Dim ipFound As Boolean = False";
+ //BA.debugLineNum = 183;BA.debugLine="Sub CheckIpExits(bord As String)";
+ //BA.debugLineNum = 185;BA.debugLine="Dim ipFound As Boolean = False";
 _ipfound = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 163;BA.debugLine="Dim name As String = \"\"";
+ //BA.debugLineNum = 186;BA.debugLine="Dim name As String = \"\"";
 _name = "";
- //BA.debugLineNum = 165;BA.debugLine="If bord.Length = 0 Then Return";
+ //BA.debugLineNum = 188;BA.debugLine="If bord.Length = 0 Then Return";
 if (_bord.length()==0) { 
 if (true) return "";};
- //BA.debugLineNum = 167;BA.debugLine="name = bord";
+ //BA.debugLineNum = 190;BA.debugLine="name = bord";
 _name = _bord;
- //BA.debugLineNum = 169;BA.debugLine="If Starter.serverList.Size = 0 Then";
+ //BA.debugLineNum = 192;BA.debugLine="If Starter.serverList.Size = 0 Then";
 if (mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .getSize()==0) { 
- //BA.debugLineNum = 170;BA.debugLine="AddUnkownIp(\"\", name)";
+ //BA.debugLineNum = 193;BA.debugLine="AddUnkownIp(\"\", name)";
 _addunkownip("",_name);
- //BA.debugLineNum = 171;BA.debugLine="Return";
+ //BA.debugLineNum = 194;BA.debugLine="Return";
 if (true) return "";
  };
- //BA.debugLineNum = 174;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
+ //BA.debugLineNum = 197;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
 {
 final anywheresoftware.b4a.BA.IterableList group9 = mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ ;
 final int groupLen9 = group9.getSize()
@@ -748,27 +775,27 @@ final int groupLen9 = group9.getSize()
 ;
 for (; index9 < groupLen9;index9++){
 _lst = (nl.pdeg.bordondroid.main._bordstatus)(group9.Get(index9));
- //BA.debugLineNum = 175;BA.debugLine="If lst.name = name Then";
+ //BA.debugLineNum = 198;BA.debugLine="If lst.name = name Then";
 if ((_lst.name /*String*/ ).equals(_name)) { 
- //BA.debugLineNum = 176;BA.debugLine="ipFound = True";
+ //BA.debugLineNum = 199;BA.debugLine="ipFound = True";
 _ipfound = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 177;BA.debugLine="lst.timeStamp = DateTime.Now";
+ //BA.debugLineNum = 200;BA.debugLine="lst.timeStamp = DateTime.Now";
 _lst.timeStamp /*long*/  = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
- //BA.debugLineNum = 178;BA.debugLine="lst.alive = True";
+ //BA.debugLineNum = 201;BA.debugLine="lst.alive = True";
 _lst.alive /*boolean*/  = anywheresoftware.b4a.keywords.Common.True;
  };
  }
 };
- //BA.debugLineNum = 182;BA.debugLine="ServerAlive";
+ //BA.debugLineNum = 205;BA.debugLine="ServerAlive";
 _serveralive();
- //BA.debugLineNum = 184;BA.debugLine="If Not(ipFound) Then";
+ //BA.debugLineNum = 207;BA.debugLine="If Not(ipFound) Then";
 if (anywheresoftware.b4a.keywords.Common.Not(_ipfound)) { 
- //BA.debugLineNum = 185;BA.debugLine="AddUnkownIp(\"\", name)";
+ //BA.debugLineNum = 208;BA.debugLine="AddUnkownIp(\"\", name)";
 _addunkownip("",_name);
- //BA.debugLineNum = 186;BA.debugLine="Return";
+ //BA.debugLineNum = 209;BA.debugLine="Return";
 if (true) return "";
  };
- //BA.debugLineNum = 188;BA.debugLine="End Sub";
+ //BA.debugLineNum = 211;BA.debugLine="End Sub";
 return "";
 }
 public static String  _checkipinclv(nl.pdeg.bordondroid.main._bordstatus _bord) throws Exception{
@@ -776,22 +803,22 @@ anywheresoftware.b4a.objects.PanelWrapper _p = null;
 anywheresoftware.b4a.objects.LabelWrapper _lbl = null;
 int _i = 0;
 anywheresoftware.b4a.objects.ConcreteViewWrapper _v = null;
- //BA.debugLineNum = 223;BA.debugLine="Sub CheckIpInClv(bord As bordStatus)";
- //BA.debugLineNum = 224;BA.debugLine="Dim p As Panel";
+ //BA.debugLineNum = 246;BA.debugLine="Sub CheckIpInClv(bord As bordStatus)";
+ //BA.debugLineNum = 247;BA.debugLine="Dim p As Panel";
 _p = new anywheresoftware.b4a.objects.PanelWrapper();
- //BA.debugLineNum = 225;BA.debugLine="Dim lbl As Label";
+ //BA.debugLineNum = 248;BA.debugLine="Dim lbl As Label";
 _lbl = new anywheresoftware.b4a.objects.LabelWrapper();
- //BA.debugLineNum = 227;BA.debugLine="For i = 0 To clvServer.GetSize-1";
+ //BA.debugLineNum = 250;BA.debugLine="For i = 0 To clvServer.GetSize-1";
 {
 final int step3 = 1;
 final int limit3 = (int) (mostCurrent._clvserver._getsize()-1);
 _i = (int) (0) ;
 for (;_i <= limit3 ;_i = _i + step3 ) {
- //BA.debugLineNum = 228;BA.debugLine="p = clvServer.GetPanel(i)";
+ //BA.debugLineNum = 251;BA.debugLine="p = clvServer.GetPanel(i)";
 _p.setObject((android.view.ViewGroup)(mostCurrent._clvserver._getpanel(_i).getObject()));
- //BA.debugLineNum = 229;BA.debugLine="If p.Tag = bord.name Then";
+ //BA.debugLineNum = 252;BA.debugLine="If p.Tag = bord.name Then";
 if ((_p.getTag()).equals((Object)(_bord.name /*String*/ ))) { 
- //BA.debugLineNum = 230;BA.debugLine="For Each v As View In p.GetAllViewsRecursive";
+ //BA.debugLineNum = 253;BA.debugLine="For Each v As View In p.GetAllViewsRecursive";
 _v = new anywheresoftware.b4a.objects.ConcreteViewWrapper();
 {
 final anywheresoftware.b4a.BA.IterableList group6 = _p.GetAllViewsRecursive();
@@ -800,16 +827,16 @@ final int groupLen6 = group6.getSize()
 ;
 for (; index6 < groupLen6;index6++){
 _v.setObject((android.view.View)(group6.Get(index6)));
- //BA.debugLineNum = 231;BA.debugLine="If v.Tag = \"lblLastCheck\" Then";
+ //BA.debugLineNum = 254;BA.debugLine="If v.Tag = \"lblLastCheck\" Then";
 if ((_v.getTag()).equals((Object)("lblLastCheck"))) { 
- //BA.debugLineNum = 232;BA.debugLine="lbl = v";
+ //BA.debugLineNum = 255;BA.debugLine="lbl = v";
 _lbl.setObject((android.widget.TextView)(_v.getObject()));
- //BA.debugLineNum = 233;BA.debugLine="lbl.Text = $\"Laatste controle $Time{DateTime.";
+ //BA.debugLineNum = 256;BA.debugLine="lbl.Text = $\"Laatste controle $Time{DateTime.";
 _lbl.setText(BA.ObjectToCharSequence(("Laatste controle "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("time",(Object)(anywheresoftware.b4a.keywords.Common.DateTime.getNow()))+"")));
  };
  }
 };
- //BA.debugLineNum = 237;BA.debugLine="For Each v As View In p.GetAllViewsRecursive";
+ //BA.debugLineNum = 260;BA.debugLine="For Each v As View In p.GetAllViewsRecursive";
 _v = new anywheresoftware.b4a.objects.ConcreteViewWrapper();
 {
 final anywheresoftware.b4a.BA.IterableList group12 = _p.GetAllViewsRecursive();
@@ -818,25 +845,25 @@ final int groupLen12 = group12.getSize()
 ;
 for (; index12 < groupLen12;index12++){
 _v.setObject((android.view.View)(group12.Get(index12)));
- //BA.debugLineNum = 238;BA.debugLine="If v.Tag = \"viewbord\" Then";
+ //BA.debugLineNum = 261;BA.debugLine="If v.Tag = \"viewbord\" Then";
 if ((_v.getTag()).equals((Object)("viewbord"))) { 
- //BA.debugLineNum = 239;BA.debugLine="lbl = v";
+ //BA.debugLineNum = 262;BA.debugLine="lbl = v";
 _lbl.setObject((android.widget.TextView)(_v.getObject()));
- //BA.debugLineNum = 240;BA.debugLine="If bord.alive = False Then";
+ //BA.debugLineNum = 263;BA.debugLine="If bord.alive = False Then";
 if (_bord.alive /*boolean*/ ==anywheresoftware.b4a.keywords.Common.False) { 
- //BA.debugLineNum = 241;BA.debugLine="lbl.Enabled = False";
+ //BA.debugLineNum = 264;BA.debugLine="lbl.Enabled = False";
 _lbl.setEnabled(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 242;BA.debugLine="lbl.TextColor = Colors.Red";
+ //BA.debugLineNum = 265;BA.debugLine="lbl.TextColor = Colors.Red";
 _lbl.setTextColor(anywheresoftware.b4a.keywords.Common.Colors.Red);
- //BA.debugLineNum = 243;BA.debugLine="Starter.diedIndex = i";
+ //BA.debugLineNum = 266;BA.debugLine="Starter.diedIndex = i";
 mostCurrent._starter._diedindex /*int*/  = _i;
  }else {
- //BA.debugLineNum = 245;BA.debugLine="lbl.Enabled = True";
+ //BA.debugLineNum = 268;BA.debugLine="lbl.Enabled = True";
 _lbl.setEnabled(anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 246;BA.debugLine="lbl.TextColor = 0xFF027F00";
+ //BA.debugLineNum = 269;BA.debugLine="lbl.TextColor = 0xFF027F00";
 _lbl.setTextColor((int) (0xff027f00));
  };
- //BA.debugLineNum = 248;BA.debugLine="Return";
+ //BA.debugLineNum = 271;BA.debugLine="Return";
 if (true) return "";
  };
  }
@@ -844,11 +871,11 @@ if (true) return "";
  };
  }
 };
- //BA.debugLineNum = 255;BA.debugLine="pnlNobords.SetVisibleAnimated(1000, False)";
+ //BA.debugLineNum = 278;BA.debugLine="pnlNobords.SetVisibleAnimated(1000, False)";
 mostCurrent._pnlnobords.SetVisibleAnimated((int) (1000),anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 256;BA.debugLine="clvServer.Add(genUnitList(bord.name, bord.alive),";
+ //BA.debugLineNum = 279;BA.debugLine="clvServer.Add(genUnitList(bord.name, bord.alive),";
 mostCurrent._clvserver._add((anywheresoftware.b4a.objects.B4XViewWrapper) anywheresoftware.b4a.AbsObjectWrapper.ConvertToWrapper(new anywheresoftware.b4a.objects.B4XViewWrapper(), (java.lang.Object)(_genunitlist(_bord.name /*String*/ ,_bord.alive /*boolean*/ ).getObject())),(Object)(""));
- //BA.debugLineNum = 257;BA.debugLine="End Sub";
+ //BA.debugLineNum = 280;BA.debugLine="End Sub";
 return "";
 }
 public static void  _clvserver_itemclick(int _index,Object _value) throws Exception{
@@ -867,6 +894,7 @@ Object _value;
 anywheresoftware.b4a.objects.PanelWrapper _p = null;
 anywheresoftware.b4a.objects.LabelWrapper _lbl = null;
 anywheresoftware.b4a.objects.ConcreteViewWrapper _c = null;
+anywheresoftware.b4a.phone.Phone _ph = null;
 anywheresoftware.b4a.BA.IterableList group3;
 int index3;
 int groupLen3;
@@ -882,12 +910,12 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 287;BA.debugLine="Dim p As Panel = clvServer.GetPanel(Index)";
+ //BA.debugLineNum = 311;BA.debugLine="Dim p As Panel = clvServer.GetPanel(Index)";
 _p = new anywheresoftware.b4a.objects.PanelWrapper();
 _p.setObject((android.view.ViewGroup)(parent.mostCurrent._clvserver._getpanel(_index).getObject()));
- //BA.debugLineNum = 288;BA.debugLine="Dim lbl As Label";
+ //BA.debugLineNum = 312;BA.debugLine="Dim lbl As Label";
 _lbl = new anywheresoftware.b4a.objects.LabelWrapper();
- //BA.debugLineNum = 291;BA.debugLine="For Each c As View In p.GetAllViewsRecursive";
+ //BA.debugLineNum = 315;BA.debugLine="For Each c As View In p.GetAllViewsRecursive";
 if (true) break;
 
 case 1:
@@ -917,7 +945,7 @@ if (true) break;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 292;BA.debugLine="If c.Tag = \"name\" Then";
+ //BA.debugLineNum = 316;BA.debugLine="If c.Tag = \"name\" Then";
 if (true) break;
 
 case 4:
@@ -930,13 +958,13 @@ this.state = 6;
 case 6:
 //C
 this.state = 7;
- //BA.debugLineNum = 293;BA.debugLine="lbl = c";
+ //BA.debugLineNum = 317;BA.debugLine="lbl = c";
 _lbl.setObject((android.widget.TextView)(_c.getObject()));
- //BA.debugLineNum = 296;BA.debugLine="CallSub2(Starter, \"SetUnit\", PrepTopicName(lbl.";
+ //BA.debugLineNum = 320;BA.debugLine="CallSub2(Starter, \"SetUnit\", PrepTopicName(lbl.";
 anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(parent.mostCurrent._starter.getObject()),"SetUnit",(Object)(_preptopicname(_lbl.getText()).toLowerCase()));
- //BA.debugLineNum = 297;BA.debugLine="Starter.DiscoveredServer = lbl.Text";
+ //BA.debugLineNum = 321;BA.debugLine="Starter.DiscoveredServer = lbl.Text";
 parent.mostCurrent._starter._discoveredserver /*String*/  = _lbl.getText();
- //BA.debugLineNum = 298;BA.debugLine="Exit";
+ //BA.debugLineNum = 322;BA.debugLine="Exit";
 this.state = 8;
 if (true) break;
  if (true) break;
@@ -952,9 +980,9 @@ case 8:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 302;BA.debugLine="DisconnectMqtt";
+ //BA.debugLineNum = 326;BA.debugLine="DisconnectMqtt";
 _disconnectmqtt();
- //BA.debugLineNum = 303;BA.debugLine="Sleep(100)";
+ //BA.debugLineNum = 327;BA.debugLine="Sleep(100)";
 anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (100));
 this.state = 11;
 return;
@@ -962,9 +990,13 @@ case 11:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 305;BA.debugLine="StartActivity(ServerBoard)";
+ //BA.debugLineNum = 328;BA.debugLine="Dim ph As Phone";
+_ph = new anywheresoftware.b4a.phone.Phone();
+ //BA.debugLineNum = 329;BA.debugLine="ph.SetScreenOrientation(0)";
+_ph.SetScreenOrientation(processBA,(int) (0));
+ //BA.debugLineNum = 330;BA.debugLine="StartActivity(ServerBoard)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(parent.mostCurrent._serverboard.getObject()));
- //BA.debugLineNum = 306;BA.debugLine="End Sub";
+ //BA.debugLineNum = 331;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -972,80 +1004,85 @@ if (true) break;
     }
 }
 public static String  _disconnectmqtt() throws Exception{
- //BA.debugLineNum = 138;BA.debugLine="Sub DisconnectMqtt";
- //BA.debugLineNum = 139;BA.debugLine="If mqttGetBord.Connected Then";
+ //BA.debugLineNum = 158;BA.debugLine="Sub DisconnectMqtt";
+ //BA.debugLineNum = 159;BA.debugLine="If mqttGetData.connected Then";
+if (_mqttgetdata._connected /*boolean*/ ) { 
+ //BA.debugLineNum = 160;BA.debugLine="mqttGetData.Disconnect";
+_mqttgetdata._disconnect /*String*/ ();
+ };
+ //BA.debugLineNum = 162;BA.debugLine="If mqttGetBord.Connected Then";
 if (_mqttgetbord._connected /*boolean*/ ) { 
- //BA.debugLineNum = 140;BA.debugLine="mqttGetBord.Disconnect";
+ //BA.debugLineNum = 163;BA.debugLine="mqttGetBord.Disconnect";
 _mqttgetbord._disconnect /*String*/ ();
  };
- //BA.debugLineNum = 143;BA.debugLine="End Sub";
+ //BA.debugLineNum = 166;BA.debugLine="End Sub";
 return "";
 }
 public static String  _edtlocationcode_textchanged(String _old,String _new) throws Exception{
- //BA.debugLineNum = 342;BA.debugLine="Sub edtLocationCode_TextChanged (Old As String, Ne";
- //BA.debugLineNum = 343;BA.debugLine="If New.Length > 0 Then";
+ //BA.debugLineNum = 367;BA.debugLine="Sub edtLocationCode_TextChanged (Old As String, Ne";
+ //BA.debugLineNum = 368;BA.debugLine="If New.Length > 0 Then";
 if (_new.length()>0) { 
- //BA.debugLineNum = 344;BA.debugLine="btnOk.Enabled = True";
+ //BA.debugLineNum = 369;BA.debugLine="btnOk.Enabled = True";
 mostCurrent._btnok.setEnabled(anywheresoftware.b4a.keywords.Common.True);
  }else {
- //BA.debugLineNum = 346;BA.debugLine="btnOk.Enabled = False";
+ //BA.debugLineNum = 371;BA.debugLine="btnOk.Enabled = False";
 mostCurrent._btnok.setEnabled(anywheresoftware.b4a.keywords.Common.False);
  };
- //BA.debugLineNum = 348;BA.debugLine="End Sub";
+ //BA.debugLineNum = 373;BA.debugLine="End Sub";
 return "";
 }
 public static anywheresoftware.b4a.objects.PanelWrapper  _genunitlist(String _name,boolean _alive) throws Exception{
 anywheresoftware.b4a.objects.PanelWrapper _p = null;
- //BA.debugLineNum = 145;BA.debugLine="Sub genUnitList(name As String, alive As Boolean)";
- //BA.debugLineNum = 146;BA.debugLine="Dim p As Panel";
+ //BA.debugLineNum = 168;BA.debugLine="Sub genUnitList(name As String, alive As Boolean)";
+ //BA.debugLineNum = 169;BA.debugLine="Dim p As Panel";
 _p = new anywheresoftware.b4a.objects.PanelWrapper();
- //BA.debugLineNum = 147;BA.debugLine="p.Initialize(Me)";
+ //BA.debugLineNum = 170;BA.debugLine="p.Initialize(Me)";
 _p.Initialize(mostCurrent.activityBA,BA.ObjectToString(main.getObject()));
- //BA.debugLineNum = 148;BA.debugLine="p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 1";
-_p.SetLayout(anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),mostCurrent._clvserver._asview().getWidth(),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (120)));
- //BA.debugLineNum = 149;BA.debugLine="p.LoadLayout(\"clvBorden\")";
+ //BA.debugLineNum = 171;BA.debugLine="p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 9";
+_p.SetLayout(anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),mostCurrent._clvserver._asview().getWidth(),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (95)));
+ //BA.debugLineNum = 172;BA.debugLine="p.LoadLayout(\"clvBorden\")";
 _p.LoadLayout("clvBorden",mostCurrent.activityBA);
- //BA.debugLineNum = 150;BA.debugLine="p.Tag = name";
+ //BA.debugLineNum = 173;BA.debugLine="p.Tag = name";
 _p.setTag((Object)(_name));
- //BA.debugLineNum = 152;BA.debugLine="lblBordName.Text = name.Trim";
+ //BA.debugLineNum = 175;BA.debugLine="lblBordName.Text = name.Trim";
 mostCurrent._lblbordname.setText(BA.ObjectToCharSequence(_name.trim()));
- //BA.debugLineNum = 153;BA.debugLine="lblLastCheck.Text = $\"Laatste controle $Time{Date";
+ //BA.debugLineNum = 176;BA.debugLine="lblLastCheck.Text = $\"Laatste controle $Time{Date";
 mostCurrent._lbllastcheck.setText(BA.ObjectToCharSequence(("Laatste controle "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("time",(Object)(anywheresoftware.b4a.keywords.Common.DateTime.getNow()))+"")));
- //BA.debugLineNum = 154;BA.debugLine="If Not(alive) Then";
+ //BA.debugLineNum = 177;BA.debugLine="If Not(alive) Then";
 if (anywheresoftware.b4a.keywords.Common.Not(_alive)) { 
- //BA.debugLineNum = 155;BA.debugLine="lblViewBord.Enabled = False";
+ //BA.debugLineNum = 178;BA.debugLine="lblViewBord.Enabled = False";
 mostCurrent._lblviewbord.setEnabled(anywheresoftware.b4a.keywords.Common.False);
  };
- //BA.debugLineNum = 157;BA.debugLine="Return p";
+ //BA.debugLineNum = 180;BA.debugLine="Return p";
 if (true) return _p;
- //BA.debugLineNum = 158;BA.debugLine="End Sub";
+ //BA.debugLineNum = 181;BA.debugLine="End Sub";
 return null;
 }
 public static String  _getbaselist() throws Exception{
 nl.pdeg.bordondroid.main._locationbord _loc = null;
- //BA.debugLineNum = 77;BA.debugLine="Private Sub getBaseList";
- //BA.debugLineNum = 78;BA.debugLine="baseList.Initialize";
+ //BA.debugLineNum = 79;BA.debugLine="Private Sub getBaseList";
+ //BA.debugLineNum = 80;BA.debugLine="baseList.Initialize";
 _baselist.Initialize();
- //BA.debugLineNum = 79;BA.debugLine="baseList = baseFile.GetBase";
+ //BA.debugLineNum = 81;BA.debugLine="baseList = baseFile.GetBase";
 _baselist = _basefile._getbase /*anywheresoftware.b4a.objects.collections.List*/ ();
- //BA.debugLineNum = 81;BA.debugLine="If baseList.IsInitialized = False Then";
+ //BA.debugLineNum = 83;BA.debugLine="If baseList.IsInitialized = False Then";
 if (_baselist.IsInitialized()==anywheresoftware.b4a.keywords.Common.False) { 
- //BA.debugLineNum = 82;BA.debugLine="pnlLocationCOde.Visible = True";
+ //BA.debugLineNum = 84;BA.debugLine="pnlLocationCOde.Visible = True";
 mostCurrent._pnllocationcode.setVisible(anywheresoftware.b4a.keywords.Common.True);
  }else if(_baselist.getSize()==1) { 
- //BA.debugLineNum = 84;BA.debugLine="Dim loc As locationBord";
+ //BA.debugLineNum = 86;BA.debugLine="Dim loc As locationBord";
 _loc = new nl.pdeg.bordondroid.main._locationbord();
- //BA.debugLineNum = 85;BA.debugLine="loc.Initialize";
+ //BA.debugLineNum = 87;BA.debugLine="loc.Initialize";
 _loc.Initialize();
- //BA.debugLineNum = 86;BA.debugLine="loc = baseList.Get(0)";
+ //BA.debugLineNum = 88;BA.debugLine="loc = baseList.Get(0)";
 _loc = (nl.pdeg.bordondroid.main._locationbord)(_baselist.Get((int) (0)));
- //BA.debugLineNum = 87;BA.debugLine="If loc.isdefault = \"1\" Then";
+ //BA.debugLineNum = 89;BA.debugLine="If loc.isdefault = \"1\" Then";
 if ((_loc.isdefault /*String*/ ).equals("1")) { 
- //BA.debugLineNum = 88;BA.debugLine="InitConnection(loc.code, loc.description)";
+ //BA.debugLineNum = 90;BA.debugLine="InitConnection(loc.code, loc.description)";
 _initconnection(_loc.code /*String*/ ,_loc.description /*String*/ );
  };
  }else {
- //BA.debugLineNum = 91;BA.debugLine="For Each loc As locationBord In baseList";
+ //BA.debugLineNum = 93;BA.debugLine="For Each loc As locationBord In baseList";
 {
 final anywheresoftware.b4a.BA.IterableList group13 = _baselist;
 final int groupLen13 = group13.getSize()
@@ -1053,17 +1090,17 @@ final int groupLen13 = group13.getSize()
 ;
 for (; index13 < groupLen13;index13++){
 _loc = (nl.pdeg.bordondroid.main._locationbord)(group13.Get(index13));
- //BA.debugLineNum = 92;BA.debugLine="If loc.isdefault = \"1\" Then";
+ //BA.debugLineNum = 94;BA.debugLine="If loc.isdefault = \"1\" Then";
 if ((_loc.isdefault /*String*/ ).equals("1")) { 
- //BA.debugLineNum = 93;BA.debugLine="InitConnection(loc.code, loc.description)";
+ //BA.debugLineNum = 95;BA.debugLine="InitConnection(loc.code, loc.description)";
 _initconnection(_loc.code /*String*/ ,_loc.description /*String*/ );
- //BA.debugLineNum = 94;BA.debugLine="Exit";
+ //BA.debugLineNum = 96;BA.debugLine="Exit";
 if (true) break;
  };
  }
 };
  };
- //BA.debugLineNum = 98;BA.debugLine="End Sub";
+ //BA.debugLineNum = 100;BA.debugLine="End Sub";
 return "";
 }
 public static String  _globals() throws Exception{
@@ -1098,16 +1135,16 @@ mostCurrent._lblcurrlocation = new anywheresoftware.b4a.objects.LabelWrapper();
 return "";
 }
 public static String  _initconnection(String _locationcode,String _location) throws Exception{
- //BA.debugLineNum = 100;BA.debugLine="Private Sub InitConnection(locationCode As String,";
- //BA.debugLineNum = 101;BA.debugLine="lblCurrLocation.Text = location";
+ //BA.debugLineNum = 102;BA.debugLine="Private Sub InitConnection(locationCode As String,";
+ //BA.debugLineNum = 103;BA.debugLine="lblCurrLocation.Text = location";
 mostCurrent._lblcurrlocation.setText(BA.ObjectToCharSequence(_location));
- //BA.debugLineNum = 102;BA.debugLine="CallSub2(Starter, \"SetSubBase\", locationCode)";
+ //BA.debugLineNum = 104;BA.debugLine="CallSub2(Starter, \"SetSubBase\", locationCode)";
 anywheresoftware.b4a.keywords.Common.CallSubNew2(processBA,(Object)(mostCurrent._starter.getObject()),"SetSubBase",(Object)(_locationcode));
- //BA.debugLineNum = 103;BA.debugLine="CallSub(Starter, \"SetSubGetUnits\")";
+ //BA.debugLineNum = 105;BA.debugLine="CallSub(Starter, \"SetSubGetUnits\")";
 anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(mostCurrent._starter.getObject()),"SetSubGetUnits");
- //BA.debugLineNum = 104;BA.debugLine="StartConnection";
+ //BA.debugLineNum = 106;BA.debugLine="StartConnection";
 _startconnection();
- //BA.debugLineNum = 105;BA.debugLine="End Sub";
+ //BA.debugLineNum = 107;BA.debugLine="End Sub";
 return "";
 }
 public static void  _lblviewbord_click() throws Exception{
@@ -1123,6 +1160,7 @@ anywheresoftware.b4a.objects.ConcreteViewWrapper _v = null;
 anywheresoftware.b4a.objects.PanelWrapper _p = null;
 anywheresoftware.b4a.objects.LabelWrapper _lbl = null;
 anywheresoftware.b4a.objects.ConcreteViewWrapper _c = null;
+anywheresoftware.b4a.phone.Phone _ph = null;
 anywheresoftware.b4a.BA.IterableList group4;
 int index4;
 int groupLen4;
@@ -1138,15 +1176,15 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 260;BA.debugLine="Dim v As View = Sender";
+ //BA.debugLineNum = 283;BA.debugLine="Dim v As View = Sender";
 _v = new anywheresoftware.b4a.objects.ConcreteViewWrapper();
 _v.setObject((android.view.View)(anywheresoftware.b4a.keywords.Common.Sender(mostCurrent.activityBA)));
- //BA.debugLineNum = 261;BA.debugLine="Dim p As Panel = v.Parent";
+ //BA.debugLineNum = 284;BA.debugLine="Dim p As Panel = v.Parent";
 _p = new anywheresoftware.b4a.objects.PanelWrapper();
 _p.setObject((android.view.ViewGroup)(_v.getParent()));
- //BA.debugLineNum = 262;BA.debugLine="Dim lbl As Label";
+ //BA.debugLineNum = 285;BA.debugLine="Dim lbl As Label";
 _lbl = new anywheresoftware.b4a.objects.LabelWrapper();
- //BA.debugLineNum = 265;BA.debugLine="For Each c As View In p.GetAllViewsRecursive";
+ //BA.debugLineNum = 288;BA.debugLine="For Each c As View In p.GetAllViewsRecursive";
 if (true) break;
 
 case 1:
@@ -1176,7 +1214,7 @@ if (true) break;
 case 3:
 //C
 this.state = 4;
- //BA.debugLineNum = 266;BA.debugLine="If c.Tag = \"name\" Then";
+ //BA.debugLineNum = 289;BA.debugLine="If c.Tag = \"name\" Then";
 if (true) break;
 
 case 4:
@@ -1189,13 +1227,13 @@ this.state = 6;
 case 6:
 //C
 this.state = 7;
- //BA.debugLineNum = 267;BA.debugLine="lbl = c";
+ //BA.debugLineNum = 290;BA.debugLine="lbl = c";
 _lbl.setObject((android.widget.TextView)(_c.getObject()));
- //BA.debugLineNum = 268;BA.debugLine="Starter.selectedBordName = PrepTopicName(lbl.Te";
+ //BA.debugLineNum = 291;BA.debugLine="Starter.selectedBordName = PrepTopicName(lbl.Te";
 parent.mostCurrent._starter._selectedbordname /*String*/  = _preptopicname(_lbl.getText());
- //BA.debugLineNum = 269;BA.debugLine="Starter.DiscoveredServer = lbl.Text";
+ //BA.debugLineNum = 292;BA.debugLine="Starter.DiscoveredServer = lbl.Text";
 parent.mostCurrent._starter._discoveredserver /*String*/  = _lbl.getText();
- //BA.debugLineNum = 270;BA.debugLine="Exit";
+ //BA.debugLineNum = 293;BA.debugLine="Exit";
 this.state = 8;
 if (true) break;
  if (true) break;
@@ -1211,9 +1249,9 @@ case 8:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 274;BA.debugLine="DisconnectMqtt";
+ //BA.debugLineNum = 297;BA.debugLine="DisconnectMqtt";
 _disconnectmqtt();
- //BA.debugLineNum = 275;BA.debugLine="Sleep(100)";
+ //BA.debugLineNum = 298;BA.debugLine="Sleep(100)";
 anywheresoftware.b4a.keywords.Common.Sleep(mostCurrent.activityBA,this,(int) (100));
 this.state = 11;
 return;
@@ -1221,9 +1259,13 @@ case 11:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 277;BA.debugLine="StartActivity(ServerBoard)";
+ //BA.debugLineNum = 299;BA.debugLine="Dim ph As Phone";
+_ph = new anywheresoftware.b4a.phone.Phone();
+ //BA.debugLineNum = 300;BA.debugLine="ph.SetScreenOrientation(0)";
+_ph.SetScreenOrientation(processBA,(int) (0));
+ //BA.debugLineNum = 301;BA.debugLine="StartActivity(ServerBoard)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(parent.mostCurrent._serverboard.getObject()));
- //BA.debugLineNum = 278;BA.debugLine="End Sub";
+ //BA.debugLineNum = 302;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -1231,17 +1273,17 @@ if (true) break;
     }
 }
 public static String  _pnllocation_click() throws Exception{
- //BA.debugLineNum = 350;BA.debugLine="Sub pnlLocation_Click";
- //BA.debugLineNum = 351;BA.debugLine="StartActivity(locations)";
+ //BA.debugLineNum = 375;BA.debugLine="Sub pnlLocation_Click";
+ //BA.debugLineNum = 376;BA.debugLine="StartActivity(locations)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._locations.getObject()));
- //BA.debugLineNum = 352;BA.debugLine="End Sub";
+ //BA.debugLineNum = 377;BA.debugLine="End Sub";
 return "";
 }
 public static String  _preptopicname(String _bord) throws Exception{
- //BA.debugLineNum = 280;BA.debugLine="Private Sub PrepTopicName(bord As String) As Strin";
- //BA.debugLineNum = 282;BA.debugLine="Return bord.Replace(\" \", \"\")";
+ //BA.debugLineNum = 304;BA.debugLine="Private Sub PrepTopicName(bord As String) As Strin";
+ //BA.debugLineNum = 306;BA.debugLine="Return bord.Replace(\" \", \"\")";
 if (true) return _bord.replace(" ","");
- //BA.debugLineNum = 283;BA.debugLine="End Sub";
+ //BA.debugLineNum = 307;BA.debugLine="End Sub";
 return "";
 }
 
@@ -1286,10 +1328,10 @@ return "";
 public static String  _serveralive() throws Exception{
 long _msnow = 0L;
 nl.pdeg.bordondroid.main._bordstatus _lst = null;
- //BA.debugLineNum = 190;BA.debugLine="Sub ServerAlive";
- //BA.debugLineNum = 192;BA.debugLine="Dim msNow As Long = DateTime.Now";
+ //BA.debugLineNum = 213;BA.debugLine="Sub ServerAlive";
+ //BA.debugLineNum = 215;BA.debugLine="Dim msNow As Long = DateTime.Now";
 _msnow = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
- //BA.debugLineNum = 193;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
+ //BA.debugLineNum = 216;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
 {
 final anywheresoftware.b4a.BA.IterableList group2 = mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ ;
 final int groupLen2 = group2.getSize()
@@ -1297,62 +1339,62 @@ final int groupLen2 = group2.getSize()
 ;
 for (; index2 < groupLen2;index2++){
 _lst = (nl.pdeg.bordondroid.main._bordstatus)(group2.Get(index2));
- //BA.debugLineNum = 194;BA.debugLine="If(msNow - lst.timeStamp) > Starter.serverDied A";
+ //BA.debugLineNum = 217;BA.debugLine="If(msNow - lst.timeStamp) > Starter.serverDied A";
 if ((_msnow-_lst.timeStamp /*long*/ )>mostCurrent._starter._serverdied /*long*/  && _lst.alive /*boolean*/ ==anywheresoftware.b4a.keywords.Common.True) { 
- //BA.debugLineNum = 195;BA.debugLine="lst.alive = False";
+ //BA.debugLineNum = 218;BA.debugLine="lst.alive = False";
 _lst.alive /*boolean*/  = anywheresoftware.b4a.keywords.Common.False;
- //BA.debugLineNum = 196;BA.debugLine="CheckIpInClv(lst)";
+ //BA.debugLineNum = 219;BA.debugLine="CheckIpInClv(lst)";
 _checkipinclv(_lst);
- //BA.debugLineNum = 197;BA.debugLine="Return";
+ //BA.debugLineNum = 220;BA.debugLine="Return";
 if (true) return "";
  }else {
- //BA.debugLineNum = 199;BA.debugLine="CheckIpInClv(lst)";
+ //BA.debugLineNum = 222;BA.debugLine="CheckIpInClv(lst)";
 _checkipinclv(_lst);
  };
  }
 };
- //BA.debugLineNum = 202;BA.debugLine="End Sub";
+ //BA.debugLineNum = 225;BA.debugLine="End Sub";
 return "";
 }
 public static String  _startconnection() throws Exception{
- //BA.debugLineNum = 61;BA.debugLine="Private Sub StartConnection";
- //BA.debugLineNum = 62;BA.debugLine="pnlLocationCOde.Visible = False";
+ //BA.debugLineNum = 63;BA.debugLine="Private Sub StartConnection";
+ //BA.debugLineNum = 64;BA.debugLine="pnlLocationCOde.Visible = False";
 mostCurrent._pnllocationcode.setVisible(anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 63;BA.debugLine="pnlNobords.Visible = True";
+ //BA.debugLineNum = 65;BA.debugLine="pnlNobords.Visible = True";
 mostCurrent._pnlnobords.setVisible(anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 64;BA.debugLine="clvServer.Clear";
+ //BA.debugLineNum = 66;BA.debugLine="clvServer.Clear";
 mostCurrent._clvserver._clear();
- //BA.debugLineNum = 65;BA.debugLine="mqttGetData.Initialize";
+ //BA.debugLineNum = 67;BA.debugLine="mqttGetData.Initialize";
 _mqttgetdata._initialize /*String*/ (processBA);
- //BA.debugLineNum = 66;BA.debugLine="mqttGetBord.Initialize";
+ //BA.debugLineNum = 68;BA.debugLine="mqttGetBord.Initialize";
 _mqttgetbord._initialize /*String*/ (processBA);
- //BA.debugLineNum = 67;BA.debugLine="mqttGetBord.SetPubBord";
+ //BA.debugLineNum = 69;BA.debugLine="mqttGetBord.SetPubBord";
 _mqttgetbord._setpubbord /*String*/ ();
- //BA.debugLineNum = 68;BA.debugLine="mqttGetBord.Connect";
+ //BA.debugLineNum = 70;BA.debugLine="mqttGetBord.Connect";
 _mqttgetbord._connect /*String*/ ();
- //BA.debugLineNum = 70;BA.debugLine="baseFile.GetBase";
+ //BA.debugLineNum = 72;BA.debugLine="baseFile.GetBase";
 _basefile._getbase /*anywheresoftware.b4a.objects.collections.List*/ ();
- //BA.debugLineNum = 72;BA.debugLine="tmrBordLastAlive.Initialize(\"tmrBordAlive\", 10000";
+ //BA.debugLineNum = 74;BA.debugLine="tmrBordLastAlive.Initialize(\"tmrBordAlive\", 10000";
 _tmrbordlastalive.Initialize(processBA,"tmrBordAlive",(long) (10000));
- //BA.debugLineNum = 73;BA.debugLine="tmrBordLastAlive.Enabled = True";
+ //BA.debugLineNum = 75;BA.debugLine="tmrBordLastAlive.Enabled = True";
 _tmrbordlastalive.setEnabled(anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 75;BA.debugLine="End Sub";
+ //BA.debugLineNum = 77;BA.debugLine="End Sub";
 return "";
 }
 public static String  _tmrbordalive_tick() throws Exception{
- //BA.debugLineNum = 108;BA.debugLine="Sub tmrBordAlive_Tick";
- //BA.debugLineNum = 109;BA.debugLine="If Starter.diedIndex > -1 Then";
+ //BA.debugLineNum = 110;BA.debugLine="Sub tmrBordAlive_Tick";
+ //BA.debugLineNum = 111;BA.debugLine="If Starter.diedIndex > -1 Then";
 if (mostCurrent._starter._diedindex /*int*/ >-1) { 
- //BA.debugLineNum = 110;BA.debugLine="clvServer.RemoveAt(Starter.diedIndex)";
+ //BA.debugLineNum = 112;BA.debugLine="clvServer.RemoveAt(Starter.diedIndex)";
 mostCurrent._clvserver._removeat(mostCurrent._starter._diedindex /*int*/ );
- //BA.debugLineNum = 111;BA.debugLine="Starter.serverList.RemoveAt(Starter.diedIndex)";
+ //BA.debugLineNum = 113;BA.debugLine="Starter.serverList.RemoveAt(Starter.diedIndex)";
 mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .RemoveAt(mostCurrent._starter._diedindex /*int*/ );
- //BA.debugLineNum = 112;BA.debugLine="Starter.diedIndex = -1";
+ //BA.debugLineNum = 114;BA.debugLine="Starter.diedIndex = -1";
 mostCurrent._starter._diedindex /*int*/  = (int) (-1);
  };
- //BA.debugLineNum = 114;BA.debugLine="ServerAlive";
+ //BA.debugLineNum = 116;BA.debugLine="ServerAlive";
 _serveralive();
- //BA.debugLineNum = 115;BA.debugLine="End Sub";
+ //BA.debugLineNum = 117;BA.debugLine="End Sub";
 return "";
 }
 }

@@ -31,7 +31,7 @@ Library4=json
 Library5=xui views
 Library6=phone
 Library7=runtimepermissions
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~'SetActivityAttribute(Main, "android:excludeFromRecents", "true")~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:icon, "@mipmap/ic_launcher")~\n~CreateResource(mipmap-anydpi-v26, ic_launcher.xml,~\n~<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">~\n~    <background android:drawable="@mipmap/background"/>~\n~    <foreground android:drawable="@mipmap/foreground"/>~\n~</adaptive-icon>~\n~)~\n~'End of default text.~\n~
 Module1=Base
 Module2=locations
 Module3=mqttGetBordData
@@ -48,7 +48,7 @@ Version=9.801
 	#VersionCode: 1
 	#VersionName: 0.11
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
-	#SupportedOrientations: landscape
+	#SupportedOrientations: unspecified
 	#CanInstallToExternalStorage: False
 	#BridgeLogger: true
 #End Region
@@ -91,6 +91,8 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	Dim ph As Phone
+	ph.SetScreenOrientation(1)
 	Activity.LoadLayout("main")
 	
 	baseFile.Initialize
@@ -161,17 +163,35 @@ End Sub
 
 Sub Activity_Resume
 	If Starter.mqttGetBordsActive Then
+		If Starter.serverList.Size > 0 Then
+			'Starter.serverList.Sort(True)
+			clvServer.Clear
+			pnlNobords.SetVisibleAnimated(100, False)
+			For Each bd As bordStatus In Starter.serverList
+				clvServer.Add(genUnitList(bd.name, bd.alive), "")
+			Next
+		End If
 		mqttGetBord.Connect
 	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
- 	DisconnectMqtt
+	tmrBordLastAlive.Enabled = False
+'	Log("CLOSE")
+'	If mqttGetData.connected Then
+'		mqttGetData.Disconnect
+'	End If
+'	If mqttGetBord.Connected Then
+'		mqttGetBord.Disconnect
+'	End If
+'	Activity.Finish
+'	DisconnectMqtt
 End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
 		tmrBordLastAlive.Enabled = False
+		DisconnectMqtt
 		Activity.Finish
 		
 		Return False
@@ -181,6 +201,9 @@ Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 End Sub
 
 Sub DisconnectMqtt
+	If mqttGetData.connected Then
+		mqttGetData.Disconnect
+	End If
 	If mqttGetBord.Connected Then
 		mqttGetBord.Disconnect
 	End If
@@ -190,7 +213,7 @@ End Sub
 Sub genUnitList(name As String, alive As Boolean) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 120dip) '190
+	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 95dip) '190
 	p.LoadLayout("clvBorden")
 	p.Tag = name
 	
@@ -318,7 +341,8 @@ Sub lblViewBord_Click
 	
 	DisconnectMqtt
 	Sleep(100)
-
+	Dim ph As Phone
+	ph.SetScreenOrientation(0)
 	StartActivity(ServerBoard)
 End Sub
 
@@ -346,7 +370,8 @@ Sub clvServer_ItemClick (Index As Int, Value As Object)
 	
 	DisconnectMqtt
 	Sleep(100)
-
+	Dim ph As Phone
+	ph.SetScreenOrientation(0)
 	StartActivity(ServerBoard)
 End Sub
 

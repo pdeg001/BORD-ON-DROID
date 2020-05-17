@@ -15,14 +15,14 @@
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 	<application
-		android:icon="@drawable/icon"
+		android:icon="@mipmap/ic_launcher"
 		android:label="Board On Droid">
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
 			android:name=".main"
 			android:label="Board On Droid"
-			android:screenOrientation="landscape">
+			android:screenOrientation="unspecified">
 			<intent-filter>
 			   <action android:name="android.intent.action.MAIN" />
 			   <category android:name="android.intent.category.LAUNCHER" />
@@ -34,14 +34,14 @@
 			android:launchMode="singleTop"
 			android:name=".locations"
 			android:label="Board On Droid"
-			android:screenOrientation="landscape">
+			android:screenOrientation="unspecified">
 		</activity>
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
 			android:name=".serverboard"
 			android:label="Board On Droid"
-			android:screenOrientation="landscape">
+			android:screenOrientation="unspecified">
 		</activity>
 		<service android:name=".starter">
 		</service>

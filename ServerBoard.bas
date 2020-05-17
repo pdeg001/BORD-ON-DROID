@@ -53,10 +53,13 @@ Sub Globals
 	
 	Private lblTafelNaam As Label
 	Private lblSpelduur As Label
+	Private pnlSponsor As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Dim p As Phone
+	p.SetScreenOrientation(0)
+	
 	If Not (mqttGetData.IsInitialized) Then
 		mqttGetData.Initialize
 	End If
@@ -64,8 +67,9 @@ Sub Activity_Create(FirstTime As Boolean)
 	CallSub(Starter, "SetSubString")
 	mqttGetData.SetSub
 	
-	p.SetScreenOrientation(0)
 	Activity.LoadLayout("ServerBoard")
+	pnlSponsor.SendToBack
+	imgNoData.BringToFront
 	SetImg
 	
 	dataTmr.Initialize("dataTmr", 1000)
@@ -186,16 +190,9 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblP2Maken100.Text = Number.SubString2(0,1)
 	lblP2Maken10.Text = Number.SubString2(1,2)
 	lblP2Maken1.Text = Number.SubString2(2,3)
+
 	cs.Initialize.Append("").Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).PopAll
-	
-'	cs.Image(LoadBitmap(File.DirAssets, "myimage.png"), 40dip, 40dip, False).Append(CRLF).Append("Police")
-'	cs.PopAll
-'	btnImg.Text = cs
-	'Chr(0xE6E1)
-	'lblP2Moy.Text = $"${cs.ToString} ${p2.Get("moyenne")}"$
 	lblP2Moy.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).Append("  ").Append(p2.Get("moyenne")).PopAll
-	'lblP2Moy.Text = cs.ToString
-'	lbl_player_two_perc.Text = p2.Get("percentage")
 	
 	lblBeurt100.Text = aantal.SubString2(0,1)
 	lblBeurt10.Text = aantal.SubString2(1,2)
