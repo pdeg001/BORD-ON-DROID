@@ -90,3 +90,8 @@ End Sub
 Private Sub GetBaseFilePath As String
 	Return baseFilePath
 End Sub
+
+Public Sub SetLs
+'	Dim ph As Phone
+'	ph.SetScreenOrientation(0)
+End Sub

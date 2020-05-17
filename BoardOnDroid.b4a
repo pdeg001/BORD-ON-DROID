@@ -48,7 +48,7 @@ Version=9.801
 	#VersionCode: 1
 	#VersionName: 0.11
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
-	#SupportedOrientations: unspecified
+	#SupportedOrientations: landscape
 	#CanInstallToExternalStorage: False
 	#BridgeLogger: true
 #End Region
@@ -164,7 +164,6 @@ End Sub
 Sub Activity_Resume
 	If Starter.mqttGetBordsActive Then
 		If Starter.serverList.Size > 0 Then
-			'Starter.serverList.Sort(True)
 			clvServer.Clear
 			pnlNobords.SetVisibleAnimated(100, False)
 			For Each bd As bordStatus In Starter.serverList

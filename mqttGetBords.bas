@@ -62,7 +62,7 @@ Private Sub client_Connected (Success As Boolean)
 			ToastMessageShow("Error connecting: " & LastException, True)
 		End If
 	Catch
-		Log(LastException)	
+		Log("")	
 	End Try
 End Sub
 

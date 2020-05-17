@@ -37,7 +37,7 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	ph.SetScreenOrientation(1)
+ph.SetScreenOrientation(1)
 	Activity.LoadLayout("locations")
 	baseFile.Initialize
 	GetLocations

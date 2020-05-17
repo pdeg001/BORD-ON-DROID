@@ -50,7 +50,7 @@ Private Sub client_Connected (Success As Boolean)
 End Sub
 
 Public Sub Disconnect
-	Log("CLOSE DATA")
+'	Log("CLOSE DATA")
 	If connected Then
 		'client.Publish2(subBordDataDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 		client.Close
@@ -59,7 +59,7 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
-	Log($"DATA RECEIVED : $Time{DateTime.Now}"$)
+'	Log($"DATA RECEIVED : $Time{DateTime.Now}"$)
 	
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As Message = receivedObject

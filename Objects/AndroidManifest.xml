@@ -22,7 +22,7 @@
 			android:launchMode="singleTop"
 			android:name=".main"
 			android:label="Board On Droid"
-			android:screenOrientation="unspecified">
+			android:screenOrientation="landscape">
 			<intent-filter>
 			   <action android:name="android.intent.action.MAIN" />
 			   <category android:name="android.intent.category.LAUNCHER" />
@@ -34,14 +34,14 @@
 			android:launchMode="singleTop"
 			android:name=".locations"
 			android:label="Board On Droid"
-			android:screenOrientation="unspecified">
+			android:screenOrientation="landscape">
 		</activity>
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
 			android:name=".serverboard"
 			android:label="Board On Droid"
-			android:screenOrientation="unspecified">
+			android:screenOrientation="landscape">
 		</activity>
 		<service android:name=".starter">
 		</service>
