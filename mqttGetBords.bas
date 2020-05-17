@@ -9,6 +9,8 @@ Sub Class_Globals
 	Public connected As Boolean
 	Private serializator As B4XSerializator
 	Private phone As Phone
+	Private pubBord As String
+	Private pubBordDisconnect As String
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -16,6 +18,11 @@ Public Sub Initialize
 	
 End Sub
 
+public Sub SetPubBord()
+	pubBord = $"${CallSub(Starter, "GetBase")}/pubbord"$
+'	pubBord = $"${CallSub(Starter, "GetSubUnits")}/pubbord"$
+	pubBordDisconnect = $"${CallSub(Starter, "GetSubUnits")}/disconnect"$
+End Sub
 
 Public Sub Connect ()
 	If connected Then client.Close
@@ -24,14 +31,14 @@ Public Sub Connect ()
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
-	mo.SetLastWill("pubbord/disconnect", serializator.ConvertObjectToBytes(phone.Model), 0, False)
+	mo.SetLastWill(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 	client.Connect2(mo)
 End Sub
 
 Public Sub Disconnect
 	If connected Then
 		Try
-			client.Publish2("pubbord/disconnect", serializator.ConvertObjectToBytes(phone.Model), 0, False)
+			client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 			client.Close
 			connected = False
 		Catch
@@ -43,11 +50,11 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-
+	connected = False
 	If Success Then
 		connected = True
 		Starter.mqttGetBordsActive = connected
-		client.Subscribe("pubbord/#", 0)
+		client.Subscribe(pubBord, 0)
 	Else
 		ToastMessageShow("Error connecting: " & LastException, True)
 	End If
@@ -56,8 +63,10 @@ End Sub
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As String = receivedObject
+	Dim baseName As String = $"${CallSub(Starter, "GetBase")}/pubbord"$
 
-	If Topic = "pubbord" Then
+'	Log($"$Time{DateTime.Now} - ${Topic} - ${m}"$)
+	If Topic = baseName Then
 		If m.IndexOf("DIED") > -1 Then
 			Return
 		End If

@@ -13,13 +13,18 @@ Sub Class_Globals
 '	Public subto As String
 '	Private subBordData As String
 	Private subBordDataDisconnect As String
-	
+	Private subBord As String
 	
 End Sub
 
 Public Sub Initialize
 '	subBordData = $"pubdata/#"$
-	subBordDataDisconnect = $"pubdata/disconnect"$
+'	subBordDataDisconnect = $"${subBord}/disconnect"$
+End Sub
+
+Public Sub SetSub
+	subBord = CallSub(Starter, "GetSubString")
+	subBordDataDisconnect = $"${subBord}/disconnect"$
 End Sub
 
 Public Sub Connect ()
@@ -34,10 +39,11 @@ Public Sub Connect ()
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-	Log("Connected " & Success)
+'	Log("Connected " & Success)
 	If Success Then
 		connected = True
-		client.Subscribe(Starter.selectedBordName, 0)
+		'client.Subscribe(Starter.selectedBordName, 0)
+		client.Subscribe(subBord, 0)
 	Else
 		ToastMessageShow("Error connecting: " & LastException, True)
 	End If
@@ -63,7 +69,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	End If
 	If m.Body = "data please" Then Return
 	
-	If Topic = Starter.selectedBordName Then
+	If Topic = subBord Then
 		CallSubDelayed(ServerBoard, "GamedInProgress")
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)
 	End If
@@ -71,7 +77,7 @@ End Sub
 
 Public Sub SendMessage(Body As String)
 	If connected Then
-		client.Publish2(Starter.selectedBordName, CreateMessage(Body), 0, False)
+		client.Publish2(subBord, CreateMessage(Body), 0, False)
 	End If
 End Sub
 

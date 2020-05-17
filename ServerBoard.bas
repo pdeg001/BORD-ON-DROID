@@ -15,6 +15,7 @@ Sub Process_Globals
 	Dim dotCount As Int = 0
 	Dim waitText As String 
 	Dim cs As CSBuilder
+	Private SubString As String
 End Sub
 
 Sub Globals
@@ -56,30 +57,21 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Dim p As Phone
-	Dim bmp As Bitmap
+	If Not (mqttGetData.IsInitialized) Then
+		mqttGetData.Initialize
+	End If
+
+	CallSub(Starter, "SetSubString")
+	mqttGetData.SetSub
 	
 	p.SetScreenOrientation(0)
 	Activity.LoadLayout("ServerBoard")
-	Dim nuleen As Int = Rnd(0,2)
-	Log("RND " & nuleen)
+	SetImg
 	
-	If nuleen = 0 Then
-		bmp = LoadBitmapResize(File.DirAssets, "sven1.jpg", imgSponsor.Width, imgSponsor.Height, True)
-	Else
-		bmp = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
-	End If
-	imgSponsor.SetBackgroundImage(bmp)
-	'imgSponsor.Bitmap = LoadBitmap(File.DirAssets, "sven_oud.jpg")
-	
-	mqttGetData.Initialize
 	dataTmr.Initialize("dataTmr", 1000)
-'	dataTmr.Enabled = True
-	'Starter.Connect(False)
 	mqttGetData.Connect
 	
-'	lblNoData.TextColor = Colors.Red
 	imgNoData.SetVisibleAnimated(1, True)
-'	lblNoData.SetVisibleAnimated(1000, True)
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
 	Sleep(1000)
@@ -107,7 +99,7 @@ Sub Activity_Resume
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
-	Log("pause")
+'	Log("pause")
 	If mqttGetData.connected Then
 		mqttGetData.Disconnect
 	End If
@@ -185,7 +177,7 @@ public Sub UpdateBordWhenClient(data As Message)
 '	funcScorebord.p1_progress = ( p1.Get("caram")/p1.Get("maken"))*100
 '	funcScorebord.p2_progress = ( p2.Get("caram")/p2.Get("maken"))*100
 	
-	lblp2name.Text = p2.Get("naam")
+	lblP2Name.Text = p2.Get("naam")
 	Number = p2.Get("caram")
 	lblP2100.Text = Number.SubString2(0,1)
 	lblP210.Text = Number.SubString2(1,2)
@@ -231,4 +223,16 @@ End Sub
 Public Sub GamedInProgress
 '	lblNoData.TextColor = Colors.White
 '	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
+End Sub
+
+Private Sub SetImg
+	Dim bmp As Bitmap
+	Dim nuleen As Int = Rnd(0,2)
+	
+	If nuleen = 0 Then
+		bmp = LoadBitmapResize(File.DirAssets, "sven1.jpg", imgSponsor.Width, imgSponsor.Height, True)
+	Else
+		bmp = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
+	End If
+	imgSponsor.SetBackgroundImage(bmp)
 End Sub

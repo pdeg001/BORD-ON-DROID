@@ -14,7 +14,7 @@ public class starter extends  android.app.Service{
 			android.content.Intent in = new android.content.Intent(context, starter.class);
 			if (intent != null)
 				in.putExtra("b4a_internal_intent", intent);
-            ServiceHelper.StarterHelper.startServiceFromReceiver (context, in, true, BA.class);
+            ServiceHelper.StarterHelper.startServiceFromReceiver (context, in, true, anywheresoftware.b4a.ShellBA.class);
 		}
 
 	}
@@ -29,7 +29,7 @@ public class starter extends  android.app.Service{
         super.onCreate();
         mostCurrent = this;
         if (processBA == null) {
-		    processBA = new BA(this, null, null, "nl.pdeg.bordondroid", "nl.pdeg.bordondroid.starter");
+		    processBA = new anywheresoftware.b4a.ShellBA(this, null, null, "nl.pdeg.bordondroid", "nl.pdeg.bordondroid.starter");
             if (BA.isShellModeRuntimeCheck(processBA)) {
                 processBA.raiseEvent2(null, true, "SHELL", false);
 		    }
@@ -124,7 +124,8 @@ public class starter extends  android.app.Service{
 @Override
 	public android.os.IBinder onBind(android.content.Intent intent) {
 		return null;
-	}public anywheresoftware.b4a.keywords.Common __c = null;
+	}
+public anywheresoftware.b4a.keywords.Common __c = null;
 public static int _port = 0;
 public static String _host = "";
 public static boolean _connected = false;
@@ -132,57 +133,197 @@ public static String _discoveredserver = "";
 public static anywheresoftware.b4a.objects.collections.List _serverlist = null;
 public static long _serverdied = 0L;
 public static String _selectedbordname = "";
+public static String _mqttname = "";
+public static String _mqttbase = "";
+public static String _mqttunit = "";
+public static String _mqttgetunits = "";
+public static anywheresoftware.b4a.objects.RuntimePermissions _rp = null;
 public static boolean _mqttgetbordsactive = false;
 public static boolean _mqttgetborddataactive = false;
 public static int _diedindex = 0;
+public static String _substring = "";
+public static String _basefile = "";
+public static String _basefilepath = "";
+public static String _storefolder = "";
+public static boolean _testbasename = false;
+public b4a.example.dateutils _dateutils = null;
 public nl.pdeg.bordondroid.main _main = null;
+public nl.pdeg.bordondroid.locations _locations = null;
 public nl.pdeg.bordondroid.serverboard _serverboard = null;
+public static String  _setsubbase(String _basename) throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "setsubbase", false))
+	 {return ((String) Debug.delegate(processBA, "setsubbase", new Object[] {_basename}));}
+RDebugUtils.currentLine=4915200;
+ //BA.debugLineNum = 4915200;BA.debugLine="Private Sub SetSubBase(baseName As String)";
+RDebugUtils.currentLine=4915201;
+ //BA.debugLineNum = 4915201;BA.debugLine="mqttBase = baseName";
+_mqttbase = _basename;
+RDebugUtils.currentLine=4915202;
+ //BA.debugLineNum = 4915202;BA.debugLine="End Sub";
+return "";
+}
+public static String  _setsubgetunits() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "setsubgetunits", false))
+	 {return ((String) Debug.delegate(processBA, "setsubgetunits", null));}
+RDebugUtils.currentLine=5111808;
+ //BA.debugLineNum = 5111808;BA.debugLine="Private Sub SetSubGetUnits";
+RDebugUtils.currentLine=5111809;
+ //BA.debugLineNum = 5111809;BA.debugLine="mqttGetUnits = $\"${mqttName}/${mqttBase}\"$";
+_mqttgetunits = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_mqttname))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_mqttbase))+"");
+RDebugUtils.currentLine=5111810;
+ //BA.debugLineNum = 5111810;BA.debugLine="End Sub";
+return "";
+}
+public static String  _setunit(String _name) throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "setunit", false))
+	 {return ((String) Debug.delegate(processBA, "setunit", new Object[] {_name}));}
+RDebugUtils.currentLine=5046272;
+ //BA.debugLineNum = 5046272;BA.debugLine="Private Sub SetUnit(name As String)";
+RDebugUtils.currentLine=5046273;
+ //BA.debugLineNum = 5046273;BA.debugLine="mqttUnit = name";
+_mqttunit = _name;
+RDebugUtils.currentLine=5046274;
+ //BA.debugLineNum = 5046274;BA.debugLine="End Sub";
+return "";
+}
+public static String  _getbasefilepath() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "getbasefilepath", false))
+	 {return ((String) Debug.delegate(processBA, "getbasefilepath", null));}
+RDebugUtils.currentLine=5308416;
+ //BA.debugLineNum = 5308416;BA.debugLine="Private Sub GetBaseFilePath As String";
+RDebugUtils.currentLine=5308417;
+ //BA.debugLineNum = 5308417;BA.debugLine="Return baseFilePath";
+if (true) return _basefilepath;
+RDebugUtils.currentLine=5308418;
+ //BA.debugLineNum = 5308418;BA.debugLine="End Sub";
+return "";
+}
+public static String  _getsubstring() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "getsubstring", false))
+	 {return ((String) Debug.delegate(processBA, "getsubstring", null));}
+RDebugUtils.currentLine=4980736;
+ //BA.debugLineNum = 4980736;BA.debugLine="Private Sub GetSubString As String";
+RDebugUtils.currentLine=4980737;
+ //BA.debugLineNum = 4980737;BA.debugLine="Return SubString";
+if (true) return _substring;
+RDebugUtils.currentLine=4980738;
+ //BA.debugLineNum = 4980738;BA.debugLine="End Sub";
+return "";
+}
+public static String  _getbase() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "getbase", false))
+	 {return ((String) Debug.delegate(processBA, "getbase", null));}
+RDebugUtils.currentLine=5242880;
+ //BA.debugLineNum = 5242880;BA.debugLine="Public Sub GetBase As String";
+RDebugUtils.currentLine=5242881;
+ //BA.debugLineNum = 5242881;BA.debugLine="Return mqttGetUnits '$\"${mqttName}/${mqttBase}/\"$";
+if (true) return _mqttgetunits;
+RDebugUtils.currentLine=5242882;
+ //BA.debugLineNum = 5242882;BA.debugLine="End Sub";
+return "";
+}
+public static String  _getsubunits() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "getsubunits", false))
+	 {return ((String) Debug.delegate(processBA, "getsubunits", null));}
+RDebugUtils.currentLine=5177344;
+ //BA.debugLineNum = 5177344;BA.debugLine="Private Sub GetSubUnits As String";
+RDebugUtils.currentLine=5177345;
+ //BA.debugLineNum = 5177345;BA.debugLine="Return mqttGetUnits";
+if (true) return _mqttgetunits;
+RDebugUtils.currentLine=5177346;
+ //BA.debugLineNum = 5177346;BA.debugLine="End Sub";
+return "";
+}
+public static String  _setsubstring() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "setsubstring", false))
+	 {return ((String) Debug.delegate(processBA, "setsubstring", null));}
+RDebugUtils.currentLine=4849664;
+ //BA.debugLineNum = 4849664;BA.debugLine="Public Sub SetSubString";
+RDebugUtils.currentLine=4849665;
+ //BA.debugLineNum = 4849665;BA.debugLine="SubString = $\"${mqttName}/${mqttBase}/${mqttUnit}";
+_substring = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_mqttname))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_mqttbase))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_mqttunit))+"");
+RDebugUtils.currentLine=4849666;
+ //BA.debugLineNum = 4849666;BA.debugLine="End Sub";
+return "";
+}
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
- //BA.debugLineNum = 26;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
- //BA.debugLineNum = 27;BA.debugLine="Return True";
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "application_error", false))
+	 {return ((Boolean) Debug.delegate(processBA, "application_error", new Object[] {_error,_stacktrace}));}
+RDebugUtils.currentLine=4653056;
+ //BA.debugLineNum = 4653056;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
+RDebugUtils.currentLine=4653057;
+ //BA.debugLineNum = 4653057;BA.debugLine="Return True";
 if (true) return anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 28;BA.debugLine="End Sub";
+RDebugUtils.currentLine=4653058;
+ //BA.debugLineNum = 4653058;BA.debugLine="End Sub";
 return false;
 }
-public static String  _process_globals() throws Exception{
- //BA.debugLineNum = 6;BA.debugLine="Sub Process_Globals";
- //BA.debugLineNum = 7;BA.debugLine="Public const port As Int = 1883";
-_port = (int) (1883);
- //BA.debugLineNum = 8;BA.debugLine="Public const host As String = \"pdeg3005.mynetgear";
-_host = "pdeg3005.mynetgear.com";
- //BA.debugLineNum = 9;BA.debugLine="Public connected As Boolean";
-_connected = false;
- //BA.debugLineNum = 10;BA.debugLine="Public DiscoveredServer As String";
-_discoveredserver = "";
- //BA.debugLineNum = 11;BA.debugLine="Public serverList As List";
-_serverlist = new anywheresoftware.b4a.objects.collections.List();
- //BA.debugLineNum = 12;BA.debugLine="Public serverDied As Long = 10000";
-_serverdied = (long) (10000);
- //BA.debugLineNum = 13;BA.debugLine="Public selectedBordName As String";
-_selectedbordname = "";
- //BA.debugLineNum = 14;BA.debugLine="Public mqttGetBordsActive, mqttGetBordDataActive";
-_mqttgetbordsactive = false;
-_mqttgetborddataactive = false;
- //BA.debugLineNum = 15;BA.debugLine="Public diedIndex As Int = -1";
-_diedindex = (int) (-1);
- //BA.debugLineNum = 16;BA.debugLine="End Sub";
+public static String  _createbasefile() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "createbasefile", false))
+	 {return ((String) Debug.delegate(processBA, "createbasefile", null));}
+RDebugUtils.currentLine=4784128;
+ //BA.debugLineNum = 4784128;BA.debugLine="Private Sub CreateBaseFile";
+RDebugUtils.currentLine=4784129;
+ //BA.debugLineNum = 4784129;BA.debugLine="If Not(File.Exists(baseFilePath, \"\")) Then";
+if (anywheresoftware.b4a.keywords.Common.Not(anywheresoftware.b4a.keywords.Common.File.Exists(_basefilepath,""))) { 
+RDebugUtils.currentLine=4784130;
+ //BA.debugLineNum = 4784130;BA.debugLine="File.WriteString(baseFilePath, \"\", \"\")";
+anywheresoftware.b4a.keywords.Common.File.WriteString(_basefilepath,"","");
+ };
+RDebugUtils.currentLine=4784132;
+ //BA.debugLineNum = 4784132;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_create() throws Exception{
- //BA.debugLineNum = 18;BA.debugLine="Sub Service_Create";
- //BA.debugLineNum = 19;BA.debugLine="serverList.Initialize";
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "service_create", false))
+	 {return ((String) Debug.delegate(processBA, "service_create", null));}
+RDebugUtils.currentLine=4521984;
+ //BA.debugLineNum = 4521984;BA.debugLine="Sub Service_Create";
+RDebugUtils.currentLine=4521985;
+ //BA.debugLineNum = 4521985;BA.debugLine="serverList.Initialize";
 _serverlist.Initialize();
- //BA.debugLineNum = 20;BA.debugLine="End Sub";
+RDebugUtils.currentLine=4521986;
+ //BA.debugLineNum = 4521986;BA.debugLine="storeFolder = rp.GetSafeDirDefaultExternal(\"bod\")";
+_storefolder = _rp.GetSafeDirDefaultExternal("bod");
+RDebugUtils.currentLine=4521988;
+ //BA.debugLineNum = 4521988;BA.debugLine="baseFile = \"bod.pdg\"";
+_basefile = "bod.pdg";
+RDebugUtils.currentLine=4521989;
+ //BA.debugLineNum = 4521989;BA.debugLine="baseFilePath = File.Combine(storeFolder, baseFile";
+_basefilepath = anywheresoftware.b4a.keywords.Common.File.Combine(_storefolder,_basefile);
+RDebugUtils.currentLine=4521991;
+ //BA.debugLineNum = 4521991;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_destroy() throws Exception{
- //BA.debugLineNum = 30;BA.debugLine="Sub Service_Destroy";
- //BA.debugLineNum = 32;BA.debugLine="End Sub";
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "service_destroy", false))
+	 {return ((String) Debug.delegate(processBA, "service_destroy", null));}
+RDebugUtils.currentLine=4718592;
+ //BA.debugLineNum = 4718592;BA.debugLine="Sub Service_Destroy";
+RDebugUtils.currentLine=4718594;
+ //BA.debugLineNum = 4718594;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
- //BA.debugLineNum = 22;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
- //BA.debugLineNum = 24;BA.debugLine="End Sub";
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "service_start", false))
+	 {return ((String) Debug.delegate(processBA, "service_start", new Object[] {_startingintent}));}
+RDebugUtils.currentLine=4587520;
+ //BA.debugLineNum = 4587520;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
+RDebugUtils.currentLine=4587522;
+ //BA.debugLineNum = 4587522;BA.debugLine="End Sub";
 return "";
 }
 }

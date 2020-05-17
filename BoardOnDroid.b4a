@@ -1,16 +1,20 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
 File1=Baloo2-Regular.ttf
-File10=wacht_op_data.png
+File10=sven_oud.jpg
+File11=sven1.jpg
+File12=wacht_op_data.png
 File2=clvBorden.bal
-File3=digital-7.ttf
-File4=main.bal
-File5=materialdesignicons-webfont.ttf
-File6=mouse.png
-File7=ServerBoard.bal
-File8=sven_oud.jpg
-File9=sven1.jpg
+File3=clvLocation.bal
+File4=digital-7.ttf
+File5=locations.bal
+File6=main.bal
+File7=materialdesignicons-webfont.ttf
+File8=mouse.png
+File9=ServerBoard.bal
 FileGroup1=Default Group
 FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -24,16 +28,19 @@ Library1=core
 Library2=jmqtt
 Library3=randomaccessfile
 Library4=json
-Library5=customlistview
+Library5=xui views
 Library6=phone
+Library7=runtimepermissions
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
-Module1=mqttGetBordData
-Module2=mqttGetBords
-Module3=ServerBoard
-Module4=Starter
-NumberOfFiles=10
-NumberOfLibraries=6
-NumberOfModules=4
+Module1=Base
+Module2=locations
+Module3=mqttGetBordData
+Module4=mqttGetBords
+Module5=ServerBoard
+Module6=Starter
+NumberOfFiles=12
+NumberOfLibraries=7
+NumberOfModules=6
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -55,14 +62,17 @@ Sub Process_Globals
 	Type Message (Body As String, From As String)
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
 	Type bordFound(name As String, ip As String)
+	Type locationBord(code As String, description As String, isdefault As String)
 	
 	Private mqttGetBord As mqttGetBords
 	Private mqttGetData As mqttGetBordData
 	Private tmrBordLastAlive As Timer
+	Private baseFile As Base
+	Private baseList As List
 End Sub
 
 Sub Globals
-	Private clvServer As CustomListView
+'	Private clvServer As CustomListView
 	Private lblBordName As Label
 	Private lblViewBord As Label
 	Private pnlBord As Panel
@@ -70,19 +80,73 @@ Sub Globals
 	Private pnlNobords As Panel
 '	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private lblVersion As Label
+	Private pnlLocationCOde As Panel
+	Private edtLocationCode As EditText
+	Private btnCancel As Button
+	Private btnOk As Button
+	Private pnlLocation As Panel
+'	Private CustomListView1 As CustomListView
+	Private clvServer As CustomListView
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	
+	baseFile.Initialize
+	'baseList.Initialize
+	
 	lblVersion.Text = "v"&Application.VersionName
+	pnlNobords.Visible = False
+	
+	getBaseList
+	
+End Sub
+
+Private Sub StartConnection
+	pnlLocationCOde.Visible = False
+	pnlNobords.Visible = True
 	clvServer.Clear
 	mqttGetData.Initialize
 	mqttGetBord.Initialize
+	mqttGetBord.SetPubBord
 	mqttGetBord.Connect
+	
+	baseFile.GetBase
 
 	tmrBordLastAlive.Initialize("tmrBordAlive", 10000)
 	tmrBordLastAlive.Enabled = True
+	
 End Sub
+
+Private Sub getBaseList
+	baseList.Initialize
+	baseList = baseFile.GetBase
+		
+	If baseList.IsInitialized = False Then
+		pnlLocationCOde.Visible = True
+	Else If baseList.Size = 1 Then
+		Dim loc As locationBord
+		loc.Initialize
+		loc = baseList.Get(0)
+		If loc.isdefault = "1" Then
+			InitConnection(loc.code)
+		End If
+	Else
+		For Each loc As locationBord In baseList
+			If loc.isdefault = "1" Then
+				InitConnection(loc.code)
+				Exit
+			End If
+		Next
+	End If
+End Sub
+
+Private Sub InitConnection(locationCode As String)
+	CallSub2(Starter, "SetSubBase", locationCode)
+	CallSub(Starter, "SetSubGetUnits")
+	StartConnection
+End Sub
+
 
 Sub tmrBordAlive_Tick
 	If Starter.diedIndex > -1 Then
@@ -124,7 +188,7 @@ End Sub
 Sub genUnitList(name As String, alive As Boolean) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 10dip) '190
+	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 120dip) '190
 	p.LoadLayout("clvBorden")
 	p.Tag = name
 	
@@ -232,7 +296,7 @@ Sub CheckIpInClv(bord As bordStatus)
 	
 '	Log("------ ADD BORD TO LIST")
 	pnlNobords.SetVisibleAnimated(1000, False)
-	clvServer.Add(genUnitList(bord.name, bord.alive), 100dip, "")
+	clvServer.Add(genUnitList(bord.name, bord.alive), "")
 End Sub
 
 Sub lblViewBord_Click
@@ -257,7 +321,7 @@ Sub lblViewBord_Click
 End Sub
 
 Private Sub PrepTopicName(bord As String) As String
-	Log($"SUBBORD : ${bord.Replace(" ", "")}"$)
+'	Log($"SUBBORD : ${bord.Replace(" ", "")}"$)
 	Return bord.Replace(" ", "")
 End Sub
 
@@ -270,7 +334,9 @@ Sub clvServer_ItemClick (Index As Int, Value As Object)
 	For Each c As View In p.GetAllViewsRecursive
 		If c.Tag = "name" Then
 			lbl = c
-			Starter.selectedBordName = PrepTopicName(lbl.Text)
+			'Starter.selectedBordName = PrepTopicName(lbl.Text)
+			
+			CallSub2(Starter, "SetUnit", PrepTopicName(lbl.Text).ToLowerCase)
 			Starter.DiscoveredServer = lbl.Text
 			Exit
 		End If
@@ -283,3 +349,47 @@ Sub clvServer_ItemClick (Index As Int, Value As Object)
 End Sub
 
 
+
+
+Sub btnCancel_Click
+	Msgbox2Async("Applicatie afsluiten?", "Bord Op Droid", "JA", "", "NEE", Null, False)
+	Wait For Msgbox_Result(Result As Int)
+	If Result = DialogResponse.POSITIVE Then
+		Activity.Finish
+	End If
+End Sub
+
+Sub btnOk_Click
+	Starter.testBaseName = True
+	mqttGetBord.Initialize
+	CallSub2(Starter, "SetSubBase", edtLocationCode.Text)
+	CallSub(Starter, "SetSubGetUnits")
+	mqttGetBord.SetPubBord
+	Sleep(100)
+	mqttGetBord.Connect
+	
+	Sleep(1000)
+	
+	If mqttGetBord.connected = False Then
+		Msgbox2Async("Kan geen verbinding maken met locatie", "Bord Op Droid", "OKE", "", "", Null, False)
+		Wait For Msgbox_Result(Result As Int)
+	Else 
+		ToastMessageShow("Verbonden met locatie", True)
+		mqttGetBord.Disconnect
+		pnlLocationCOde.Visible = False
+		baseFile.SetBase(edtLocationCode.Text)
+		StartConnection
+	End If
+End Sub
+
+Sub edtLocationCode_TextChanged (Old As String, New As String)
+	If New.Length > 0 Then
+		btnOk.Enabled = True
+	Else
+		btnOk.Enabled = False
+	End If
+End Sub
+
+Sub pnlLocation_Click
+	StartActivity(locations)
+End Sub
