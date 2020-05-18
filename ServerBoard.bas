@@ -16,6 +16,8 @@ Sub Process_Globals
 	Dim waitText As String 
 	Dim cs As CSBuilder
 	Private SubString As String
+	Dim lastMessageTime As Long
+	Dim lastMessageTimer As Timer
 End Sub
 
 Sub Globals
@@ -57,9 +59,6 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	Dim p As Phone
-	p.SetScreenOrientation(0)
-	
 	If Not (mqttGetData.IsInitialized) Then
 		mqttGetData.Initialize
 	End If
@@ -68,7 +67,9 @@ Sub Activity_Create(FirstTime As Boolean)
 	mqttGetData.SetSub
 	
 	Activity.LoadLayout("ServerBoard")
-	pnlSponsor.SendToBack
+	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
+	lastMessageTimer.Enabled = True
+	
 	imgNoData.BringToFront
 	SetImg
 	
@@ -80,6 +81,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	Sleep(1000)
 	mqttGetData.SendMessage("data please")
+End Sub
+
+Sub tmrLastMessase_Tick
+	If (DateTime.Now-lastMessageTime) >= 120*1000 Then
+		ToastMessageShow("PPPPPP", True)
+		lblSpelduur.TextColor = Colors.Red
+	End If
 End Sub
 
 Sub dataTmr_Tick
@@ -107,6 +115,7 @@ Sub Activity_Pause (UserClosed As Boolean)
 	If mqttGetData.connected Then
 		mqttGetData.Disconnect
 	End If
+	lastMessageTimer.Enabled = False
 	Activity.Finish
 End Sub
 
@@ -119,6 +128,7 @@ End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		lastMessageTimer.Enabled = False
 		DisconnetMqtt
 		Return False
 	Else

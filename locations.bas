@@ -34,12 +34,14 @@ Sub Globals
 	Private lblDelete As Label
 	Private chkEdtDefault As CheckBox
 	Private currentCodeEdit As String
+	Private ime As IME
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-ph.SetScreenOrientation(1)
+'ph.SetScreenOrientation(1)
 	Activity.LoadLayout("locations")
 	baseFile.Initialize
+	ime.Initialize(Me)
 	GetLocations
 End Sub
 
@@ -60,14 +62,12 @@ Private Sub GetLocations
 	
 End Sub
 
-
 Sub CreateLocatie(code As String, description As String, isDefault As String) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 160dip) '190
 	p.LoadLayout("clvLocation")
 	
-	Log(description)
 	lblLocatie.Text = code
 	lblDescription.Text = description
 	chkDefault.Checked = isDefault = 1
@@ -78,6 +78,8 @@ End Sub
 Sub clvLocation_ItemClick (Index As Int, Value As Object)
 	SetEditFields(clvLocation.GetPanel(Index))
 	pnlEditLocation.SetVisibleAnimated(500, True)	
+	edtDescription.RequestFocusAndShowKeyboard
+	
 End Sub
 
 Private Sub SetEditFields(p As Panel)
@@ -106,12 +108,21 @@ Private Sub SetEditFields(p As Panel)
 End Sub
 
 Sub btnEditSave_Click
+	If edtCode.Text = "" Then
+		Msgbox2Async("Locatie mag niet leeg zijn", "App naam", "OKE", "", "", Null, False)
+		Wait For Msgbox_Result (Result As Int)
+		If Result = DialogResponse.POSITIVE Then
+			edtCode.Text = currentCodeEdit
+			Return
+		End If
+	End If
 	baseFile.ModifyLocation(currentCodeEdit, edtCode.Text, edtDescription.Text, chkEdtDefault.Checked)
 	GetLocations
 	btnEditCancel_Click
 End Sub
 
 Sub btnEditCancel_Click
+	ime.HideKeyboard
 	pnlEditLocation.SetVisibleAnimated(1000, False)
 	currentCodeEdit = ""
 End Sub

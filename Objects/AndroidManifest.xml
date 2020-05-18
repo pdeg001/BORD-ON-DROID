@@ -22,7 +22,7 @@
 			android:launchMode="singleTop"
 			android:name=".main"
 			android:label="Board On Droid"
-			android:screenOrientation="landscape">
+			android:screenOrientation="portrait">
 			<intent-filter>
 			   <action android:name="android.intent.action.MAIN" />
 			   <category android:name="android.intent.category.LAUNCHER" />
@@ -34,7 +34,7 @@
 			android:launchMode="singleTop"
 			android:name=".locations"
 			android:label="Board On Droid"
-			android:screenOrientation="landscape">
+			android:screenOrientation="portrait">
 		</activity>
 		<activity
 			android:windowSoftInputMode="stateHidden"

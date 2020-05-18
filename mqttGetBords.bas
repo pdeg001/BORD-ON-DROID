@@ -39,12 +39,14 @@ Public Sub Disconnect
 	If connected Then
 		Try
 			Log("CLOSE BORDS")
-			client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+			'client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+			client.Unsubscribe(pubBord)
 			client.Close
 			connected = False
 		Catch
 			Log("BORD DATA " &LastException)
-			client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+			'client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+			client.Unsubscribe(pubBord)
 			connected = False
 			client.Close
 		End Try
@@ -59,7 +61,7 @@ Private Sub client_Connected (Success As Boolean)
 			Starter.mqttGetBordsActive = connected
 			client.Subscribe(pubBord, 0)
 		Else
-			ToastMessageShow("Error connecting: " & LastException, True)
+			CallSub(Main, "ErrorConnecting")
 		End If
 	Catch
 		Log("")	
@@ -96,4 +98,8 @@ Private Sub CreateMessage(Body As String) As Byte()
 	m.Body = Body
 	m.From = "Name"
 	Return serializator.ConvertObjectToBytes(m)
+End Sub
+
+Private Sub GetClientConnected As Boolean
+	Return client.Connected
 End Sub

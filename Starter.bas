@@ -10,12 +10,13 @@ Version=6.5
 #End Region
 
 Sub Process_Globals
+	Dim mqtt As MqttClient
 	Public const port As Int = 1883
 	Public const host As String = "pdeg3005.mynetgear.com"
 	Public connected As Boolean
 	Public DiscoveredServer As String
 	Public serverList As List
-	Public serverDied As Long = 10000
+	Public serverDied As Long = 30000
 	Public selectedBordName As String
 	Private mqttName As String = "pdeg"
 	Private mqttBase As String
@@ -27,7 +28,7 @@ Sub Process_Globals
 	Private SubString, baseFile, baseFilePath As String
 	Private storeFolder As String
 	Public testBaseName As Boolean = False
-	
+	Dim working, brokerConnected As Boolean
 	
 End Sub
 
@@ -37,10 +38,11 @@ Sub Service_Create
 	
 	baseFile = "bod.pdg"
 	baseFilePath = File.Combine(storeFolder, baseFile)
-'	CreateBaseFile
+	working = True
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
+	ConnectAndReconnect
 
 End Sub
 
@@ -52,10 +54,33 @@ Sub Service_Destroy
 
 End Sub
 
-Private Sub CreateBaseFile
-	If Not(File.Exists(baseFilePath, "")) Then
-		File.WriteString(baseFilePath, "", "")
-	End If
+Sub ConnectAndReconnect
+	Do While working
+		If mqtt.IsInitialized Then mqtt.Close
+		mqtt.Initialize("mqtt", "tcp://pdeg3005.mynetgear.com:1883", "pdeg_" & Rnd(0, 999999999))
+		Dim mo As MqttConnectOptions
+		mo.Initialize("", "")
+		Log("Trying to connect")
+		mqtt.Connect2(mo)
+		Wait For Mqtt_Connected (Success As Boolean)
+		If Success Then
+			Log("Mqtt connected")
+			brokerConnected = True
+	
+			CallSub(Main, "getBaseList")
+			Do While working And mqtt.Connected
+				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
+				Sleep(5000)
+			Loop
+			Log("Disconnected")
+			brokerConnected = False
+			If mqtt.IsInitialized Then mqtt.Close
+		Else
+			Log("Error connecting.")
+			If mqtt.IsInitialized Then mqtt.Close
+		End If
+		Sleep(5000)
+	Loop
 End Sub
 
 Public Sub SetSubString

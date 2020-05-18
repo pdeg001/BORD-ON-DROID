@@ -51,8 +51,9 @@ End Sub
 
 Public Sub Disconnect
 '	Log("CLOSE DATA")
-	If connected Then
+	If client.connected Then
 		'client.Publish2(subBordDataDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+		client.Unsubscribe(subBord)
 		client.Close
 		connected = False
 	End If
@@ -63,7 +64,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As Message = receivedObject
-	
+'	Log(m.Body)
 	If m.From.IndexOf("game-ended") > -1 Then
 		CallSub(ServerBoard, "GamedEnded")
 		Return
@@ -71,6 +72,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	If m.Body = "data please" Then Return
 	
 	If Topic = subBord Then
+		ServerBoard.lastMessageTime = DateTime.Now
 		CallSubDelayed(ServerBoard, "GamedInProgress")
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)
 	End If
