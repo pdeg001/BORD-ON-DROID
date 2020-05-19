@@ -68,12 +68,15 @@ Sub ConnectAndReconnect
 			brokerConnected = True
 	
 			CallSub(Main, "getBaseList")
+			'CallSub(Main, "StartConnection")
 			Do While working And mqtt.Connected
 				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
 				Sleep(5000)
 			Loop
 			Log("Disconnected")
 			brokerConnected = False
+			CallSub(ServerBoard, "ConnectionLost")
+			CallSub(Main, "ShowNotConnectedToBroker")
 			If mqtt.IsInitialized Then mqtt.Close
 		Else
 			Log("Error connecting.")

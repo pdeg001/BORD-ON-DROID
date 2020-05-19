@@ -23,7 +23,7 @@ Public Sub GetBase As List
 	End If
 End Sub
 
-Public Sub SetBase(baseName As String)
+Public Sub SetBase(baseName As String, description As String, isDefault As String)
 	Dim loc As locationBord
 	Dim lst As List
 	
@@ -31,11 +31,11 @@ Public Sub SetBase(baseName As String)
 	lst.Initialize
 	
 	loc.code = baseName
-	loc.description = "Nieuwe locatie"
-	loc.isdefault = "1"
+	loc.description = description
+	loc.isdefault = isDefault
 	
 	If CheckBaseListExists Then
-		lst = File.ReadList(baseFile, "")
+		lst = serializator.ConvertBytesToObject(File.ReadBytes(baseFile, ""))
 	End If
 	lst.Add(loc)
 
@@ -52,14 +52,14 @@ End Sub
 Public Sub ModifyLocation(oldLocation As String, newLocation As String, description As String, isDefault As Boolean)
 	Dim modList As List = GetBase
 	
-	For Each location As locationBord In modList
-		If location.code = oldLocation Then
-			location.code = newLocation
-			location.description = description
+	For Each Location As locationBord In modList
+		If Location.code = oldLocation Then
+			Location.code = newLocation
+			Location.description = description
 			If isDefault Then
-				location.isdefault = "1"
+				Location.isdefault = "1"
 			Else
-				location.isdefault = "0"
+				Location.isdefault = "0"
 			End If
 			Exit
 		End If
@@ -67,7 +67,32 @@ Public Sub ModifyLocation(oldLocation As String, newLocation As String, descript
 	writeList(modList)
 End Sub
 
+Public Sub LocationExist(locationCode As String) As Boolean
+	Dim modList As List = GetBase
+	
+	For Each location As locationBord In modList
+		If location.code = locationCode Then
+			Return True
+		End If
+	Next
+	Return False
+End Sub
+
 Private Sub writeList(lst As List)
 	serializator.ConvertObjectToBytes(lst)
 	File.WriteBytes(baseFile, "", serializator.ConvertObjectToBytes(lst))
+End Sub
+
+Public Sub DeleteBase(locationCode As String)
+	Dim modList As List = GetBase
+	Dim locBord As locationBord
+	
+	For i = 0 To modList.Size -1
+		locBord = modList.Get(i)
+		If locBord.code = locationCode Then
+			modList.RemoveAt(i)
+			writeList(modList)
+			Exit
+		End If
+	Next
 End Sub

@@ -38,7 +38,7 @@ End Sub
 Public Sub Disconnect
 	If connected Then
 		Try
-			Log("CLOSE BORDS")
+'			Log("CLOSE BORDS")
 			'client.Publish2(pubBordDisconnect, serializator.ConvertObjectToBytes(phone.Model), 0, False)
 			client.Unsubscribe(pubBord)
 			client.Close
@@ -101,5 +101,5 @@ Private Sub CreateMessage(Body As String) As Byte()
 End Sub
 
 Private Sub GetClientConnected As Boolean
-	Return client.Connected
+	Return connected
 End Sub

@@ -1,20 +1,24 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
 File1=Baloo2-Regular.ttf
-File10=sven_oud.jpg
-File11=sven1.jpg
-File12=wacht_op_data.png
+File10=selectlocation.bal
+File11=ServerBoard.bal
+File12=sven_oud.jpg
+File13=sven1.jpg
+File14=wacht_op_data.png
 File2=clvBorden.bal
 File3=clvLocation.bal
-File4=digital-7.ttf
-File5=locations.bal
-File6=main.bal
-File7=materialdesignicons-webfont.ttf
-File8=mouse.png
-File9=ServerBoard.bal
+File4=clvSelectLocation.bal
+File5=digital-7.ttf
+File6=locations.bal
+File7=main.bal
+File8=materialdesignicons-webfont.ttf
+File9=mouse.png
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=Default Group
 FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -36,11 +40,12 @@ Module1=Base
 Module2=locations
 Module3=mqttGetBordData
 Module4=mqttGetBords
-Module5=ServerBoard
-Module6=Starter
-NumberOfFiles=12
+Module5=SelectLocation
+Module6=ServerBoard
+Module7=Starter
+NumberOfFiles=14
 NumberOfLibraries=7
-NumberOfModules=6
+NumberOfModules=7
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -89,6 +94,9 @@ Sub Globals
 	Private clvServer As CustomListView
 	Private lblCurrLocation As Label
 	Private lblNoBord As Label
+	Private pnlLocationList As Panel
+	Private edtFloatCode As B4XFloatTextField
+	Private edtFloatDescription As B4XFloatTextField
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -115,9 +123,20 @@ Private Sub StartConnection
 End Sub
 
 Private Sub getBaseList
-	lblNoBord.Text = "Wachten op borden..."
+	Dim listSize As Int = 0
+	
 	baseList.Initialize
 	baseList = baseFile.GetBase
+	If baseList.IsInitialized Then
+		listSize = baseList.Size
+	End If
+	If listSize > 1 Then
+		pnlLocationList.SetVisibleAnimated(500, True)
+		Else
+		pnlLocationList.SetVisibleAnimated(500, False)
+	End If
+	
+	lblNoBord.Text = "Wachten op borden..."
 		
 	If baseList.IsInitialized = False Then
 		pnlLocationCOde.Visible = True
@@ -125,25 +144,29 @@ Private Sub getBaseList
 		Dim loc As locationBord
 		loc.Initialize
 		loc = baseList.Get(0)
-		If loc.isdefault = "1" Then
-			InitConnection(loc.code, loc.description)
-		End If
+		'If loc.isdefault = "1" Then
+		InitConnection(loc.code, loc.description)
+		'End If
 	Else
-		For Each loc As locationBord In baseList
-			If loc.isdefault = "1" Then
-				InitConnection(loc.code, loc.description)
-				Exit
-			End If
-		Next
+		StartActivity(SelectLocation)
+'		For Each loc As locationBord In baseList
+'			If loc.isdefault = "1" Then
+'				InitConnection(loc.code, loc.description)
+'				Exit
+'			End If
+'		Next
 	End If
 	
-	If CheckClientConnected = False Then
-		lblNoBord.Text = "Server zoeken..."
-	End If
+'	If CheckClientConnected = False Then
+'		lblNoBord.Text = "Server zoeken..."
+'	End If
 	
 End Sub
 
-Private Sub InitConnection(locationCode As String, location As String)
+Sub InitConnection(locationCode As String, location As String)
+	If mqttGetBord.connected Then mqttGetBord.Disconnect
+	Starter.serverList.Initialize
+	clvServer.Clear
 	lblCurrLocation.Text = location
 	CallSub2(Starter, "SetSubBase", locationCode)
 	CallSub(Starter, "SetSubGetUnits")
@@ -174,8 +197,14 @@ Sub CheckLastAliveTime
 	
 End Sub
 
+Sub ShowNotConnectedToBroker
+	lblNoBord.Text = "Verbinding borden verbroken"
+	pnlNobords.SetVisibleAnimated(1000, True)
+End Sub
 
 Sub Activity_Resume
+'	getBaseList
+'	Return
 	If Starter.mqttGetBordsActive Then
 		If Starter.serverList.Size > 0 Then
 			clvServer.Clear
@@ -394,11 +423,17 @@ Sub btnOk_Click
 		Msgbox2Async("Kan geen verbinding maken met locatie", "Bord Op Droid", "OKE", "", "", Null, False)
 		Wait For Msgbox_Result(Result As Int)
 	Else 
+		Dim code, description As String
+		
+		code = edtFloatCode.Text
+		If edtFloatDescription.Text = "" Then edtFloatDescription.Text = "Nieuwe locatie"
+		description = edtFloatDescription.Text
 		ToastMessageShow("Verbonden met locatie", True)
 		mqttGetBord.Disconnect
 		pnlLocationCOde.Visible = False
-		baseFile.SetBase(edtLocationCode.Text)
-		StartConnection
+		baseFile.SetBase(code, description, "1")
+		InitConnection(code, description)
+		'StartConnection
 	End If
 End Sub
 
@@ -426,5 +461,21 @@ Private Sub ErrorConnecting
 	Wait For Msgbox_Result (Result As Int)
 	If Result = DialogResponse.POSITIVE Then
 		mqttGetBord.Disconnect
+	End If
+End Sub
+
+Sub pnlLocationList_Click
+	StartActivity(SelectLocation)
+End Sub
+
+Sub edtFloatDescription_TextChanged (Old As String, New As String)
+	
+End Sub
+
+Sub edtFloatCode_TextChanged (Old As String, New As String)
+	If New.Length > 0 Then
+		btnOk.Enabled = True
+	Else
+		btnOk.Enabled = False
 	End If
 End Sub

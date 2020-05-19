@@ -47,5 +47,12 @@
 		</service>
 		<receiver android:name=".starter$starter_BR">
 		</receiver>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".selectlocation"
+			android:label="Board On Droid"
+			android:screenOrientation="portrait">
+		</activity>
 	</application>
 </manifest>

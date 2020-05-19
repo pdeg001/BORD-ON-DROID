@@ -83,9 +83,16 @@ Sub Activity_Create(FirstTime As Boolean)
 	mqttGetData.SendMessage("data please")
 End Sub
 
+Sub ConnectionLost
+	ToastMessageShow("Verbinding met bord verloren", True)
+	Sleep(2000)
+	lastMessageTimer.Enabled = False
+	DisconnetMqtt
+End Sub
+
 Sub tmrLastMessase_Tick
 	If (DateTime.Now-lastMessageTime) >= 120*1000 Then
-		ToastMessageShow("PPPPPP", True)
+		mqttGetData.SendMessage("data please")
 		lblSpelduur.TextColor = Colors.Red
 	End If
 End Sub
