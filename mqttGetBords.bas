@@ -101,5 +101,6 @@ Private Sub CreateMessage(Body As String) As Byte()
 End Sub
 
 Private Sub GetClientConnected As Boolean
-	Return connected
+	'Return client.Connected
+	Return client.IsInitialized
 End Sub

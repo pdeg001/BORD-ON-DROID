@@ -19,10 +19,12 @@ Sub Globals
 	Private pnlBord As Panel
 	Private clvLocation As CustomListView
 	Private lblDescription As Label
+	Private lblVersion As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("selectlocation")
+	lblVersion.Text = Starter.appVersion
 	baseFile.Initialize
 	CreateLocation
 End Sub
@@ -47,7 +49,7 @@ End Sub
 Sub CreateLocatie(code As String, description As String) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 80dip) '190
+	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 85dip) '190
 	p.LoadLayout("clvSelectLocation")
 	
 	lblLocationCode.Text = code

@@ -13,20 +13,20 @@ File6=locations.bal
 File7=main.bal
 File8=materialdesignicons-webfont.ttf
 File9=mouse.png
-FileGroup1=Default Group
+FileGroup1=font
 FileGroup10=Default Group
 FileGroup11=Default Group
-FileGroup12=Default Group
-FileGroup13=Default Group
-FileGroup14=Default Group
+FileGroup12=img
+FileGroup13=img
+FileGroup14=img
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
-FileGroup5=Default Group
+FileGroup5=font
 FileGroup6=Default Group
 FileGroup7=Default Group
-FileGroup8=Default Group
-FileGroup9=Default Group
+FileGroup8=font
+FileGroup9=img
 Group=Default Group
 Library1=core
 Library2=jmqtt
@@ -49,9 +49,9 @@ NumberOfModules=7
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
-	#ApplicationLabel: Board On Droid
+	#ApplicationLabel: Bord Op Droid
 	#VersionCode: 1
-	#VersionName: 0.11
+	#VersionName: 0.51
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -97,17 +97,27 @@ Sub Globals
 	Private pnlLocationList As Panel
 	Private edtFloatCode As B4XFloatTextField
 	Private edtFloatDescription As B4XFloatTextField
+	Private B4XLoadingIndicator1 As B4XLoadingIndicator
+	Private B4XLoadingIndicator2 As B4XLoadingIndicator
+	Private BordDiedProgress As B4XLoadingIndicator
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	
+	mqttGetBord.Initialize
+	
+	Starter.appVersion = $"${Application.LabelName} v${Application.VersionName}"$
+	lblVersion.Text = Starter.appVersion
 	baseFile.Initialize
-	lblVersion.Text = "v"&Application.VersionName
 	pnlNobords.Visible = False
 End Sub
 
 Private Sub StartConnection
 	pnlLocationCOde.Visible = False
+	B4XLoadingIndicator1.Show
+	B4XLoadingIndicator2.Show
+	Sleep(10)
 	pnlNobords.Visible = True
 	clvServer.Clear
 	mqttGetData.Initialize
@@ -124,16 +134,19 @@ End Sub
 
 Private Sub getBaseList
 	Dim listSize As Int = 0
-	
+	Return
 	baseList.Initialize
 	baseList = baseFile.GetBase
 	If baseList.IsInitialized Then
 		listSize = baseList.Size
 	End If
 	If listSize > 1 Then
+		edtFloatCode.RequestFocusAndShowKeyboard
 		pnlLocationList.SetVisibleAnimated(500, True)
-		Else
+		Sleep(200)
+	Else
 		pnlLocationList.SetVisibleAnimated(500, False)
+		Sleep(200)
 	End If
 	
 	lblNoBord.Text = "Wachten op borden..."
@@ -144,23 +157,11 @@ Private Sub getBaseList
 		Dim loc As locationBord
 		loc.Initialize
 		loc = baseList.Get(0)
-		'If loc.isdefault = "1" Then
+		lblCurrLocation.Text = loc.description
 		InitConnection(loc.code, loc.description)
-		'End If
 	Else
 		StartActivity(SelectLocation)
-'		For Each loc As locationBord In baseList
-'			If loc.isdefault = "1" Then
-'				InitConnection(loc.code, loc.description)
-'				Exit
-'			End If
-'		Next
 	End If
-	
-'	If CheckClientConnected = False Then
-'		lblNoBord.Text = "Server zoeken..."
-'	End If
-	
 End Sub
 
 Sub InitConnection(locationCode As String, location As String)
@@ -187,13 +188,25 @@ End Sub
 Sub CheckLastAliveTime
 	Dim currTime As Long = DateTime.Now
 	Dim timeDiff As Long
+	Dim bordAlive As Boolean = True
+	
+	If lblLastCheck.IsInitialized = False Then
+		lblNoBord.Visible = False
+		Return
+	End If
+	
+	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 	
 	For Each bd As bordStatus In Starter.serverList
 		timeDiff = currTime-bd.timeStamp
 		If timeDiff >= Starter.serverDied Then
-			Log(bd.name & " died")	
+			bd.alive = False
+			baseFile.SetBordDiedByName(bd.name, clvServer, bd.alive)
+		Else
+			baseFile.SetBordDiedByName(bd.name, clvServer, bd.alive)
 		End If
 	Next
+	
 	
 End Sub
 
@@ -262,7 +275,8 @@ Sub genUnitList(name As String, alive As Boolean) As Panel
 	p.Tag = name
 	
 	lblBordName.Text = name.Trim
-	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
+'	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
+	BordDiedProgress.Show
 	If Not(alive) Then
 		lblViewBord.Enabled = False
 	End If
@@ -271,7 +285,7 @@ End Sub
 
 Sub CheckIpExits(bord As String)
 	
-	Dim ipFound As Boolean = False
+	Dim bordExists As Boolean = False
 	Dim name As String = ""
 	
 	If bord.Length = 0 Then Return
@@ -285,15 +299,15 @@ Sub CheckIpExits(bord As String)
 	
 	For Each lst As bordStatus In Starter.serverList
 		If lst.name = name Then
-			ipFound = True
+			bordExists = True
 			lst.timeStamp = DateTime.Now
 			lst.alive = True
 		End If
 	Next
 	
-	ServerAlive
+'	ServerAlive
 	
-	If Not(ipFound) Then
+	If Not(bordExists) Then
 		AddUnkownIp("", name)
 		Return
 	End If
@@ -322,13 +336,16 @@ Sub AddUnkownIp(ip As String, name As String)
 	bordStatus.alive = True
 	Starter.serverList.Add(bordStatus)
 	CheckIpInClv(bordStatus)
+	baseFile.SetBordDiedByName(name, clvServer, True)
 	
 	If clvServer.GetSize > 0 Then
-		pnlNobords.SetVisibleAnimated(1000, False)
+		pnlNobords.SetVisibleAnimated(500, False)
 	Else 
-		pnlNobords.SetVisibleAnimated(1000, True)	
+		pnlNobords.SetVisibleAnimated(500, True)	
 	End If
-	Sleep(1000)
+	
+	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
+	Sleep(400)
 	
 End Sub
 
@@ -401,7 +418,7 @@ Sub clvServer_ItemClick (Index As Int, Value As Object)
 End Sub
 
 Sub btnCancel_Click
-	Msgbox2Async("Applicatie afsluiten?", "Bord Op Droid", "JA", "", "NEE", Null, False)
+	Msgbox2Async("Applicatie afsluiten?", Application.LabelName, "JA", "", "NEE", Application.Icon, False)
 	Wait For Msgbox_Result(Result As Int)
 	If Result = DialogResponse.POSITIVE Then
 		Activity.Finish
@@ -409,9 +426,17 @@ Sub btnCancel_Click
 End Sub
 
 Sub btnOk_Click
+	If edtFloatCode.Text = "" Then
+		Msgbox2Async("Locatie code mag niet leeg zijn", Application.LabelName, "OKE", "", "", Application.Icon, False)
+		Wait For Msgbox_Result(Result As Int)
+		Return
+	End If
+	
+	Dim ime As IME
+	ime.Initialize(Me)
 	Starter.testBaseName = True
 	mqttGetBord.Initialize
-	CallSub2(Starter, "SetSubBase", edtLocationCode.Text)
+	CallSub2(Starter, "SetSubBase", edtFloatCode.Text)
 	CallSub(Starter, "SetSubGetUnits")
 	mqttGetBord.SetPubBord
 	Sleep(100)
@@ -420,9 +445,9 @@ Sub btnOk_Click
 	Sleep(1000)
 	
 	If mqttGetBord.connected = False Then
-		Msgbox2Async("Kan geen verbinding maken met locatie", "Bord Op Droid", "OKE", "", "", Null, False)
+		Msgbox2Async("Kan geen verbinding maken met locatie", Application.LabelName, "OKE", "", "", Application.Icon, False)
 		Wait For Msgbox_Result(Result As Int)
-	Else 
+	Else
 		Dim code, description As String
 		
 		code = edtFloatCode.Text
@@ -434,6 +459,7 @@ Sub btnOk_Click
 		baseFile.SetBase(code, description, "1")
 		InitConnection(code, description)
 		'StartConnection
+		ime.HideKeyboard
 	End If
 End Sub
 
@@ -457,7 +483,7 @@ Private Sub CheckClientConnected As Boolean
 End Sub
 
 Private Sub ErrorConnecting
-	Msgbox2Async("Kan geen verbinding maken met locatie"&CRLF&"Controleer locatie code", "App naam", "OKE", "", "", Null, False)
+	Msgbox2Async("Kan geen verbinding maken met locatie"&CRLF&"Controleer locatie code", Application.LabelName, "OKE", "", "", Application.Icon, False)
 	Wait For Msgbox_Result (Result As Int)
 	If Result = DialogResponse.POSITIVE Then
 		mqttGetBord.Disconnect
@@ -479,3 +505,5 @@ Sub edtFloatCode_TextChanged (Old As String, New As String)
 		btnOk.Enabled = False
 	End If
 End Sub
+
+

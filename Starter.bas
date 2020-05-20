@@ -28,6 +28,7 @@ Sub Process_Globals
 	Private SubString, baseFile, baseFilePath As String
 	Private storeFolder As String
 	Public testBaseName As Boolean = False
+	Public appVersion as String
 	Dim working, brokerConnected As Boolean
 	
 End Sub

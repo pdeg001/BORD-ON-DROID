@@ -23,39 +23,34 @@ End Sub
 Sub Globals
 '	Dim lblList() As Label
 	Dim parser As JSONParser
-	Private lblP1Name As Label
-	Private lblP2Name As Label
-	Private lblP1Maken100 As Label
-	Private lblP1Maken10 As Label
-	Private lblP1Maken1 As Label
-	Private lblP1100 As Label
-	Private lblP110 As Label
-	Private lblP11 As Label
-	Private lblP2Maken100 As Label
-	Private lblP2Maken10 As Label
-	Private lblP2Maken1 As Label
-	Private lblP2100 As Label
-	Private lblP210 As Label
-	Private lblP1Moy As Label
-	Private lblP2Moy As Label
-	Private lblP21 As Label
-	Private lblBeurt100 As Label
-	Private lblBeurt10 As Label
-	Private lblBeurt1 As Label
-	Private imgP2Play As ImageView
-	Private imgP1Play As ImageView
-'	Private pnlBord As Panel
-'	Private lblBordName As Label
-'	Private lblViewBord As Label
-'	Private waitingForData As Boolean = True
+	Private lblP1Name, lblP2Name As Label
+	'Private lblP2Name As Label
+	Private lblP1Maken100, lblP1Maken10, lblP1Maken1 As Label
+'	Private lblP1Maken10 As Label
+'	Private lblP1Maken1 As Label
+	Private lblP1100, lblP110, lblP11 As Label
+'	Private lblP110 As Label
+'	Private lblP11 As Label
+	Private lblP2Maken100, lblP2Maken10, lblP2Maken1 As Label
+'	Private lblP2Maken10 As Label
+'	Private lblP2Maken1 As Label
+	Private lblP2100, lblP210, lblP21 As Label
+'	Private lblP210 As Label
+	Private lblP1Moy, lblP2Moy As Label
+'	Private lblP2Moy As Label
 	
-	Private imgNoData As ImageView
-	Private lblNoData As Label
-	Private imgSponsor As ImageView
+	Private lblBeurt100, lblBeurt10, lblBeurt1 As Label
+'	Private lblBeurt10 As Label
+'	Private lblBeurt1 As Label
+	Private imgP2Play, imgP1Play, imgSponsor, imgNoData As ImageView
+'	Private imgP1Play As ImageView
 	
-	Private lblTafelNaam As Label
-	Private lblSpelduur As Label
-	Private pnlSponsor As Panel
+'	Private imgNoData As ImageView
+'	Private lblNoData As Label
+'	Private imgSponsor As ImageView
+	
+	Private lblTafelNaam, lblSpelduur As Label
+'	Private lblSpelduur As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -147,9 +142,6 @@ public Sub UpdateBordWhenClient(data As Message)
 	If imgNoData.Visible Then
 		dataTmr.Enabled = False
 		imgNoData.SetVisibleAnimated(1000, False)
-'		lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
-'		lblNoData.TextColor = Colors.White
-'		lblNoData.Visible = True
 		Sleep(1200)
 	End If
 	lblSpelduur.TextColor = Colors.White
@@ -160,27 +152,14 @@ public Sub UpdateBordWhenClient(data As Message)
 	Dim root As Map = parser.NextObject
 	Dim score As Map = root.Get("score")
 	Dim p1 As Map = score.Get("p1")
-'	Dim caram As String = p1.Get("caram")
-'	Dim percentage As String = p1.Get("percentage")
-'	Dim naam As String = p1.Get("naam")
-'	Dim maken As String = p1.Get("maken")
-'	Dim moyenne As String = p1.Get("moyenne")
 	Dim p2 As Map = score.Get("p2")
-'	Dim caram As String = p2.Get("caram")
-'	Dim percentage As String = p2.Get("percentage")
-'	Dim naam As String = p2.Get("naam")
-'	Dim maken As String = p2.Get("maken")
-	Dim moyenne As String = p2.Get("moyenne")
+'	Dim moyenne As String = p2.Get("moyenne")
 	Dim aan_stoot As Map = score.Get("aan_stoot")
 	Dim speler As String = aan_stoot.Get("speler")
 	Dim spelduur As Map = score.Get("spelduur")
 	Dim tijd As String = spelduur.Get("tijd")
-'	Dim autoinnings As Map = score.Get("autoinnings")
-'	Dim value As String = autoinnings.Get("value")
 	Dim beurten As Map = score.Get("beurten")
 	Dim aantal As String = beurten.Get("aantal")
-	
-	
 	
 	lblP1Name.Text = p1.Get("naam")
 	Number = p1.Get("caram")
@@ -191,12 +170,7 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblP1Maken100.Text = Number.SubString2(0,1)
 	lblP1Maken10.Text = Number.SubString2(1,2)
 	lblP1Maken1.Text = Number.SubString2(2,3)
-	'lblP1Moy.Text = p1.Get("moyenne")
 	lblP1Moy.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).Append("  ").Append(p1.Get("moyenne")).PopAll
-'	lbl_player_one_perc.Text = p1.Get("percentage")
-	
-'	funcScorebord.p1_progress = ( p1.Get("caram")/p1.Get("maken"))*100
-'	funcScorebord.p2_progress = ( p2.Get("caram")/p2.Get("maken"))*100
 	
 	lblP2Name.Text = p2.Get("naam")
 	Number = p2.Get("caram")
@@ -214,12 +188,9 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblBeurt100.Text = aantal.SubString2(0,1)
 	lblBeurt10.Text = aantal.SubString2(1,2)
 	lblBeurt1.Text = aantal.SubString2(2,3)
-'	lbl_innings.Text = aantal'score.Get("beurten")
 	lblSpelduur.Text = tijd'score.Get("spelduur")
 	lblSpelduur.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF253)).Append("  ").Append(tijd).PopAll
-	'setProgress(p1_progressBar, p1_progress)
 	
-'	CallSub(funcScorebord, "SetProgressBarForMirror")
 	imgP1Play.Visible = False
 	imgP2Play.Visible = False
 	If speler = 1 Then

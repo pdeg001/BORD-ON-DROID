@@ -96,3 +96,41 @@ Public Sub DeleteBase(locationCode As String)
 		End If
 	Next
 End Sub
+
+Public Sub SetBordDiedByName(bordName As String, clv As CustomListView, alive As Boolean)' As Boolean
+	Dim lbl As Label
+	Dim p As Panel
+	Dim y As Int = 0
+	For i = 0 To clv.Size -1
+		p = clv.GetPanel(i)
+		For Each v As View In p.GetAllViewsRecursive
+			If v.Tag = "name" Then
+				lbl = v
+				If lbl.Text <> bordName Then Continue
+				SetBordOffline(p, alive)
+				Exit
+			End If
+			y=y+1
+		Next
+	Next
+End Sub
+
+Private Sub SetBordOffline(p As Panel, alive As Boolean)
+	Dim lbl As Label
+	
+	For Each v As View In p.GetAllViewsRecursive
+		If v.Tag = "viewbord" Then
+			lbl = v
+			If alive Then
+				lbl.SetVisibleAnimated(200, True)
+				Sleep(0)
+				Exit
+			Else
+				lbl.SetVisibleAnimated(200, False)
+				Sleep(0)
+				Exit
+			End If
+		End If
+		
+	Next
+End Sub

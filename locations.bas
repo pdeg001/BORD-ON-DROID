@@ -36,10 +36,12 @@ Sub Globals
 	Private lblEdtLocatie As Label
 	Private pnlDeleteLocation As Panel
 	Private refreshList As Boolean
+	Private lblVersion As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("locations")
+	lblVersion.Text = Starter.appVersion
 	baseFile.Initialize
 	ime.Initialize(Me)
 	GetLocations
@@ -76,7 +78,7 @@ End Sub
 Sub CreateLocatie(code As String, description As String, isDefault As String, listSize As Int) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 180dip) '190
+	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 90dip) '190
 	p.LoadLayout("clvLocation")
 	
 	lblLocatie.Text = code
@@ -124,7 +126,7 @@ End Sub
 
 Sub btnEditSave_Click
 	If edtCode.Text = "" Then
-		Msgbox2Async("Locatie mag niet leeg zijn", "App naam", "OKE", "", "", Null, False)
+		Msgbox2Async("Locatie mag niet leeg zijn", Application.LabelName, "OKE", "", "", Application.Icon, False)
 		Wait For Msgbox_Result (Result As Int)
 		If Result = DialogResponse.POSITIVE Then
 			edtCode.Text = currentCodeEdit
@@ -134,7 +136,7 @@ Sub btnEditSave_Click
 	
 	If currentCodeEdit = "new" Then
 		If baseFile.LocationExist(edtCode.Text) Then
-			Msgbox2Async("Locatie code bestaat al", "App naam", "OKE", "", "", Null, False)
+			Msgbox2Async("Locatie code bestaat al", Application.LabelName, "OKE", "", "", Application.Icon, False)
 			Wait For Msgbox_Result (Result As Int)
 			If Result = DialogResponse.POSITIVE Then
 				Return
@@ -238,7 +240,7 @@ End Sub
 Sub pnlDeleteLocation_Click
 	Dim v As View = Sender
 	
-	Msgbox2Async("Locatie verwijderen?", "App naam", "JA", "", "NEE", Null, False)
+	Msgbox2Async("Locatie verwijderen?", Application.LabelName, "JA", "", "NEE", Application.Icon, False)
 	Wait For Msgbox_Result (Result As Int)
 	If Result = DialogResponse.POSITIVE Then
 		DeleteLocation(v)
