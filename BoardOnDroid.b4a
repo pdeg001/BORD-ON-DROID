@@ -100,6 +100,7 @@ Sub Globals
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private B4XLoadingIndicator2 As B4XLoadingIndicator
 	Private BordDiedProgress As B4XLoadingIndicator
+	Private connectTime As Long
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -129,12 +130,17 @@ Private Sub StartConnection
 
 	tmrBordLastAlive.Initialize("tmrBordAlive", 10000)
 	tmrBordLastAlive.Enabled = True
+	connectTime = DateTime.Now
 	
+End Sub
+
+Sub setConnectedTime(firstMsgTime As Long)
+	connectTime = firstMsgTime
 End Sub
 
 Private Sub getBaseList
 	Dim listSize As Int = 0
-	Return
+	'Return
 	baseList.Initialize
 	baseList = baseFile.GetBase
 	If baseList.IsInitialized Then
@@ -170,11 +176,16 @@ Sub InitConnection(locationCode As String, location As String)
 	clvServer.Clear
 	lblCurrLocation.Text = location
 	CallSub2(Starter, "SetSubBase", locationCode)
+	Sleep(0)
 	CallSub(Starter, "SetSubGetUnits")
+	Sleep(0)
 	StartConnection
 End Sub
 
 Sub tmrBordAlive_Tick
+	If Not(checkConnectTime) Then Return
+	
+	
 	CheckLastAliveTime
 	Return
 	If Starter.diedIndex > -1 Then
@@ -183,6 +194,22 @@ Sub tmrBordAlive_Tick
 		Starter.diedIndex = -1
 	End If
 	ServerAlive
+End Sub
+
+Sub checkConnectTime As Boolean
+	If connectTime <> -1 Then
+		pnlNobords.Visible = True
+		mqttGetBord.Disconnect
+		tmrBordLastAlive.Enabled = False
+		Msgbox2Async("Geen borden gevonden", Application.LabelName, "OKE", "", "", Application.Icon, False)
+		Wait For Msgbox_Result (Result As Int)
+		If Result = DialogResponse.POSITIVE Then
+			'...
+		End If
+		pnlNobords.Visible = False
+		Return False
+	End If
+	Return True
 End Sub
 
 Sub CheckLastAliveTime
@@ -289,6 +316,7 @@ Sub CheckIpExits(bord As String)
 	Dim name As String = ""
 	
 	If bord.Length = 0 Then Return
+	connectTime = -1
 	
 	name = bord
 
