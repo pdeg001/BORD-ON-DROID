@@ -187,13 +187,13 @@ Sub tmrBordAlive_Tick
 	
 	
 	CheckLastAliveTime
-	Return
-	If Starter.diedIndex > -1 Then
-		clvServer.RemoveAt(Starter.diedIndex)
-		Starter.serverList.RemoveAt(Starter.diedIndex)
-		Starter.diedIndex = -1
-	End If
-	ServerAlive
+'	Return
+'	If Starter.diedIndex > -1 Then
+'		clvServer.RemoveAt(Starter.diedIndex)
+'		Starter.serverList.RemoveAt(Starter.diedIndex)
+'		Starter.diedIndex = -1
+'	End If
+'	ServerAlive
 End Sub
 
 Sub checkConnectTime As Boolean
@@ -201,12 +201,8 @@ Sub checkConnectTime As Boolean
 		pnlNobords.Visible = True
 		mqttGetBord.Disconnect
 		tmrBordLastAlive.Enabled = False
-		Msgbox2Async("Geen borden gevonden", Application.LabelName, "OKE", "", "", Application.Icon, False)
-		Wait For Msgbox_Result (Result As Int)
-		If Result = DialogResponse.POSITIVE Then
-			'...
-		End If
 		pnlNobords.Visible = False
+		Msgbox2Async("Geen borden gevonden", Application.LabelName, "OKE", "", "", Application.Icon, False)
 		Return False
 	End If
 	Return True
