@@ -73,6 +73,7 @@ Sub Process_Globals
 	Private baseList As List
 	Private mqttBase As MqttConnector
 '	Private selectedLocationCode As String
+	Private appPaused As Boolean
 End Sub
 
 Sub Globals
@@ -114,13 +115,41 @@ Sub Activity_Create(FirstTime As Boolean)
 	pnlNobords.Visible = False
 End Sub
 
+Sub Activity_Resume
+	If Starter.mainPaused Then
+		ResumeConnection(True)
+		Starter.mainPaused = False
+	Else
+		
+	End If
+'	Log("activity resume main")
+'	If Starter.mqttGetBordsActive Then
+'		If Starter.serverList.Size > 0 Then
+'			clvServer.Clear
+'			pnlNobords.SetVisibleAnimated(100, False)
+'			For Each bd As bordStatus In Starter.serverList
+'				clvServer.Add(genUnitList(bd.name, bd.alive), "")
+'			Next
+'		End If
+'		If CheckClientConnected = False Then
+'			mqttBase.Connect
+'		End If
+'	End If
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	Starter.mainPaused = True
+	ResumeConnection(False)
+	'tmrBordLastAlive.Enabled = False
+End Sub
+
 'Sub SetSelectedLocationCode(code As String)
 '	selectedLocationCode = code
 'End Sub
 
 Sub setBordLastAliveTimer
 	tmrBordLastAlive.Enabled = True
-	ReconnectToLocation
+'	ReconnectToLocation
 End Sub
 
 Private Sub StartConnection
@@ -180,6 +209,7 @@ Private Sub getBaseList
 End Sub
 
 Sub ReconnectToLocation
+	mqttBase.Initialize
 	CallSub2(Starter, "SetLastWill", "bordpubdied")
 	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
 	CallSub2(Starter, "SetSubString2", "/pubbord")
@@ -189,7 +219,7 @@ End Sub
 
 'subscribe to get bord on location
 'Sub InitConnection
-Sub InitConnection()
+Sub InitConnection
 	If mqttBase.connected Then mqttBase.Disconnect
 	Starter.serverList.Initialize
 	clvServer.Clear
@@ -241,7 +271,7 @@ End Sub
 Sub CheckLastAliveTime
 	Dim currTime As Long = DateTime.Now
 	Dim timeDiff As Long
-	Dim bordAlive As Boolean = True
+'	Dim bordAlive As Boolean = True
 	
 	If lblLastCheck.IsInitialized = False Then
 		lblNoBord.Visible = False
@@ -269,23 +299,15 @@ Sub ShowNotConnectedToBroker
 	pnlNobords.SetVisibleAnimated(1000, True)
 End Sub
 
-Sub Activity_Resume
-	If Starter.mqttGetBordsActive Then
-		If Starter.serverList.Size > 0 Then
-			clvServer.Clear
-			pnlNobords.SetVisibleAnimated(100, False)
-			For Each bd As bordStatus In Starter.serverList
-				clvServer.Add(genUnitList(bd.name, bd.alive), "")
-			Next
-		End If
-		If CheckClientConnected = False Then
-			mqttBase.Connect
-		End If
-	End If
-End Sub
 
-Sub Activity_Pause (UserClosed As Boolean)
-	tmrBordLastAlive.Enabled = False
+Sub ResumeConnection(resume As Boolean)
+	If resume Then
+		mqttBase.Connect
+	Else
+		mqttBase.Disconnect	
+	End If
+	
+	tmrBordLastAlive.Enabled = resume
 End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean

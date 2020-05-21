@@ -33,6 +33,7 @@ Sub Process_Globals
 	Public appVersion As String
 	Dim working, brokerConnected As Boolean
 	Public firstConnectTime As Long
+	Public mainPaused as Boolean
 	
 End Sub
 

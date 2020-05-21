@@ -23,6 +23,7 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	Starter.mainPaused = False
 	Activity.LoadLayout("selectlocation")
 	lblVersion.Text = Starter.appVersion
 	baseFile.Initialize
@@ -77,8 +78,8 @@ Sub pnlBord_Click
 	
 	Starter.selectedLocationCode = code
 	Starter.selectedLocationDescription = description
-	CallSubDelayed(Main, "InitConnection")
-	Sleep(0)
 	Activity.Finish	
+	
+	CallSubDelayed(Main, "InitConnection")
 End Sub
 

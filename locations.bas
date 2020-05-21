@@ -76,9 +76,10 @@ Private Sub GetLocations
 End Sub
 
 Sub CreateLocatie(code As String, description As String, isDefault As String, listSize As Int) As Panel
+	Starter.mainPaused = False
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 90dip) '190
+	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 130dip) '190
 	p.LoadLayout("clvLocation")
 	
 	lblLocatie.Text = code

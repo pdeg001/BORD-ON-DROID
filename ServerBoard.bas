@@ -37,6 +37,7 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	Starter.mainPaused = False
 	If Not (mqttBase.IsInitialized) Then
 		mqttBase.Initialize
 	End If
@@ -45,6 +46,7 @@ Sub Activity_Create(FirstTime As Boolean)
 '	mqttBase.SetSub
 	
 	Activity.LoadLayout("ServerBoard")
+'	imgNoData.Visible = False
 	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
 	lastMessageTimer.Enabled = True
 	
@@ -54,7 +56,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	dataTmr.Initialize("dataTmr", 1000)
 	mqttBase.Connect
 	
-	imgNoData.SetVisibleAnimated(1, True)
+'	imgNoData.SetVisibleAnimated(1, True)
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
 	Sleep(1000)
@@ -91,18 +93,23 @@ Sub dataTmr_Tick
 End Sub
 
 Sub Activity_Resume
-'	waitText = $"Wachten op ${Starter.DiscoveredServer}"$
-	dotCount = 0
-'	Starter.SendMessage("data please")
+	ResumeConnection(True)
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
-'	Log("pause")
-	If mqttBase.connected Then
-		mqttBase.Disconnect
+	ResumeConnection(False)
+End Sub
+
+Sub ResumeConnection(resume As Boolean)
+	If resume Then
+		mqttBase.Connect
+		Sleep(500)
+		mqttBase.SendMessage("data please")
+	Else
+		mqttBase .Disconnect
 	End If
-	lastMessageTimer.Enabled = False
-	Activity.Finish
+	
+	lastMessageTimer.Enabled = resume
 End Sub
 
 Sub DisconnetMqtt
@@ -117,7 +124,7 @@ Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 		CallSubDelayed(Main, "setBordLastAliveTimer")
 		lastMessageTimer.Enabled = False
 		DisconnetMqtt
-		
+		CallSubDelayed(Main, "ReconnectToLocation")
 		Return False
 	Else
 		Return True
@@ -128,7 +135,7 @@ public Sub UpdateBordWhenClient(data As Message)
 	If imgNoData.Visible Then
 		dataTmr.Enabled = False
 		imgNoData.SetVisibleAnimated(1000, False)
-		Sleep(1200)
+		'Sleep(1200)
 	End If
 	lblSpelduur.TextColor = Colors.White
 	Dim Number, str As String
