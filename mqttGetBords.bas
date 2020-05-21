@@ -19,8 +19,8 @@ Public Sub Initialize
 End Sub
 
 public Sub SetPubBord()
-	pubBord = $"${CallSub(Starter, "GetBase")}/pubbord"$
-'	pubBord = $"${CallSub(Starter, "GetSubUnits")}/pubbord"$
+'	pubBord = $"${CallSub(Starter, "GetBase")}/pubbord"$
+	pubBord = $"${CallSub(Starter, "GetSubUnits")}"$
 	pubBordDisconnect = $"${CallSub(Starter, "GetSubUnits")}/disconnect"$
 End Sub
 
@@ -70,6 +70,7 @@ End Sub
 
 Private Sub client_MessageArrived (Topic As String, Payload() As Byte)
 	If connected = False Then Return
+Log($"TOPIC : ${Topic} at $Time{DateTime.Now}"$)
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As String = receivedObject
 	Dim baseName As String = $"${CallSub(Starter, "GetBase")}/pubbord"$

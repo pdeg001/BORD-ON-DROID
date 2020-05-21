@@ -75,7 +75,9 @@ Sub pnlBord_Click
 		End If
 	Next
 	
-	CallSubDelayed3(Main, "InitConnection", code, description)
+	Starter.selectedLocationCode = code
+	Starter.selectedLocationDescription = description
+	CallSubDelayed(Main, "InitConnection")
 	Sleep(0)
 	Activity.Finish	
 End Sub

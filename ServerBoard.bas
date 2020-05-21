@@ -10,12 +10,14 @@ Version=9.801
 #End Region
 
 Sub Process_Globals
-	Dim mqttGetData As mqttGetBordData
+'	Dim mqttGetData As mqttGetBordData
+	Dim mqttBase As MqttConnector
+	Dim baseFile As Base
 	Dim dataTmr As Timer
 	Dim dotCount As Int = 0
-	Dim waitText As String 
+'	Dim waitText As String 
 	Dim cs As CSBuilder
-	Private SubString As String
+'Private SubString As String
 	Dim lastMessageTime As Long
 	Dim lastMessageTimer As Timer
 End Sub
@@ -24,42 +26,23 @@ Sub Globals
 '	Dim lblList() As Label
 	Dim parser As JSONParser
 	Private lblP1Name, lblP2Name As Label
-	'Private lblP2Name As Label
 	Private lblP1Maken100, lblP1Maken10, lblP1Maken1 As Label
-'	Private lblP1Maken10 As Label
-'	Private lblP1Maken1 As Label
 	Private lblP1100, lblP110, lblP11 As Label
-'	Private lblP110 As Label
-'	Private lblP11 As Label
 	Private lblP2Maken100, lblP2Maken10, lblP2Maken1 As Label
-'	Private lblP2Maken10 As Label
-'	Private lblP2Maken1 As Label
 	Private lblP2100, lblP210, lblP21 As Label
-'	Private lblP210 As Label
 	Private lblP1Moy, lblP2Moy As Label
-'	Private lblP2Moy As Label
-	
 	Private lblBeurt100, lblBeurt10, lblBeurt1 As Label
-'	Private lblBeurt10 As Label
-'	Private lblBeurt1 As Label
 	Private imgP2Play, imgP1Play, imgSponsor, imgNoData As ImageView
-'	Private imgP1Play As ImageView
-	
-'	Private imgNoData As ImageView
-'	Private lblNoData As Label
-'	Private imgSponsor As ImageView
-	
 	Private lblTafelNaam, lblSpelduur As Label
-'	Private lblSpelduur As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	If Not (mqttGetData.IsInitialized) Then
-		mqttGetData.Initialize
+	If Not (mqttBase.IsInitialized) Then
+		mqttBase.Initialize
 	End If
-
+	baseFile.Initialize
 	CallSub(Starter, "SetSubString")
-	mqttGetData.SetSub
+'	mqttBase.SetSub
 	
 	Activity.LoadLayout("ServerBoard")
 	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
@@ -69,17 +52,18 @@ Sub Activity_Create(FirstTime As Boolean)
 	SetImg
 	
 	dataTmr.Initialize("dataTmr", 1000)
-	mqttGetData.Connect
+	mqttBase.Connect
 	
 	imgNoData.SetVisibleAnimated(1, True)
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
 	Sleep(1000)
-	mqttGetData.SendMessage("data please")
+	mqttBase.SendMessage("data please")
 End Sub
 
 Sub ConnectionLost
-	ToastMessageShow("Verbinding met bord verloren", True)
+	'ToastMessageShow("Verbinding met bord verloren", True)
+	baseFile.createCustomToast("Verbinding met bord verloren", Colors.Red)
 	Sleep(2000)
 	lastMessageTimer.Enabled = False
 	DisconnetMqtt
@@ -87,7 +71,7 @@ End Sub
 
 Sub tmrLastMessase_Tick
 	If (DateTime.Now-lastMessageTime) >= 120*1000 Then
-		mqttGetData.SendMessage("data please")
+		mqttBase.SendMessage("data please")
 		lblSpelduur.TextColor = Colors.Red
 	End If
 End Sub
@@ -107,31 +91,33 @@ Sub dataTmr_Tick
 End Sub
 
 Sub Activity_Resume
-	waitText = $"Wachten op ${Starter.DiscoveredServer}"$
+'	waitText = $"Wachten op ${Starter.DiscoveredServer}"$
 	dotCount = 0
 '	Starter.SendMessage("data please")
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 '	Log("pause")
-	If mqttGetData.connected Then
-		mqttGetData.Disconnect
+	If mqttBase.connected Then
+		mqttBase.Disconnect
 	End If
 	lastMessageTimer.Enabled = False
 	Activity.Finish
 End Sub
 
 Sub DisconnetMqtt
-	If mqttGetData.connected Then
-		mqttGetData.Disconnect
+	If mqttBase.connected Then
+		mqttBase.Disconnect
 	End If
 	Activity.Finish
 End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		CallSubDelayed(Main, "setBordLastAliveTimer")
 		lastMessageTimer.Enabled = False
 		DisconnetMqtt
+		
 		Return False
 	Else
 		Return True
@@ -202,7 +188,7 @@ End Sub
 
 Public Sub GamedEnded
 	lblSpelduur.TextColor = Colors.Red
-	'lblNoData.Text = $"Partij op tafel ${Starter.DiscoveredServer} beëindigd"$
+	Msgbox2Async("Spel beëindigd", Application.LabelName, "OKE", "", "", Application.Icon, False)
 End Sub
 
 Public Sub GamedInProgress
@@ -220,4 +206,8 @@ Private Sub SetImg
 		bmp = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
 	End If
 	imgSponsor.SetBackgroundImage(bmp)
+End Sub
+
+Sub BordDied
+	Msgbox2Async("Verbinding verbroken", Application.LabelName, "OK", "", "", Application.Icon, False)
 End Sub

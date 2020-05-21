@@ -22,15 +22,17 @@ Sub Process_Globals
 	Private mqttBase As String
 	Private mqttUnit As String
 	Private mqttGetUnits As String
+	Private mqttLastWill As String
 	Private rp As RuntimePermissions
 	Public mqttGetBordsActive, mqttGetBordDataActive As Boolean
 	Public diedIndex As Int = -1
-	Private SubString, baseFile, baseFilePath As String
+	Private baseFile, baseFilePath As String
+	Public SubString, subDisconnectString, selectedLocationCode, selectedLocationDescription As String
 	Private storeFolder As String
 	Public testBaseName As Boolean = False
 	Public appVersion As String
 	Dim working, brokerConnected As Boolean
-	Public firstConnectTime as Long
+	Public firstConnectTime As Long
 	
 End Sub
 
@@ -62,11 +64,11 @@ Sub ConnectAndReconnect
 		mqtt.Initialize("mqtt", "tcp://pdeg3005.mynetgear.com:1883", "pdeg_" & Rnd(0, 999999999))
 		Dim mo As MqttConnectOptions
 		mo.Initialize("", "")
-		Log("Trying to connect")
+'		Log("Trying to connect")
 		mqtt.Connect2(mo)
 		Wait For Mqtt_Connected (Success As Boolean)
 		If Success Then
-			Log("Mqtt connected")
+'			Log("Mqtt connected")
 			brokerConnected = True
 	
 			CallSub(Main, "getBaseList")
@@ -75,21 +77,37 @@ Sub ConnectAndReconnect
 				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
 				Sleep(5000)
 			Loop
-			Log("Disconnected")
+'			Log("Disconnected")
 			brokerConnected = False
 			CallSub(ServerBoard, "ConnectionLost")
 			CallSub(Main, "ShowNotConnectedToBroker")
 			If mqtt.IsInitialized Then mqtt.Close
 		Else
-			Log("Error connecting.")
+'			Log("Error connecting.")
 			If mqtt.IsInitialized Then mqtt.Close
 		End If
 		Sleep(5000)
 	Loop
 End Sub
 
+Sub SetLastWill(lastWill As String)
+	mqttLastWill = lastWill
+End Sub
+
+Sub GetLastWill As String
+	Return mqttLastWill	
+End Sub
+
 Public Sub SetSubString
-	SubString = $"${mqttName}/${mqttBase}/${mqttUnit}"$
+	SubString = $"${mqttName}/${mqttBase}/recvdata_${mqttUnit}"$
+End Sub
+
+Public Sub SetSubString2(unit As String)
+	SubString = $"${mqttName}/${mqttBase}${unit}"$
+End Sub
+
+Public Sub SetUnsubscribeString2(unit As String)
+	subDisconnectString =  $"${mqttName}/${mqttBase}${unit}/disconnect"$
 End Sub
 
 'set location code
