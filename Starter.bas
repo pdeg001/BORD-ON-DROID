@@ -33,7 +33,7 @@ Sub Process_Globals
 	Public appVersion As String
 	Dim working, brokerConnected As Boolean
 	Public firstConnectTime As Long
-	Public mainPaused as Boolean
+	Public mainPaused As Boolean
 	
 End Sub
 
@@ -122,6 +122,10 @@ End Sub
 
 Private Sub SetUnit(name As String)
 	mqttUnit = name
+End Sub
+
+Private Sub GetUnit As String
+	Return mqttUnit
 End Sub
 
 Private Sub SetSubGetUnits

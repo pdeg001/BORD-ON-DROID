@@ -20,6 +20,7 @@ Sub Globals
 	Private clvLocation As CustomListView
 	Private lblDescription As Label
 	Private lblVersion As Label
+	Private pnlBack As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -52,34 +53,37 @@ Sub CreateLocatie(code As String, description As String) As Panel
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 85dip) '190
 	p.LoadLayout("clvSelectLocation")
-	
+	Log($"ACTIVE UNIT ${Starter.selectedLocationCode}"$)
 	lblLocationCode.Text = code
 	lblDescription.Text = description
+	
+	If code = Starter.selectedLocationCode Then
+		Dim tf As Typeface
+		Dim clr As Long =  0xFF282BFF
+		
+		tf = Typeface.CreateNew(Typeface.LoadFromAssets("Baloo2-Regular.ttf"), Typeface.STYLE_ITALIC)
+		
+		lblLocationCode.Typeface = tf
+		lblLocationCode.TextColor = clr
+		lblDescription.Typeface = tf
+		lblDescription.TextColor = clr
+	End If
+	
 	Return p
 End Sub
 
 Sub pnlBord_Click
 	Dim p As Panel = Sender
-	Dim lbl As Label
-	Dim code, description As String
-		
-	For Each v As View In p.GetAllViewsRecursive
-		If v.Tag = "code" Then
-			lbl = v
-			code = lbl.Text
-			Continue
-		End If
-		
-		If v.Tag = "name" Then
-			lbl = v
-			description = lbl.Text
-		End If
-	Next
 	
-	Starter.selectedLocationCode = code
-	Starter.selectedLocationDescription = description
+	Starter.selectedLocationCode = baseFile.GetSelectedLabelTagFromPanel(p, "code")
+	Starter.selectedLocationDescription = baseFile.GetSelectedLabelTagFromPanel(p, "name")
 	Activity.Finish	
 	
 	CallSubDelayed(Main, "InitConnection")
 End Sub
 
+
+
+Sub pnlBack_Click
+	Activity.Finish
+End Sub

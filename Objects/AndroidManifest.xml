@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="nl.pdeg.bordondroid"
 	android:versionCode="1"
-	android:versionName="0.51"
+	android:versionName="0.83"
 	android:installLocation="internalOnly">
 	
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
@@ -36,13 +36,6 @@
 			android:label="Bord Op Droid"
 			android:screenOrientation="portrait">
 		</activity>
-		<activity
-			android:windowSoftInputMode="stateHidden"
-			android:launchMode="singleTop"
-			android:name=".serverboard"
-			android:label="Bord Op Droid"
-			android:screenOrientation="landscape">
-		</activity>
 		<service android:name=".starter">
 		</service>
 		<receiver android:name=".starter$starter_BR">
@@ -53,6 +46,13 @@
 			android:name=".selectlocation"
 			android:label="Bord Op Droid"
 			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".serverboard"
+			android:label="Bord Op Droid"
+			android:screenOrientation="landscape">
 		</activity>
 	</application>
 </manifest>

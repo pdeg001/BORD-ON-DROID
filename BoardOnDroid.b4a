@@ -50,7 +50,7 @@ Version=9.801
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
 	#VersionCode: 1
-	#VersionName: 0.51
+	#VersionName: 0.83
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -116,6 +116,7 @@ Sub Activity_Create(FirstTime As Boolean)
 End Sub
 
 Sub Activity_Resume
+	ShowSelectLocationButton
 	If Starter.mainPaused Then
 		ResumeConnection(True)
 		Starter.mainPaused = False
@@ -179,16 +180,22 @@ Private Sub getBaseList
 
 	baseList.Initialize
 	baseList = baseFile.GetBase
+	
+	If CallSub(baseFile, "CheckBaseListExists") = False Then
+		pnlLocationCOde.Visible = True
+		Return
+	End If
+	
 	If baseList.IsInitialized Then
 		listSize = baseList.Size
 	End If
 	If listSize > 1 Then
-		edtFloatCode.RequestFocusAndShowKeyboard
+		'edtFloatCode.RequestFocusAndShowKeyboard
 		pnlLocationList.SetVisibleAnimated(500, True)
 		Sleep(200)
 	Else
 		pnlLocationList.SetVisibleAnimated(500, False)
-		Sleep(200)
+		'Sleep(200)
 	End If
 	
 	lblNoBord.Text = "Wachten op borden..."
@@ -231,20 +238,21 @@ Sub InitConnection
 	Sleep(0)
 	StartConnection
 End Sub
+
 'subscribe to bord data
 Sub clvServer_ItemClick (Index As Int, Value As Object)
 	Dim p As Panel = clvServer.GetPanel(Index)
-	Dim lbl As Label
+	Dim unit As String
 	
-	For Each c As View In p.GetAllViewsRecursive
-		If c.Tag = "name" Then
-			lbl = c
-			CallSub2(Starter, "SetLastWill", "recvdied")
-			CallSub2(Starter, "SetUnit", PrepTopicName(lbl.Text).ToLowerCase)
-			Starter.DiscoveredServer = lbl.Text
-			Exit
-		End If
-	Next
+	unit = baseFile.GetSelectedLabelTagFromPanel(p, "name")
+	If baseFile.GetBordAlive(unit) = False Then
+		baseFile.ShowCustomToast($"Bord niet gevonden, controleer of het bord "online" is"$, False, Colors.Red)
+		Return
+	End If
+	
+	Starter.DiscoveredServer = unit
+	CallSub2(Starter, "SetLastWill", "recvdied")
+	CallSub2(Starter, "SetUnit", PrepTopicName(unit).ToLowerCase)
 	
 	DisconnectMqtt
 	Sleep(100)
@@ -340,6 +348,7 @@ Sub genUnitList(name As String, alive As Boolean) As Panel
 	p.Tag = name
 	
 	lblBordName.Text = name.Trim
+	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 	BordDiedProgress.Show
 	If Not(alive) Then
 		lblViewBord.Enabled = False
@@ -404,7 +413,7 @@ Sub AddUnkownIp(ip As String, name As String)
 		pnlNobords.SetVisibleAnimated(500, True)	
 	End If
 	
-	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
+'	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 	Sleep(400)
 	
 End Sub
@@ -416,27 +425,28 @@ Sub CheckIpInClv(bord As bordStatus)
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
 		If p.Tag = bord.name Then
-			For Each v As View In p.GetAllViewsRecursive
-				If v.Tag = "lblLastCheck" Then
-					lbl = v
-					lbl.Text = $"Laatste controle $Time{DateTime.Now}"$
-				End If
-			Next
-			
-			For Each v As View In p.GetAllViewsRecursive
-				If v.Tag = "viewbord" Then
-					lbl = v
-					If bord.alive = False Then
-						lbl.Enabled = False
-						lbl.TextColor = Colors.Red
-						Starter.diedIndex = i
-					Else
-						lbl.Enabled = True
-						lbl.TextColor = 0xFF027F00
-					End If
-					Return
-				End If
-			Next
+'			For Each v As View In p.GetAllViewsRecursive
+'				If v.Tag = "lblLastCheck" Then
+'					lbl = v
+'					lbl.Text = $"Laatste controle $Time{DateTime.Now}"$
+'				End If
+'			Next
+			baseFile.SetPanelLabelItemText(p, "lblLastCheck", $"Laatste controle $Time{DateTime.Now}"$)
+			baseFile.SetBordDiedByName(bord.name, clvServer, bord.alive)
+'			For Each v As View In p.GetAllViewsRecursive
+'				If v.Tag = "viewbord" Then
+'					lbl = v
+'					If bord.alive = False Then
+'						lbl.Enabled = False
+'						lbl.TextColor = Colors.Red
+'						Starter.diedIndex = i
+'					Else
+'						lbl.Enabled = True
+'						lbl.TextColor = 0xFF027F00
+'					End If
+'					Return
+'				End If
+'			Next
 		End If
 	Next
 	
@@ -514,6 +524,7 @@ Sub edtLocationCode_TextChanged (Old As String, New As String)
 End Sub
 
 Sub pnlLocation_Click
+
 	If CheckClientConnected Then
 		mqttBase.Disconnect
 	End If
@@ -540,4 +551,18 @@ Sub edtFloatCode_TextChanged (Old As String, New As String)
 	End If
 End Sub
 
+Sub DeletedLocationActive
+	mqttBase.Disconnect
+	clvServer.Clear
+	getBaseList
+End Sub
+
+Sub ShowSelectLocationButton
+	pnlLocationList.Visible = baseFile.GetBase.Size > 1	
+End Sub
+
+Sub ConnectionError
+	baseFile.ShowCustomToast("MQTT Fout", True, Colors.Red)
+	
+End Sub
 

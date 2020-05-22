@@ -35,6 +35,7 @@ Sub Globals
 	Private refreshList As Boolean
 	Private lblVersion As Label
 	Private pnlDelete As Panel
+	Private pnlBack As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -68,24 +69,21 @@ Private Sub GetLocations
 	clvLocation.Clear
 	
 	For Each loc As locationBord In baseList
-		clvLocation.Add(CreateLocatie(loc.code, loc.description, loc.isdefault, baseList.Size), "")
+		clvLocation.Add(CreateLocatie(loc.code, loc.description), "")
 	Next
 	
 End Sub
 
-Sub CreateLocatie(code As String, description As String, isDefault As String, listSize As Int) As Panel
+Sub CreateLocatie(code As String, description As String) As Panel
 	Starter.mainPaused = False
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 150dip) '190
+	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 160dip) '190
 	p.LoadLayout("clvLocation")
+	p.Tag = code
 	
 	lblLocatie.Text = code
 	lblDescription.Text = description
-'	chkDefault.Checked = isDefault = 1
-'	If listSize = 1 Then
-'		chkDefault.Enabled = False
-'	End If
 	Return p
 End Sub
 
@@ -98,26 +96,9 @@ Sub clvLocation_ItemClick (Index As Int, Value As Object)
 End Sub
 
 Private Sub SetEditFields(p As Panel)
-	Dim lbl As Label
-	Dim chk As CheckBox
-	For Each v As View In p.GetAllViewsRecursive
-		If v.Tag = "code" Then
-			lbl = v
-			edtCode.Text = lbl.Text
-			currentCodeEdit = lbl.Text
-		End If
-		If v.Tag = "description" Then
-			lbl = v
-			edtDescription.Text = lbl.Text
-		End If
-		If v.Tag = "isdefault" Then
-			chk = v
-			chkEdtDefault.Checked = chk.Checked
-			If clvLocation.Size = 1 Then
-			End If
-		End If
-	Next
-	
+	edtCode.Text = baseFile.GetSelectedLabelTagFromPanel(p, "code")
+	currentCodeEdit = edtCode.Text
+	edtDescription.Text = baseFile.GetSelectedLabelTagFromPanel(p, "description")
 End Sub
 
 Sub btnEditSave_Click
@@ -150,15 +131,13 @@ Sub btnEditSave_Click
 	refreshList = False
 End Sub
 
-
-
-
 Sub btnEditCancel_Click
 	ime.HideKeyboard
 	pnlEditLocation.SetVisibleAnimated(500, False)
 	currentCodeEdit = ""
 	edtCode.Text = ""
 	edtDescription.Text = ""
+	
 End Sub
 
 Sub pnlNew_Click
@@ -168,92 +147,29 @@ Sub pnlNew_Click
 	edtCode.RequestFocusAndShowKeyboard
 End Sub
 
-'Sub chkDefault_CheckedChange(Checked As Boolean)
-'	If refreshList Then Return
-'	
-'	Dim chk As CheckBox = Sender
-'	Dim p As Panel = chk.Parent
-'	Dim selectedCode As String
-'	
-'	refreshList = True
-'
-'	Dim pnl As Panel = clvLocation.GetPanel(clvLocation.GetItemFromView(p))	
-'	'GET SELECTED CODE
-'	selectedCode = GetSelectedCode(p, "code")
-'	Log("SELECTED CODE : " & selectedCode)
-'	
-'	RemoveDefaultLocation
-'	
-'	baseFile.ModifyLocation(selectedCode, selectedCode, GetSelectedCode(pnl,"description"), True)
-'	chk.Checked = True
-'	'GetLocations
-'	refreshList = False
-'End Sub
-
-Private Sub GetSelectedCode(p As Panel, strTag As String) As String
-	Log(strTag)
-	Dim lbl As Label
-	Dim chk As B4XView
-	
-	For Each v As B4XView In p.GetAllViewsRecursive
-		If v Is CheckBox Then
-			chk = v
-			chk.Checked = False
-			Return ""
-			Exit
-		End If
-		
-		If v.Tag = "" Then Continue
-		
-		If v.Tag = strTag And v Is Label Then
-			lbl = v
-			Return lbl.Text
-		End If
-	Next
-	Return ""
-End Sub
-
-'Private Sub RemoveDefaultLocation
-'	Dim p As Panel
-'	Dim code, description As String
-'	refreshList = True
-'	For i = 0 To clvLocation.Size -1
-'		
-'		Log("WDMKWMD - " &i)
-'		p = clvLocation.GetPanel(i)	
-''		code = GetSelectedCode(p, "code")
-''		description = GetSelectedCode(p, "description")
-'		GetSelectedCode(p, "isdefault")
-''		baseFile.ModifyLocation(code, code, description, False)
-'	Next
-'	refreshList = False
-'End Sub
-
-'Sub pnlDeleteLocation_Click
-'	Dim v As View = Sender
-'	
-'	Msgbox2Async("Locatie verwijderen?", Application.LabelName, "JA", "", "NEE", Application.Icon, False)
-'	Wait For Msgbox_Result (Result As Int)
-'	If Result = DialogResponse.POSITIVE Then
-'		DeleteLocation(v)
-'	End If
-'End Sub
-
 Private Sub DeleteLocation(v As View)
 	Dim p As Panel = v.Parent
-	Dim code As String =GetSelectedCode(p, "code")
+	Dim code As String = baseFile.GetSelectedLabelTagFromPanel(p, "code")
 	baseFile.DeleteBase(code)
+	
+	If CallSub(Starter, "GetUnit") = code Then
+		CallSub(Main, "DeletedLocationActive")
+	End If
 End Sub
-
-
-
 
 Sub pnlDelete_Click
 	Dim v As View = Sender
-	
-	Msgbox2Async("Locatie verwijderen?", Application.LabelName, "JA", "", "NEE", Application.Icon, False)
+	Dim p As Panel = v.Parent
+		
+	Msgbox2Async($"Locatie ${p.tag} verwijderen?"$, Application.LabelName, "JA", "", "NEE", Application.Icon, False)
 	Wait For Msgbox_Result (Result As Int)
 	If Result = DialogResponse.POSITIVE Then
 		DeleteLocation(v)
+		clvLocation.RemoveAt(baseFile.GetClvPanelIndex(p, clvLocation))
+		baseFile.ShowCustomToast("Locatie verwijderd", False, Colors.Green)
 	End If
+End Sub
+
+Sub pnlBack_Click
+	Activity.Finish
 End Sub

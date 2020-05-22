@@ -38,7 +38,9 @@ Private Sub client_Connected (Success As Boolean)
 		'client.Subscribe(Starter.selectedBordName, 0)
 		client.Subscribe(Starter.SubString, 0)
 	Else
-		ToastMessageShow("Error connecting: " & LastException, True)
+'		ToastMessageShow("Error connecting +++ : " & LastException, True)
+'		Log("SUBSTRING = " &Starter.SubString)
+		ProcessConnectError
 	End If
 End Sub
 
@@ -95,5 +97,11 @@ End Sub
 
 Sub GetClientConnected As Boolean
 	Return connected
+End Sub
+
+Sub ProcessConnectError
+	If Starter.SubString.IndexOf("pubbord") > -1 Then
+		CallSub(Main, "ConnectionError")
+	End If
 End Sub
 

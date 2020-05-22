@@ -16,10 +16,14 @@ Public Sub Initialize
 End Sub
 
 Public Sub GetBase As List
+	Dim lstDummy As List
+	
+	
 	If CheckBaseListExists Then
 		Return serializator.ConvertBytesToObject(File.ReadBytes(baseFile, ""))
 	Else
-		Return Null
+		lstDummy.Initialize
+		Return lstDummy
 	End If
 End Sub
 
@@ -98,26 +102,18 @@ Public Sub DeleteBase(locationCode As String)
 End Sub
 
 Public Sub SetBordDiedByName(bordName As String, clv As CustomListView, alive As Boolean)' As Boolean
-	Dim lbl As Label
 	Dim p As Panel
-	Dim y As Int = 0
+
 	For i = 0 To clv.Size -1
 		p = clv.GetPanel(i)
-		For Each v As View In p.GetAllViewsRecursive
-			If v.Tag = "name" Then
-				lbl = v
-				If lbl.Text <> bordName Then Continue
-				SetBordOffline(p, alive)
-				Exit
-			End If
-			y=y+1
-		Next
+		SetBordOffline(GetPanelFromTag("name", bordName, p), alive)
 	Next
 End Sub
 
 Private Sub SetBordOffline(p As Panel, alive As Boolean)
 	Dim lbl As Label
 	
+	If p.IsInitialized = False Then Return
 	For Each v As View In p.GetAllViewsRecursive
 		If v.Tag = "viewbord" Then
 			lbl = v
@@ -152,8 +148,79 @@ Sub ShowCustomToast(Text As Object, LongDuration As Boolean, BackgroundColor As 
 	Dim cd As ColorDrawable
 	cd.Initialize(BackgroundColor, 20dip)
 	v.Background = cd
+	
 	'uncomment to show toast in the center:
 	'  toast.RunMethod("setGravity", Array( _
 	' Bit.Or(Gravity.CENTER_HORIZONTAL, Gravity.CENTER_VERTICAL), 0, 0))
 	toast.RunMethod("show", Null)
 End Sub
+
+Sub GetSelectedLabelTagFromPanel(p As Panel, strTag As String) As String
+	Dim lbl As Label
+	
+	For Each v As B4XView In p.GetAllViewsRecursive
+		If v.Tag = "" Then Continue
+		
+		If v.Tag = strTag And v Is Label Then
+			lbl = v
+			Return lbl.Text
+		End If
+	Next
+	Return ""
+End Sub
+
+Sub SetSelectedTagFromPanel(p As Panel, strTag As String) As String
+	Dim lbl As Label
+	
+	For Each v As B4XView In p.GetAllViewsRecursive
+		If v.Tag = "" Then Continue
+		
+		If v.Tag = strTag And v Is Label Then
+			lbl = v
+			Return lbl.Text
+		End If
+	Next
+	Return ""
+End Sub
+
+Sub GetClvPanelIndex(p As Panel, clv As CustomListView) As Int
+	Return clv.GetItemFromView(p)
+End Sub
+
+Sub GetPanelFromTag(tagName As String, bordName As String, p As Panel) As Panel
+	Dim lbl As Label
+	For Each v As View In p.GetAllViewsRecursive
+		If v.Tag = tagName Then
+			lbl = v
+			If lbl.Text <> bordName Then Continue
+			Return p
+			Exit
+		End If
+	Next
+	Return Null
+End Sub
+
+Sub GetBordAlive(name As String) As Boolean
+	For Each lst As bordStatus In Starter.serverList
+		If lst.name = name Then
+			Return lst.alive
+		End If
+	Next
+	Return False
+End Sub
+
+Sub SetPanelLabelItemText(p As Panel, strTag As String, itemText As String)
+	Dim lbl As Label
+	
+	For Each v As B4XView In p.GetAllViewsRecursive
+		If v.Tag = "" Then Continue
+		
+		If v.Tag = strTag And v Is Label Then
+			lbl = v
+			lbl.Text = itemText
+			Exit
+		End If
+	Next
+End Sub
+
+
