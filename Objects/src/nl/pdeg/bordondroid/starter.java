@@ -138,6 +138,7 @@ public static String _mqttname = "";
 public static String _mqttbase = "";
 public static String _mqttunit = "";
 public static String _mqttgetunits = "";
+public static String _mqttlastwill = "";
 public static anywheresoftware.b4a.objects.RuntimePermissions _rp = null;
 public static boolean _mqttgetbordsactive = false;
 public static boolean _mqttgetborddataactive = false;
@@ -159,6 +160,19 @@ public nl.pdeg.bordondroid.main _main = null;
 public nl.pdeg.bordondroid.locations _locations = null;
 public nl.pdeg.bordondroid.selectlocation _selectlocation = null;
 public nl.pdeg.bordondroid.serverboard _serverboard = null;
+public static String  _setlastwill(String _lastwill) throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "setlastwill", false))
+	 {return ((String) Debug.delegate(processBA, "setlastwill", new Object[] {_lastwill}));}
+RDebugUtils.currentLine=1769472;
+ //BA.debugLineNum = 1769472;BA.debugLine="Sub SetLastWill(lastWill As String)";
+RDebugUtils.currentLine=1769473;
+ //BA.debugLineNum = 1769473;BA.debugLine="mqttLastWill = lastWill";
+_mqttlastwill = _lastwill;
+RDebugUtils.currentLine=1769474;
+ //BA.debugLineNum = 1769474;BA.debugLine="End Sub";
+return "";
+}
 public static String  _setsubbase(String _basename) throws Exception{
 RDebugUtils.currentModule="starter";
 if (Debug.shouldDelegate(processBA, "setsubbase", false))
@@ -482,6 +496,19 @@ RDebugUtils.currentLine=2555905;
 if (true) return _basefilepath;
 RDebugUtils.currentLine=2555906;
  //BA.debugLineNum = 2555906;BA.debugLine="End Sub";
+return "";
+}
+public static String  _getlastwill() throws Exception{
+RDebugUtils.currentModule="starter";
+if (Debug.shouldDelegate(processBA, "getlastwill", false))
+	 {return ((String) Debug.delegate(processBA, "getlastwill", null));}
+RDebugUtils.currentLine=1835008;
+ //BA.debugLineNum = 1835008;BA.debugLine="Sub GetLastWill As String";
+RDebugUtils.currentLine=1835009;
+ //BA.debugLineNum = 1835009;BA.debugLine="Return mqttLastWill";
+if (true) return _mqttlastwill;
+RDebugUtils.currentLine=1835010;
+ //BA.debugLineNum = 1835010;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_create() throws Exception{

@@ -22,7 +22,7 @@ Sub Process_Globals
 	Private mqttBase As String
 	Private mqttUnit As String
 	Private mqttGetUnits As String
-''	Private mqttLastWill As String
+	Private mqttLastWill As String
 	Private rp As RuntimePermissions
 	Public mqttGetBordsActive, mqttGetBordDataActive As Boolean
 	Public diedIndex As Int = -1
@@ -92,13 +92,13 @@ Sub ConnectAndReconnect
 	Loop
 End Sub
 
-''Sub SetLastWill(lastWill As String)
-''	mqttLastWill = lastWill
-''End Sub
+Sub SetLastWill(lastWill As String)
+	mqttLastWill = lastWill
+End Sub
 
-''Sub GetLastWill As String
-''	Return mqttLastWill	
-''End Sub
+Sub GetLastWill As String
+	Return mqttLastWill
+End Sub
 
 Public Sub SetSubString
 	SubString = $"${mqttName}/${mqttBase}/recvdata_${mqttUnit}"$
