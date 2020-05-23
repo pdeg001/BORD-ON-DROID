@@ -10,20 +10,14 @@ Version=9.801
 #End Region
 
 Sub Process_Globals
-'	Dim mqttGetData As mqttGetBordData
 	Dim mqttBase As MqttConnector
 	Dim baseFile As Base
-	Dim dataTmr As Timer
-	Dim dotCount As Int = 0
-'	Dim waitText As String 
 	Dim cs As CSBuilder
-'Private SubString As String
 	Dim lastMessageTime As Long
 	Dim lastMessageTimer As Timer
 End Sub
 
 Sub Globals
-'	Dim lblList() As Label
 	Dim parser As JSONParser
 	Private lblP1Name, lblP2Name As Label
 	Private lblP1Maken100, lblP1Maken10, lblP1Maken1 As Label
@@ -43,20 +37,15 @@ Sub Activity_Create(FirstTime As Boolean)
 	End If
 	baseFile.Initialize
 	CallSub(Starter, "SetSubString")
-'	mqttBase.SetSub
 	
 	Activity.LoadLayout("ServerBoard")
-'	imgNoData.Visible = False
+	SetImgSponsor
 	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
 	lastMessageTimer.Enabled = True
 	
-	imgNoData.BringToFront
-	SetImg
 	
-	dataTmr.Initialize("dataTmr", 1000)
 	mqttBase.Connect
 	
-'	imgNoData.SetVisibleAnimated(1, True)
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
 	Sleep(1000)
@@ -64,7 +53,6 @@ Sub Activity_Create(FirstTime As Boolean)
 End Sub
 
 Sub ConnectionLost
-	'ToastMessageShow("Verbinding met bord verloren", True)
 	baseFile.createCustomToast("Verbinding met bord verloren", Colors.Red)
 	Sleep(2000)
 	lastMessageTimer.Enabled = False
@@ -76,20 +64,6 @@ Sub tmrLastMessase_Tick
 		mqttBase.SendMessage("data please")
 		lblSpelduur.TextColor = Colors.Red
 	End If
-End Sub
-
-Sub dataTmr_Tick
-	Dim dot As String
-	dotCount=dotCount+1
-	If dotCount >= 10 Then
-		dotCount = 0
-		'lblNoData.Text = Starter.DiscoveredServer
-		Return
-	End If
-	For i = 0 To dotCount
-		dot = dot &"*"
-	Next
-'	lblNoData.Text = $"${dot} ${waitText} ${dot}"$
 End Sub
 
 Sub Activity_Resume
@@ -132,11 +106,8 @@ Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 End Sub
 
 public Sub UpdateBordWhenClient(data As Message)
-	If imgNoData.Visible Then
-		dataTmr.Enabled = False
-		imgNoData.SetVisibleAnimated(1000, False)
-		'Sleep(1200)
-	End If
+	HideWaitLabel
+	
 	lblSpelduur.TextColor = Colors.White
 	Dim Number, str As String
 	str = data.Body
@@ -198,23 +169,28 @@ Public Sub GamedEnded
 	Msgbox2Async("Spel beëindigd", Application.LabelName, "OKE", "", "", Application.Icon, False)
 End Sub
 
-Public Sub GamedInProgress
-'	lblNoData.TextColor = Colors.White
-'	lblNoData.Text = $"U kijkt naar ${Starter.DiscoveredServer}"$
-End Sub
-
-Private Sub SetImg
+Private Sub SetImgSponsor
 	Dim bmp As Bitmap
+	Dim bmpName As String
 	Dim nuleen As Int = Rnd(0,2)
 	
 	If nuleen = 0 Then
-		bmp = LoadBitmapResize(File.DirAssets, "sven1.jpg", imgSponsor.Width, imgSponsor.Height, True)
+		bmpName = "sven1.jpg"
 	Else
-		bmp = LoadBitmapResize(File.DirAssets, "sven_oud.jpg", imgSponsor.Width, imgSponsor.Height, True)
+		bmpName = "sven_oud.jpg"
 	End If
+	
+	bmp = LoadBitmapResize(File.DirAssets, bmpName, imgSponsor.Width, imgSponsor.Height, True)
 	imgSponsor.SetBackgroundImage(bmp)
 End Sub
 
 Sub BordDied
 	Msgbox2Async("Verbinding verbroken", Application.LabelName, "OK", "", "", Application.Icon, False)
+End Sub
+
+Sub HideWaitLabel
+	If imgNoData.Visible Then
+		imgNoData.SetVisibleAnimated(0, False)
+		Sleep(300)
+	End If
 End Sub

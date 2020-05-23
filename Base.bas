@@ -169,19 +169,19 @@ Sub GetSelectedLabelTagFromPanel(p As Panel, strTag As String) As String
 	Return ""
 End Sub
 
-Sub SetSelectedTagFromPanel(p As Panel, strTag As String) As String
-	Dim lbl As Label
-	
-	For Each v As B4XView In p.GetAllViewsRecursive
-		If v.Tag = "" Then Continue
-		
-		If v.Tag = strTag And v Is Label Then
-			lbl = v
-			Return lbl.Text
-		End If
-	Next
-	Return ""
-End Sub
+''Sub SetSelectedTagFromPanel(p As Panel, strTag As String) As String
+''	Dim lbl As Label
+''	
+''	For Each v As B4XView In p.GetAllViewsRecursive
+''		If v.Tag = "" Then Continue
+''		
+''		If v.Tag = strTag And v Is Label Then
+''			lbl = v
+''			Return lbl.Text
+''		End If
+''	Next
+''	Return ""
+''End Sub
 
 Sub GetClvPanelIndex(p As Panel, clv As CustomListView) As Int
 	Return clv.GetItemFromView(p)

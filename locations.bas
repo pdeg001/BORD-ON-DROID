@@ -32,7 +32,7 @@ Sub Globals
 	Private pnlNew As Panel
 	Private lblEdtLocatie As Label
 	Private pnlDeleteLocation As Panel
-	Private refreshList As Boolean
+''	Private refreshList As Boolean
 	Private lblVersion As Label
 	Private pnlDelete As Panel
 	Private pnlBack As Panel
@@ -125,10 +125,10 @@ Sub btnEditSave_Click
 		baseFile.ModifyLocation(currentCodeEdit, edtCode.Text, edtDescription.Text, chkEdtDefault.Checked)
 	End If
 	
-	refreshList = True
+''	refreshList = True
 	GetLocations
 	btnEditCancel_Click
-	refreshList = False
+''	refreshList = False
 End Sub
 
 Sub btnEditCancel_Click

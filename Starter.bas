@@ -22,7 +22,7 @@ Sub Process_Globals
 	Private mqttBase As String
 	Private mqttUnit As String
 	Private mqttGetUnits As String
-	Private mqttLastWill As String
+''	Private mqttLastWill As String
 	Private rp As RuntimePermissions
 	Public mqttGetBordsActive, mqttGetBordDataActive As Boolean
 	Public diedIndex As Int = -1
@@ -31,7 +31,8 @@ Sub Process_Globals
 	Private storeFolder As String
 	Public testBaseName As Boolean = False
 	Public appVersion As String
-	Dim working, brokerConnected As Boolean
+	'--Dim working, brokerConnected As Boolean
+	Dim working As Boolean
 	Public firstConnectTime As Long
 	Public mainPaused As Boolean
 	
@@ -70,7 +71,7 @@ Sub ConnectAndReconnect
 		Wait For Mqtt_Connected (Success As Boolean)
 		If Success Then
 '			Log("Mqtt connected")
-			brokerConnected = True
+''			brokerConnected = True
 	
 			CallSub(Main, "getBaseList")
 			'CallSub(Main, "StartConnection")
@@ -79,7 +80,7 @@ Sub ConnectAndReconnect
 				Sleep(5000)
 			Loop
 '			Log("Disconnected")
-			brokerConnected = False
+''			brokerConnected = False
 			CallSub(ServerBoard, "ConnectionLost")
 			CallSub(Main, "ShowNotConnectedToBroker")
 			If mqtt.IsInitialized Then mqtt.Close
@@ -91,13 +92,13 @@ Sub ConnectAndReconnect
 	Loop
 End Sub
 
-Sub SetLastWill(lastWill As String)
-	mqttLastWill = lastWill
-End Sub
+''Sub SetLastWill(lastWill As String)
+''	mqttLastWill = lastWill
+''End Sub
 
-Sub GetLastWill As String
-	Return mqttLastWill	
-End Sub
+''Sub GetLastWill As String
+''	Return mqttLastWill	
+''End Sub
 
 Public Sub SetSubString
 	SubString = $"${mqttName}/${mqttBase}/recvdata_${mqttUnit}"$
@@ -116,9 +117,9 @@ Private Sub SetSubBase(baseName As String)
 	mqttBase = baseName
 End Sub
 
-Private Sub GetSubString As String
-	Return SubString
-End Sub
+''Private Sub GetSubString As String
+''	Return SubString
+''End Sub
 
 Private Sub SetUnit(name As String)
 	mqttUnit = name
@@ -128,13 +129,13 @@ Private Sub GetUnit As String
 	Return mqttUnit
 End Sub
 
-Private Sub SetSubGetUnits
-	mqttGetUnits = $"${mqttName}/${mqttBase}"$
-End Sub
+''Private Sub SetSubGetUnits
+''	mqttGetUnits = $"${mqttName}/${mqttBase}"$
+''End Sub
 
-Private Sub GetSubUnits As String
-	Return mqttGetUnits
-End Sub
+''Private Sub GetSubUnits As String
+''	Return mqttGetUnits
+''End Sub
 
 Public Sub GetBase As String
 	Return mqttGetUnits '$"${mqttName}/${mqttBase}/"$

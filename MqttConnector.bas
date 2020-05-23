@@ -10,7 +10,7 @@ Sub Class_Globals
 	Private serializator As B4XSerializator
 	Private phone As Phone
 '	Private subBordDataDisconnect As String
-	Private subBord As String
+''	Private subBord As String
 End Sub
 
 Public Sub Initialize
@@ -71,7 +71,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	
 	If passedTopic.IndexOf("recvdata") > -1 Then
 		ServerBoard.lastMessageTime = DateTime.Now
-		CallSubDelayed(ServerBoard, "GamedInProgress")
+''		CallSubDelayed(ServerBoard, "GamedInProgress")
 		CallSub2(ServerBoard, "UpdateBordWhenClient", m)
 	End If
 	
