@@ -50,7 +50,7 @@ Version=9.801
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
 	#VersionCode: 1
-	#VersionName: 0.83
+	#VersionName: 1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
