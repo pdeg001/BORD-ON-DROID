@@ -53,6 +53,7 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
+	Try
 	Dim passedTopic As String =$"${Topic}"$
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	Dim m As Message = receivedObject
@@ -78,7 +79,9 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	If passedTopic.IndexOf("pubbord") > -1 Then
 		CallSub2(Main, "CheckIpExits", m)
 	End If
-	
+	Catch
+		Log("-")
+	End Try
 End Sub
 
 Public Sub SendMessage(Body As String)

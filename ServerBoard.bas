@@ -180,6 +180,8 @@ Private Sub SetImgSponsor
 		bmpName = "sven_oud.jpg"
 	End If
 	
+	bmpName = "uwlogo.jpg"
+	
 	bmp = LoadBitmapResize(File.DirAssets, bmpName, imgSponsor.Width, imgSponsor.Height, True)
 	imgSponsor.SetBackgroundImage(bmp)
 End Sub
