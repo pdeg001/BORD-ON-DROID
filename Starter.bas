@@ -32,7 +32,7 @@ Sub Process_Globals
 	Public testBaseName As Boolean = False
 	Public appVersion As String
 	'--Dim working, brokerConnected As Boolean
-	Dim working As Boolean
+	Dim pingMqtt As Boolean
 	Public firstConnectTime As Long
 	Public mainPaused As Boolean
 	
@@ -44,7 +44,7 @@ Sub Service_Create
 	
 	baseFile = "bod.pdg"
 	baseFilePath = File.Combine(storeFolder, baseFile)
-	working = True
+	pingMqtt = True
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
@@ -61,7 +61,7 @@ Sub Service_Destroy
 End Sub
 
 Sub ConnectAndReconnect
-	Do While working
+	Do While pingMqtt
 		If mqtt.IsInitialized Then mqtt.Close
 		mqtt.Initialize("mqtt", "tcp://pdeg3005.mynetgear.com:1883", "pdeg_" & Rnd(0, 999999999))
 		Dim mo As MqttConnectOptions
@@ -70,13 +70,14 @@ Sub ConnectAndReconnect
 		mqtt.Connect2(mo)
 		Wait For Mqtt_Connected (Success As Boolean)
 		If Success Then
-'			Log("Mqtt connected")
+			Log($"Mqtt connected $DateTime{DateTime.Now}"$)
 ''			brokerConnected = True
 	
 			CallSub(Main, "getBaseList")
 			'CallSub(Main, "StartConnection")
-			Do While working And mqtt.Connected
+			Do While pingMqtt And mqtt.Connected
 				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
+		Log($"Mqtt $DateTime{DateTime.Now}"$)
 				Sleep(5000)
 			Loop
 '			Log("Disconnected")
@@ -92,11 +93,11 @@ Sub ConnectAndReconnect
 	Loop
 End Sub
 
-Sub SetLastWill(lastWill As String)
+Public Sub SetLastWill(lastWill As String)
 	mqttLastWill = lastWill
 End Sub
 
-Sub GetLastWill As String
+Public Sub GetLastWill As String
 	Return mqttLastWill
 End Sub
 
@@ -113,7 +114,7 @@ Public Sub SetUnsubscribeString2(unit As String)
 End Sub
 
 'set location code
-Private Sub SetSubBase(baseName As String)
+Public Sub SetSubBase(baseName As String)
 	mqttBase = baseName
 End Sub
 
@@ -121,11 +122,11 @@ End Sub
 ''	Return SubString
 ''End Sub
 
-Private Sub SetUnit(name As String)
+Public Sub SetUnit(name As String)
 	mqttUnit = name
 End Sub
 
-Private Sub GetUnit As String
+Public Sub GetUnit As String
 	Return mqttUnit
 End Sub
 
@@ -141,7 +142,7 @@ Public Sub GetBase As String
 	Return mqttGetUnits '$"${mqttName}/${mqttBase}/"$
 End Sub
 
-Private Sub GetBaseFilePath As String
+Public Sub GetBaseFilePath As String
 	Return baseFilePath
 End Sub
 

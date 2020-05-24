@@ -122,6 +122,8 @@ Sub Activity_Resume
 	If Starter.mainPaused Then
 		ResumeConnection(True)
 		Starter.mainPaused = False
+		Starter.pingMqtt = True
+		Starter.ConnectAndReconnect
 	Else
 		
 	End If
@@ -142,6 +144,7 @@ End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 	Starter.mainPaused = True
+	Starter.pingMqtt = False
 	ResumeConnection(False)
 	'tmrBordLastAlive.Enabled = False
 End Sub
@@ -487,10 +490,14 @@ Sub btnOk_Click
 	ime.Initialize(Me)
 	Starter.testBaseName = True
 	Starter.selectedLocationCode = edtFloatCode.Text
-	CallSub2(Starter, "SetLastWill", "bordpubdied")
-	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
-	CallSub2(Starter, "SetSubString2", "/pubbord")
-	CallSub2(Starter, "SetUnsubscribeString2", "")
+'	CallSub2(Starter, "SetLastWill", "bordpubdied")
+	Starter.SetLastWill("bordpubdied")
+'	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
+	Starter.SetSubBase(Starter.selectedLocationCode)
+'	CallSub2(Starter, "SetSubString2", "/pubbord")
+	Starter.SetSubString2("/pubbord")
+'	CallSub2(Starter, "SetUnsubscribeString2", "")
+	Starter.SetUnsubscribeString2("")
 	mqttBase.Initialize
 	Sleep(100)
 	mqttBase.Connect

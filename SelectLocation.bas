@@ -53,7 +53,7 @@ Sub CreateLocatie(code As String, description As String) As Panel
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvLocation.AsView.Width, 85dip) '190
 	p.LoadLayout("clvSelectLocation")
-	Log($"ACTIVE UNIT ${Starter.selectedLocationCode}"$)
+'	Log($"ACTIVE UNIT ${Starter.selectedLocationCode}"$)
 	lblLocationCode.Text = code
 	lblDescription.Text = description
 	
