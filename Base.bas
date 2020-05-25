@@ -223,4 +223,37 @@ Sub SetPanelLabelItemText(p As Panel, strTag As String, itemText As String)
 	Next
 End Sub
 
+'bord name is unique
+Sub GetPanelIndexFromBordName(name As String, clv As CustomListView) As Int
+	Dim pnl As Panel
+	Dim lbl As Label
+	For i = 0 To clv.Size - 1
+		pnl = clv.GetPanel(i)
+		
+		For Each v As View In pnl.GetAllViewsRecursive
+			If v.Tag = "name" Then
+				lbl = v
+				If lbl.Text = name Then
+					Return clv.GetItemFromView(pnl)
+					Exit
+				End If
+			End If
+		Next
+	Next
+	Return -1
+End Sub
+
+Sub GetServerlistIndexFromName(name As String) As Int
+	Dim bd As bordStatus
+	
+	For i = 0 To Starter.serverList.Size -1
+		bd = Starter.serverList.Get(i)
+		If bd.name = name Then
+			Return i
+			Exit
+		End If
+	Next
+	Return -1
+End Sub
+
 

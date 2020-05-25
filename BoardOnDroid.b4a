@@ -146,7 +146,7 @@ End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 	Starter.mainPaused = True
-	Starter.pingMqtt = False
+	'Starter.pingMqtt = False
 	ResumeConnection(False)
 	'tmrBordLastAlive.Enabled = False
 End Sub
@@ -286,6 +286,7 @@ End Sub
 Sub CheckLastAliveTime
 	Dim currTime As Long = DateTime.Now
 	Dim timeDiff As Long
+	Dim clvIndex, serverListIndex As Int
 '	Dim bordAlive As Boolean = True
 	
 	If lblLastCheck.IsInitialized = False Then
@@ -297,6 +298,19 @@ Sub CheckLastAliveTime
 	
 	For Each bd As bordStatus In Starter.serverList
 		timeDiff = currTime-bd.timeStamp
+		'REMOVE SERVER
+		If timeDiff >= Starter.serverDiedRemove Then
+			clvIndex = baseFile.GetPanelIndexFromBordName(bd.name, clvServer)
+			serverListIndex = baseFile.GetServerlistIndexFromName(bd.name)
+			If clvIndex <> -1 Then
+				clvServer.RemoveAt(clvIndex)
+			End If
+			If serverListIndex <> -1 Then
+				Starter.serverList.RemoveAt(serverListIndex)
+			End If
+			Return
+		End If
+		
 		BordDiedProgress.Show
 		If timeDiff >= Starter.serverDied Then
 			bd.alive = False
@@ -305,7 +319,6 @@ Sub CheckLastAliveTime
 			baseFile.SetBordDiedByName(bd.name, clvServer, bd.alive)
 		End If
 	Next
-	
 	
 End Sub
 
@@ -361,7 +374,6 @@ Sub CheckIpExits(bord As Message)
 
 	If bord.Body.Length = 0 Then Return
 	Dim name As String = bord.Body
-
 	connectTime = -1
 
 	If Starter.serverList.Size = 0 Then

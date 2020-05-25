@@ -60,7 +60,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	Dim strFrom As String = $"${m.From}"$
 	
 	If strFrom.IndexOf("recvdied") > -1 Then
-		CallSubDelayed(ServerBoard, "BordDied")
+	'	CallSubDelayed(ServerBoard, "BordDied")
 		Return
 	End If
 	If m.Body = "data please" Then Return

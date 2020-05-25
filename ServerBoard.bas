@@ -39,6 +39,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	CallSub(Starter, "SetSubString")
 	
 	Activity.LoadLayout("ServerBoard")
+	lastMessageTime = DateTime.Now
 	SetImgSponsor
 	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
 	lastMessageTimer.Enabled = True
@@ -76,6 +77,7 @@ End Sub
 
 Sub ResumeConnection(resume As Boolean)
 	If resume Then
+		lastMessageTime = DateTime.Now
 		mqttBase.Connect
 		Sleep(500)
 		mqttBase.SendMessage("data please")
@@ -96,8 +98,8 @@ End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		Starter.pingMqtt = True
-		Starter.ConnectAndReconnect
+	'	Starter.pingMqtt = True
+	'	Starter.ConnectAndReconnect
 		CallSubDelayed(Main, "setBordLastAliveTimer")
 		lastMessageTimer.Enabled = False
 		DisconnetMqtt
@@ -110,7 +112,7 @@ End Sub
 
 public Sub UpdateBordWhenClient(data As Message)
 	HideWaitLabel
-	
+	lastMessageTime = DateTime.Now
 	lblSpelduur.TextColor = Colors.White
 	Dim Number, str As String
 	str = data.Body

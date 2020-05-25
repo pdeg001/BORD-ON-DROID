@@ -16,7 +16,8 @@ Sub Process_Globals
 	Public connected As Boolean
 	Public DiscoveredServer As String
 	Public serverList As List
-	Public serverDied As Long = 30000
+	Public serverDied As Long = 10000
+	Public serverDiedRemove As Long = 20000
 	Public selectedBordName As String
 	Private mqttName As String = "pdeg"
 	Private mqttBase As String
@@ -70,23 +71,22 @@ Sub ConnectAndReconnect
 		mqtt.Connect2(mo)
 		Wait For Mqtt_Connected (Success As Boolean)
 		If Success Then
-'			Log($"Mqtt connected $DateTime{DateTime.Now}"$)
-''			brokerConnected = True
-	
 			CallSub(Main, "getBaseList")
 			'CallSub(Main, "StartConnection")
 			Do While pingMqtt And mqtt.Connected
 				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
-'		Log($"Mqtt $DateTime{DateTime.Now}"$)
+'				Log($"Mqtt $DateTime{DateTime.Now}"$)
 				Sleep(5000)
 			Loop
-'			Log("Disconnected")
-''			brokerConnected = False
+			
+			Log("Disconnected")
+			''			brokerConnected = False
 			CallSub(ServerBoard, "ConnectionLost")
 			CallSub(Main, "ShowNotConnectedToBroker")
+			serverList.Initialize
 			If mqtt.IsInitialized Then mqtt.Close
 		Else
-'			Log("Error connecting.")
+			Log("Error connecting.")
 			If mqtt.IsInitialized Then mqtt.Close
 		End If
 		Sleep(5000)
