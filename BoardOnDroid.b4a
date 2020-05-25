@@ -76,8 +76,6 @@ Sub Process_Globals
 	Private baseFile As Base
 	Private baseList As List
 	Private mqttBase As MqttConnector
-'	Private selectedLocationCode As String
-''	Private appPaused As Boolean
 End Sub
 
 Sub Globals
