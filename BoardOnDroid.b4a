@@ -1,34 +1,36 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
 File1=Baloo2-Regular.ttf
-File10=selectlocation.bal
-File11=ServerBoard.bal
-File12=sven_oud.jpg
-File13=sven1.jpg
-File14=uwlogo.jpg
-File15=wacht_op_data.png
-File2=clvBorden.bal
-File3=clvLocation.bal
-File4=clvSelectLocation.bal
-File5=digital-7.ttf
-File6=locations.bal
-File7=main.bal
-File8=materialdesignicons-webfont.ttf
-File9=mouse.png
+File10=mouse.png
+File11=selectlocation.bal
+File12=ServerBoard.bal
+File13=sven_oud.jpg
+File14=sven1.jpg
+File15=uwlogo.jpg
+File16=wacht_op_data.png
+File2=biljarter.png
+File3=clvBorden.bal
+File4=clvLocation.bal
+File5=clvSelectLocation.bal
+File6=digital-7.ttf
+File7=locations.bal
+File8=main.bal
+File9=materialdesignicons-webfont.ttf
 FileGroup1=font
-FileGroup10=Default Group
+FileGroup10=img
 FileGroup11=Default Group
-FileGroup12=img
+FileGroup12=Default Group
 FileGroup13=img
 FileGroup14=img
 FileGroup15=img
-FileGroup2=Default Group
+FileGroup16=img
+FileGroup2=img
 FileGroup3=Default Group
 FileGroup4=Default Group
-FileGroup5=font
-FileGroup6=Default Group
+FileGroup5=Default Group
+FileGroup6=font
 FileGroup7=Default Group
-FileGroup8=font
-FileGroup9=img
+FileGroup8=Default Group
+FileGroup9=font
 Group=Default Group
 Library1=core
 Library2=jmqtt
@@ -44,15 +46,15 @@ Module3=MqttConnector
 Module4=SelectLocation
 Module5=ServerBoard
 Module6=Starter
-NumberOfFiles=15
+NumberOfFiles=16
 NumberOfLibraries=7
 NumberOfModules=6
 Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
-	#VersionCode: 1
-	#VersionName: 1.0
+	#VersionCode: 2
+	#VersionName: 1.0.1
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -312,14 +314,7 @@ Sub ShowNotConnectedToBroker
 	pnlNobords.SetVisibleAnimated(1000, True)
 End Sub
 
-
 Sub ResumeConnection(resume As Boolean)
-	If resume Then
-		mqttBase.Connect
-	Else
-		mqttBase.Disconnect	
-	End If
-	
 	tmrBordLastAlive.Enabled = resume
 End Sub
 

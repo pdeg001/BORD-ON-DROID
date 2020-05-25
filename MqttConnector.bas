@@ -99,7 +99,7 @@ Private Sub CreateMessage(Body As String) As Byte()
 End Sub
 
 Sub GetClientConnected As Boolean
-	Return connected
+	Return client.Connected
 End Sub
 
 Sub ProcessConnectError

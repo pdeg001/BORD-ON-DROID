@@ -79,6 +79,7 @@ Sub ResumeConnection(resume As Boolean)
 		mqttBase.Connect
 		Sleep(500)
 		mqttBase.SendMessage("data please")
+		lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
 	Else
 		mqttBase .Disconnect
 	End If
@@ -174,15 +175,17 @@ End Sub
 Private Sub SetImgSponsor
 	Dim bmp As Bitmap
 	Dim bmpName As String
-	Dim nuleen As Int = Rnd(0,2)
+	Dim nuleen As Int = Rnd(0,3)
 	
 	If nuleen = 0 Then
 		bmpName = "sven1.jpg"
-	Else
+	End If
+	If nuleen = 1 Then
 		bmpName = "sven_oud.jpg"
 	End If
-	
-	bmpName = "uwlogo.jpg"
+	If nuleen = 2 Then
+		bmpName = "biljarter.png"
+	End If
 	
 	bmp = LoadBitmapResize(File.DirAssets, bmpName, imgSponsor.Width, imgSponsor.Height, True)
 	imgSponsor.SetBackgroundImage(bmp)

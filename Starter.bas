@@ -70,14 +70,14 @@ Sub ConnectAndReconnect
 		mqtt.Connect2(mo)
 		Wait For Mqtt_Connected (Success As Boolean)
 		If Success Then
-			Log($"Mqtt connected $DateTime{DateTime.Now}"$)
+'			Log($"Mqtt connected $DateTime{DateTime.Now}"$)
 ''			brokerConnected = True
 	
 			CallSub(Main, "getBaseList")
 			'CallSub(Main, "StartConnection")
 			Do While pingMqtt And mqtt.Connected
 				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
-		Log($"Mqtt $DateTime{DateTime.Now}"$)
+'		Log($"Mqtt $DateTime{DateTime.Now}"$)
 				Sleep(5000)
 			Loop
 '			Log("Disconnected")
