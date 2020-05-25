@@ -98,11 +98,9 @@ End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-	'	Starter.pingMqtt = True
-	'	Starter.ConnectAndReconnect
+		DisconnetMqtt
 		CallSubDelayed(Main, "setBordLastAliveTimer")
 		lastMessageTimer.Enabled = False
-		DisconnetMqtt
 		CallSubDelayed(Main, "ReconnectToLocation")
 		Return False
 	Else

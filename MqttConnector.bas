@@ -35,18 +35,15 @@ End Sub
 Private Sub client_Connected (Success As Boolean)
 	If Success Then
 		connected = True
-		'client.Subscribe(Starter.selectedBordName, 0)
 		client.Subscribe(Starter.SubString, 0)
 	Else
-'		ToastMessageShow("Error connecting +++ : " & LastException, True)
-'		Log("SUBSTRING = " &Starter.SubString)
 		ProcessConnectError
 	End If
 End Sub
 
 Public Sub Disconnect
 	If client.connected Then
-		client.Unsubscribe(Starter.SubString)
+'		client.Unsubscribe(Starter.SubString)
 		client.Close
 		connected = False
 	End If
@@ -56,9 +53,11 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	Try
 	Dim passedTopic As String =$"${Topic}"$
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
+	'Dim m As Message = receivedObject
+	'Dim m As pubBordData = receivedObject
 	Dim m As Message = receivedObject
 	Dim strFrom As String = $"${m.From}"$
-	
+'	Log(m.Body)
 	If strFrom.IndexOf("recvdied") > -1 Then
 	'	CallSubDelayed(ServerBoard, "BordDied")
 		Return

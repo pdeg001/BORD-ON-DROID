@@ -291,7 +291,7 @@ case 16:
 this.state = 17;
 ;
  //BA.debugLineNum = 76;BA.debugLine="Log(\"Disconnected\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("05636114","Disconnected",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("25636114","Disconnected",0);
  //BA.debugLineNum = 78;BA.debugLine="CallSub(ServerBoard, \"ConnectionLost\")";
 anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(parent.mostCurrent._serverboard.getObject()),"ConnectionLost");
  //BA.debugLineNum = 79;BA.debugLine="CallSub(Main, \"ShowNotConnectedToBroker\")";
@@ -324,7 +324,7 @@ case 24:
 //C
 this.state = 25;
  //BA.debugLineNum = 83;BA.debugLine="Log(\"Error connecting.\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("05636121","Error connecting.",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("25636121","Error connecting.",0);
  //BA.debugLineNum = 84;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
 if (true) break;
 
@@ -474,7 +474,9 @@ _basefile = "bod.pdg";
 _basefilepath = anywheresoftware.b4a.keywords.Common.File.Combine(_storefolder,_basefile);
  //BA.debugLineNum = 42;BA.debugLine="pingMqtt = True";
 _pingmqtt = anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 43;BA.debugLine="End Sub";
+ //BA.debugLineNum = 43;BA.debugLine="ConnectAndReconnect";
+_connectandreconnect();
+ //BA.debugLineNum = 44;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_destroy() throws Exception{
@@ -483,9 +485,7 @@ public static String  _service_destroy() throws Exception{
 return "";
 }
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
- //BA.debugLineNum = 45;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
- //BA.debugLineNum = 46;BA.debugLine="ConnectAndReconnect";
-_connectandreconnect();
+ //BA.debugLineNum = 46;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
  //BA.debugLineNum = 48;BA.debugLine="End Sub";
 return "";
 }

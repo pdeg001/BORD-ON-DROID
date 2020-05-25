@@ -46,10 +46,10 @@ Sub Service_Create
 	baseFile = "bod.pdg"
 	baseFilePath = File.Combine(storeFolder, baseFile)
 	pingMqtt = True
+	ConnectAndReconnect
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
-	ConnectAndReconnect
 
 End Sub
 

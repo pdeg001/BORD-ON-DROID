@@ -169,20 +169,6 @@ Sub GetSelectedLabelTagFromPanel(p As Panel, strTag As String) As String
 	Return ""
 End Sub
 
-''Sub SetSelectedTagFromPanel(p As Panel, strTag As String) As String
-''	Dim lbl As Label
-''	
-''	For Each v As B4XView In p.GetAllViewsRecursive
-''		If v.Tag = "" Then Continue
-''		
-''		If v.Tag = strTag And v Is Label Then
-''			lbl = v
-''			Return lbl.Text
-''		End If
-''	Next
-''	Return ""
-''End Sub
-
 Sub GetClvPanelIndex(p As Panel, clv As CustomListView) As Int
 	Return clv.GetItemFromView(p)
 End Sub
@@ -200,9 +186,9 @@ Sub GetPanelFromTag(tagName As String, bordName As String, p As Panel) As Panel
 	Return Null
 End Sub
 
-Sub GetBordAlive(name As String) As Boolean
+Sub GetBordAlive(Name As String) As Boolean
 	For Each lst As bordStatus In Starter.serverList
-		If lst.name = name Then
+		If lst.name = Name Then
 			Return lst.alive
 		End If
 	Next
@@ -224,7 +210,7 @@ Sub SetPanelLabelItemText(p As Panel, strTag As String, itemText As String)
 End Sub
 
 'bord name is unique
-Sub GetPanelIndexFromBordName(name As String, clv As CustomListView) As Int
+Sub GetPanelIndexFromBordName(Name As String, clv As CustomListView) As Int
 	Dim pnl As Panel
 	Dim lbl As Label
 	For i = 0 To clv.Size - 1
@@ -233,7 +219,7 @@ Sub GetPanelIndexFromBordName(name As String, clv As CustomListView) As Int
 		For Each v As View In pnl.GetAllViewsRecursive
 			If v.Tag = "name" Then
 				lbl = v
-				If lbl.Text = name Then
+				If lbl.Text = Name Then
 					Return clv.GetItemFromView(pnl)
 					Exit
 				End If
@@ -243,12 +229,12 @@ Sub GetPanelIndexFromBordName(name As String, clv As CustomListView) As Int
 	Return -1
 End Sub
 
-Sub GetServerlistIndexFromName(name As String) As Int
+Sub GetServerlistIndexFromName(Name As String) As Int
 	Dim bd As bordStatus
 	
 	For i = 0 To Starter.serverList.Size -1
 		bd = Starter.serverList.Get(i)
-		If bd.name = name Then
+		If bd.name = Name Then
 			Return i
 			Exit
 		End If
@@ -256,4 +242,42 @@ Sub GetServerlistIndexFromName(name As String) As Int
 	Return -1
 End Sub
 
+Sub CheckPlayers(players As String, bordName As String, clv As CustomListView)
+	Dim index As Int = GetServerlistIndexFromName(bordName)
+	Dim pnl As Panel = clv.GetPanel(index)
+	Dim lbl As Label
+	
+	For Each v As View In pnl.GetAllViewsRecursive
+		If v.Tag = "players" Then
+			lbl = v
+			lbl.Text = players
+		End If
+	Next
+End Sub
 
+Sub NameToCamelCase(name As String) As String
+	Dim nameList() As String = Regex.Split(" ", name)
+	If nameList.Length = 2 Then
+		nameList(0) = SetFirstLetterUpperCase(nameList(0))
+		nameList(1) = SetFirstLetterUpperCase(nameList(1))
+		Return $"${nameList(0)} ${nameList(1)}"$
+	End If
+	If nameList.Length = 3 Then
+		nameList(0) = SetFirstLetterUpperCase(nameList(0))
+		nameList(2) = SetFirstLetterUpperCase(nameList(2))
+		Return $"${nameList(0)} ${nameList(1).ToLowerCase} ${nameList(2)}"$
+	End If
+
+	Return name
+End Sub
+
+Private Sub SetFirstLetterUpperCase(str As String) As String
+	str = str.ToLowerCase
+	Dim m As Matcher = Regex.Matcher("\b(\w)", str)
+	Do While m.Find
+		Dim i As Int = m.GetStart(1)
+		str = str.SubString2(0, i) & str.SubString2(i, i + 1).ToUpperCase & str.SubString(i + 1)
+	Loop
+	
+	Return str
+End Sub

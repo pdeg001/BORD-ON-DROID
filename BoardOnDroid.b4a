@@ -71,7 +71,7 @@ Sub Process_Globals
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
 	Type bordFound(name As String, ip As String)
 	Type locationBord(code As String, description As String, isdefault As String)
-	
+	type pubBordData(data as List, from as String)
 	Private tmrBordLastAlive As Timer
 	Private baseFile As Base
 	Private baseList As List
@@ -104,6 +104,7 @@ Sub Globals
 	Private BordDiedProgress As B4XLoadingIndicator
 	Private connectTime As Long
 	
+	Private lblPLayer As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -123,36 +124,19 @@ Sub Activity_Resume
 		ResumeConnection(True)
 		Starter.mainPaused = False
 		Starter.pingMqtt = True
-		Starter.ConnectAndReconnect
+'		Starter.ConnectAndReconnect
+		mqttBase.Connect
 	Else
 		
 	End If
-'	Log("activity resume main")
-'	If Starter.mqttGetBordsActive Then
-'		If Starter.serverList.Size > 0 Then
-'			clvServer.Clear
-'			pnlNobords.SetVisibleAnimated(100, False)
-'			For Each bd As bordStatus In Starter.serverList
-'				clvServer.Add(genUnitList(bd.name, bd.alive), "")
-'			Next
-'		End If
-'		If CheckClientConnected = False Then
-'			mqttBase.Connect
-'		End If
-'	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
+'	Starter.serverList.Initialize
 	Starter.mainPaused = True
-	'Starter.pingMqtt = False
 	ResumeConnection(False)
 	mqttBase.Disconnect
-	'tmrBordLastAlive.Enabled = False
 End Sub
-
-'Sub SetSelectedLocationCode(code As String)
-'	selectedLocationCode = code
-'End Sub
 
 Sub setBordLastAliveTimer
 	tmrBordLastAlive.Enabled = True
@@ -352,7 +336,7 @@ Sub DisconnectMqtt
 	
 End Sub
 
-Sub genUnitList(name As String, alive As Boolean) As Panel
+Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 95dip) '190
@@ -361,6 +345,8 @@ Sub genUnitList(name As String, alive As Boolean) As Panel
 	
 	lblBordName.Text = name.Trim
 	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
+	lblPLayer.Text = players
+	lblPLayer.Tag = "players"
 	BordDiedProgress.Show
 	If Not(alive) Then
 		lblViewBord.Enabled = False
@@ -370,13 +356,22 @@ End Sub
 
 Sub CheckIpExits(bord As Message)
 	Dim bordExists As Boolean = False
-
+	Dim strPlayers As String
 	If bord.Body.Length = 0 Then Return
 	Dim name As String = bord.Body
+	
+	'GET DATA FROM NAME
+	If name.IndexOf("|") > -1 Then
+		Dim strData() As String = Regex.Split("\|", name)
+		name = strData(0)
+		strPlayers = $"${baseFile.NameToCamelCase(strData(1))} - ${baseFile.NameToCamelCase(strData(2))}"$
+	End If
+	
+	
 	connectTime = -1
 
 	If Starter.serverList.Size = 0 Then
-		AddUnkownIp("", name)
+		AddUnkownIp("", name, strPlayers)
 		Return
 	End If
 	
@@ -385,11 +380,13 @@ Sub CheckIpExits(bord As Message)
 			bordExists = True
 			lst.timeStamp = DateTime.Now
 			lst.alive = True
+			'CHECK PLAYERS
+			baseFile.CheckPlayers(strPlayers, name, clvServer)
 		End If
 	Next
 	
 	If Not(bordExists) Then
-		AddUnkownIp("", name)
+		AddUnkownIp("", name, strPlayers)
 		Return
 	End If
 End Sub
@@ -407,15 +404,16 @@ End Sub
 '	Next
 'End Sub
 
-Sub AddUnkownIp(ip As String, name As String)
+Sub AddUnkownIp(ip As String, name As String, players As String)
 	Dim bordStatus As bordStatus
 	bordStatus.Initialize
 	bordStatus.ip = ip
 	bordStatus.name = name
 	bordStatus.timeStamp = DateTime.Now
 	bordStatus.alive = True
+	
 	Starter.serverList.Add(bordStatus)
-	CheckIpInClv(bordStatus)
+	CheckIpInClv(bordStatus, players)
 	baseFile.SetBordDiedByName(name, clvServer, True)
 	
 	If clvServer.GetSize > 0 Then
@@ -429,41 +427,21 @@ Sub AddUnkownIp(ip As String, name As String)
 	
 End Sub
 
-Sub CheckIpInClv(bord As bordStatus)
+Sub CheckIpInClv(bord As bordStatus, players As String)
 	Dim p As Panel
 ''	Dim lbl As Label
 	
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
 		If p.Tag = bord.name Then
-'			For Each v As View In p.GetAllViewsRecursive
-'				If v.Tag = "lblLastCheck" Then
-'					lbl = v
-'					lbl.Text = $"Laatste controle $Time{DateTime.Now}"$
-'				End If
-'			Next
 			baseFile.SetPanelLabelItemText(p, "lblLastCheck", $"Laatste controle $Time{DateTime.Now}"$)
 			baseFile.SetBordDiedByName(bord.name, clvServer, bord.alive)
-'			For Each v As View In p.GetAllViewsRecursive
-'				If v.Tag = "viewbord" Then
-'					lbl = v
-'					If bord.alive = False Then
-'						lbl.Enabled = False
-'						lbl.TextColor = Colors.Red
-'						Starter.diedIndex = i
-'					Else
-'						lbl.Enabled = True
-'						lbl.TextColor = 0xFF027F00
-'					End If
-'					Return
-'				End If
-'			Next
 		End If
 	Next
 	
 '	Log("------ ADD BORD TO LIST")
 	pnlNobords.SetVisibleAnimated(1000, False)
-	clvServer.Add(genUnitList(bord.name, bord.alive), "")
+	clvServer.Add(genUnitList(bord.name, bord.alive, players), "")
 End Sub
 
 Sub lblViewBord_Click
