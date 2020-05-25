@@ -146,6 +146,7 @@ Sub Activity_Pause (UserClosed As Boolean)
 	Starter.mainPaused = True
 	'Starter.pingMqtt = False
 	ResumeConnection(False)
+	mqttBase.Disconnect
 	'tmrBordLastAlive.Enabled = False
 End Sub
 

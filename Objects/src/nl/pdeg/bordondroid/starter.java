@@ -291,7 +291,7 @@ case 16:
 this.state = 17;
 ;
  //BA.debugLineNum = 76;BA.debugLine="Log(\"Disconnected\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("25505042","Disconnected",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("05636114","Disconnected",0);
  //BA.debugLineNum = 78;BA.debugLine="CallSub(ServerBoard, \"ConnectionLost\")";
 anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(parent.mostCurrent._serverboard.getObject()),"ConnectionLost");
  //BA.debugLineNum = 79;BA.debugLine="CallSub(Main, \"ShowNotConnectedToBroker\")";
@@ -324,7 +324,7 @@ case 24:
 //C
 this.state = 25;
  //BA.debugLineNum = 83;BA.debugLine="Log(\"Error connecting.\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("25505049","Error connecting.",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("05636121","Error connecting.",0);
  //BA.debugLineNum = 84;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
 if (true) break;
 
