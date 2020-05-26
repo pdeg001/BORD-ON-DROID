@@ -54,7 +54,7 @@ Version=9.801
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
 	#VersionCode: 2
-	#VersionName: 1.0.1
+	#VersionName: 1.1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -81,7 +81,7 @@ End Sub
 Sub Globals
 '	Private clvServer As CustomListView
 	Private lblBordName As Label
-	Private lblViewBord As Label
+'	Private lblViewBord As Label
 	Private pnlBord As Panel
 	Private lblLastCheck As Label
 	Private pnlNobords As Panel
@@ -101,14 +101,11 @@ Sub Globals
 	Private edtFloatDescription As B4XFloatTextField
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private B4XLoadingIndicator2 As B4XLoadingIndicator
-	Private BordDiedProgress As B4XLoadingIndicator
+'	Private BordDiedProgress As B4XLoadingIndicator
 	Private connectTime As Long
 	
 	Private lblPLayer As Label
-	Private p1Caram As Label
-	Private p1Name As Label
-	Private p2Caram As Label
-	Private p2Name As Label
+	Private lblPlayer1 As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -298,7 +295,7 @@ Sub CheckLastAliveTime
 			Return
 		End If
 		
-		BordDiedProgress.Show
+'		BordDiedProgress.Show
 		If timeDiff >= Starter.serverDied Then
 			bd.alive = False
 			baseFile.SetBordDiedByName(bd.name, clvServer, bd.alive)
@@ -343,7 +340,7 @@ End Sub
 Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	Dim p As Panel
 	p.Initialize(Me)
-	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 105dip) '190
+	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 125dip) '190
 	p.LoadLayout("clvBorden")
 	p.Tag = name
 	
@@ -352,9 +349,9 @@ Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 '	lblPLayer.Text = baseFile.CheckPlayers(players, name, clvServer)
 	lblPLayer.Text = baseFile.SetPlayertext(players)
 	lblPLayer.Tag = "players"
-	BordDiedProgress.Show
+'	BordDiedProgress.Show
 	If Not(alive) Then
-		lblViewBord.Enabled = False
+'		lblViewBord.Enabled = False
 	End If
 	Return p
 End Sub

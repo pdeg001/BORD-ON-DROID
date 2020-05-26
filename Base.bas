@@ -118,14 +118,17 @@ Private Sub SetBordOffline(p As Panel, alive As Boolean)
 	
 	If p.IsInitialized = False Then Return
 	For Each v As View In p.GetAllViewsRecursive
-		If v.Tag = "viewbord" Then
+'		If v.Tag = "viewbord" Then
+		If v.Tag = "name" Then
 			lbl = v
 			If alive Then
-				lbl.SetVisibleAnimated(200, True)
+				lbl.Color = 0x6C00DD45
+			'	lbl.SetVisibleAnimated(200, True)
 				Sleep(0)
 				Exit
 			Else
-				lbl.SetVisibleAnimated(200, False)
+				lbl.SetColorAnimated(2000, 0x6C912223, 0x6CDD0001)
+			'	lbl.SetVisibleAnimated(200, False)
 				Sleep(0)
 				Exit
 			End If
@@ -317,7 +320,9 @@ Sub SetPlayertext(data As String) As Object
 	Dim caromP1, caromP2 As Int
 	Dim strData() As String = Regex.Split("\|", data)
 	Dim fnt As Typeface = Typeface.LoadFromAssets("materialdesignicons-webfont.ttf") 'Chr(0xf130)
-	Dim  icon As String = Chr(0xfcbf)
+	Dim icon As String = Chr(0xfcbf)
+	Dim noIcon As String = Chr(0)
+	Dim iconSize As Int = 20
 	Dim iconColor As Long = 0xFF00772C
 	
 
@@ -330,37 +335,31 @@ Sub SetPlayertext(data As String) As Object
 	cs.Initialize
 	If caromP1 > caromP2 Then
 		If aanstoot = "1" Then
-			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).pop
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}"$).PopAll
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).pop
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}"$).Typeface(fnt).Size(iconSize).Append(icon).PopAll
 		Else
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).pop
-			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).PopAll
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).Size(iconSize).Append(noIcon).pop
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}   "$).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).PopAll
 		End If
 	Else If caromP2 > caromP1 Then
 		If aanstoot = "1" Then
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).pop
-			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}"$ ).PopAll
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).pop
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}"$ ).Size(iconSize).Append(noIcon).PopAll
 		Else
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).pop
-			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}   "$ ).Color(iconColor).Typeface(fnt).Size(30).Append(icon).PopAll
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).Size(iconSize).Append(noIcon).pop
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}   "$ ).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).PopAll
 		End If
 	Else
 		If aanstoot = "1" Then
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).pop
-			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}"$ ).PopAll
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).pop
+			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}"$ ).Size(iconSize).Append(noIcon).PopAll
 		Else
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).pop
-			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}   "$ ).Color(iconColor).Typeface(fnt).Size(30).Append(icon).PopAll
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).Size(iconSize).Append(noIcon).pop
+			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}   "$ ).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).PopAll
 		End If
 	End If
 	
 	Return cs
 End Sub
 
-Private Sub GetAanstootColor(aanstoot As String) As Int
-	If aanstoot = "1" Then
-		Return Colors.Blue
-	Else
-		Return Colors.Black
-	End If
-End Sub
+
