@@ -9,7 +9,8 @@ Sub Class_Globals
 	Private baseFile As String
 	Private serializator As B4XSerializator
 	Private mqtt As MqttClient
-	Private pingMqtt as Boolean
+	Private pingMqtt As Boolean
+	Private cs As CSBuilder
 End Sub
 
 Public Sub Initialize
@@ -252,7 +253,7 @@ Sub CheckPlayers(players As String, bordName As String, clv As CustomListView)
 	For Each v As View In pnl.GetAllViewsRecursive
 		If v.Tag = "players" Then
 			lbl = v
-			lbl.Text = players
+			lbl.Text = SetPlayertext(players)
 		End If
 	Next
 End Sub
@@ -309,4 +310,57 @@ Sub ConnectAndReconnect
 		End If
 		Sleep(5000)
 	Loop
+End Sub
+
+Sub SetPlayertext(data As String) As Object
+	Dim nameP1, nameP2, aanstoot As String
+	Dim caromP1, caromP2 As Int
+	Dim strData() As String = Regex.Split("\|", data)
+	Dim fnt As Typeface = Typeface.LoadFromAssets("materialdesignicons-webfont.ttf") 'Chr(0xf130)
+	Dim  icon As String = Chr(0xfcbf)
+	Dim iconColor As Long = 0xFF00772C
+	
+
+	caromP1 = strData(3)
+	caromP2 = strData(4)
+	aanstoot = strData(5)
+	nameP1 = NameToCamelCase(strData(1))
+	nameP2 = NameToCamelCase(strData(2))
+	
+	cs.Initialize
+	If caromP1 > caromP2 Then
+		If aanstoot = "1" Then
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).pop
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}"$).PopAll
+		Else
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).pop
+			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).PopAll
+		End If
+	Else If caromP2 > caromP1 Then
+		If aanstoot = "1" Then
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).pop
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}"$ ).PopAll
+		Else
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).pop
+			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}   "$ ).Color(iconColor).Typeface(fnt).Size(30).Append(icon).PopAll
+		End If
+	Else
+		If aanstoot = "1" Then
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(30).Append(icon).pop
+			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}"$ ).PopAll
+		Else
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).pop
+			cs.Typeface(Typeface.DEFAULT).Append($"${CRLF}"$ & $"${strData(4)}${TAB}${TAB}${nameP2}   "$ ).Color(iconColor).Typeface(fnt).Size(30).Append(icon).PopAll
+		End If
+	End If
+	
+	Return cs
+End Sub
+
+Private Sub GetAanstootColor(aanstoot As String) As Int
+	If aanstoot = "1" Then
+		Return Colors.Blue
+	Else
+		Return Colors.Black
+	End If
 End Sub

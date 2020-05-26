@@ -506,6 +506,10 @@ public nl.pdeg.bordondroid.b4xloadingindicator _b4xloadingindicator2 = null;
 public nl.pdeg.bordondroid.b4xloadingindicator _borddiedprogress = null;
 public static long _connecttime = 0L;
 public anywheresoftware.b4a.objects.LabelWrapper _lblplayer = null;
+public anywheresoftware.b4a.objects.LabelWrapper _p1caram = null;
+public anywheresoftware.b4a.objects.LabelWrapper _p1name = null;
+public anywheresoftware.b4a.objects.LabelWrapper _p2caram = null;
+public anywheresoftware.b4a.objects.LabelWrapper _p2name = null;
 public b4a.example.dateutils _dateutils = null;
 public nl.pdeg.bordondroid.locations _locations = null;
 public nl.pdeg.bordondroid.starter _starter = null;
@@ -1236,10 +1240,10 @@ RDebugUtils.currentLine=786442;
  //BA.debugLineNum = 786442;BA.debugLine="End Sub";
 return false;
 }
-public static String  _checkipexits(nl.pdeg.bordondroid.main._message _bord) throws Exception{
+public static String  _checkipexists(nl.pdeg.bordondroid.main._message _bord) throws Exception{
 RDebugUtils.currentModule="main";
-if (Debug.shouldDelegate(mostCurrent.activityBA, "checkipexits", false))
-	 {return ((String) Debug.delegate(mostCurrent.activityBA, "checkipexits", new Object[] {_bord}));}
+if (Debug.shouldDelegate(mostCurrent.activityBA, "checkipexists", false))
+	 {return ((String) Debug.delegate(mostCurrent.activityBA, "checkipexists", new Object[] {_bord}));}
 boolean _bordexists = false;
 String _strplayers = "";
 String _namep1 = "";
@@ -1247,11 +1251,10 @@ String _namep2 = "";
 int _caromp1 = 0;
 int _caromp2 = 0;
 String _name = "";
-anywheresoftware.b4a.objects.CSBuilder _cs = null;
 String[] _strdata = null;
 nl.pdeg.bordondroid.main._bordstatus _lst = null;
 RDebugUtils.currentLine=1245184;
- //BA.debugLineNum = 1245184;BA.debugLine="Sub CheckIpExits(bord As Message)";
+ //BA.debugLineNum = 1245184;BA.debugLine="Sub CheckIpExists(bord As Message)";
 RDebugUtils.currentLine=1245185;
  //BA.debugLineNum = 1245185;BA.debugLine="Dim bordExists As Boolean = False";
 _bordexists = anywheresoftware.b4a.keywords.Common.False;
@@ -1271,9 +1274,9 @@ if (true) return "";};
 RDebugUtils.currentLine=1245189;
  //BA.debugLineNum = 1245189;BA.debugLine="Dim name As String = bord.Body";
 _name = _bord.Body /*String*/ ;
-RDebugUtils.currentLine=1245190;
- //BA.debugLineNum = 1245190;BA.debugLine="Dim cs As CSBuilder";
-_cs = new anywheresoftware.b4a.objects.CSBuilder();
+RDebugUtils.currentLine=1245193;
+ //BA.debugLineNum = 1245193;BA.debugLine="strPlayers = name'baseFile.SetPlayertext(name)";
+_strplayers = _name;
 RDebugUtils.currentLine=1245194;
  //BA.debugLineNum = 1245194;BA.debugLine="If name.IndexOf(\"|\") > -1 Then";
 if (_name.indexOf("|")>-1) { 
@@ -1283,74 +1286,59 @@ _strdata = anywheresoftware.b4a.keywords.Common.Regex.Split("\\|",_name);
 RDebugUtils.currentLine=1245196;
  //BA.debugLineNum = 1245196;BA.debugLine="name = strData(0)";
 _name = _strdata[(int) (0)];
-RDebugUtils.currentLine=1245197;
- //BA.debugLineNum = 1245197;BA.debugLine="caromP1 = strData(3)";
-_caromp1 = (int)(Double.parseDouble(_strdata[(int) (3)]));
-RDebugUtils.currentLine=1245198;
- //BA.debugLineNum = 1245198;BA.debugLine="caromP2 = strData(4)";
-_caromp2 = (int)(Double.parseDouble(_strdata[(int) (4)]));
-RDebugUtils.currentLine=1245199;
- //BA.debugLineNum = 1245199;BA.debugLine="nameP1 = baseFile.NameToCamelCase(strData(1))";
-_namep1 = _basefile._nametocamelcase /*String*/ (null,_strdata[(int) (1)]);
-RDebugUtils.currentLine=1245200;
- //BA.debugLineNum = 1245200;BA.debugLine="nameP2 = baseFile.NameToCamelCase(strData(2))";
-_namep2 = _basefile._nametocamelcase /*String*/ (null,_strdata[(int) (2)]);
-RDebugUtils.currentLine=1245204;
- //BA.debugLineNum = 1245204;BA.debugLine="strPlayers = $\"${baseFile.NameToCamelCase(strDat";
-_strplayers = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_basefile._nametocamelcase /*String*/ (null,_strdata[(int) (1)])))+" - "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_basefile._nametocamelcase /*String*/ (null,_strdata[(int) (2)])))+"");
  };
-RDebugUtils.currentLine=1245208;
- //BA.debugLineNum = 1245208;BA.debugLine="connectTime = -1";
+RDebugUtils.currentLine=1245200;
+ //BA.debugLineNum = 1245200;BA.debugLine="connectTime = -1";
 _connecttime = (long) (-1);
-RDebugUtils.currentLine=1245210;
- //BA.debugLineNum = 1245210;BA.debugLine="If Starter.serverList.Size = 0 Then";
+RDebugUtils.currentLine=1245202;
+ //BA.debugLineNum = 1245202;BA.debugLine="If Starter.serverList.Size = 0 Then";
 if (mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ .getSize()==0) { 
-RDebugUtils.currentLine=1245211;
- //BA.debugLineNum = 1245211;BA.debugLine="AddUnkownIp(\"\", name, strPlayers)";
+RDebugUtils.currentLine=1245204;
+ //BA.debugLineNum = 1245204;BA.debugLine="AddUnkownIp(\"\", name, strPlayers)";
 _addunkownip("",_name,_strplayers);
-RDebugUtils.currentLine=1245212;
- //BA.debugLineNum = 1245212;BA.debugLine="Return";
+RDebugUtils.currentLine=1245205;
+ //BA.debugLineNum = 1245205;BA.debugLine="Return";
 if (true) return "";
  };
-RDebugUtils.currentLine=1245215;
- //BA.debugLineNum = 1245215;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
+RDebugUtils.currentLine=1245208;
+ //BA.debugLineNum = 1245208;BA.debugLine="For Each lst As bordStatus In Starter.serverList";
 {
-final anywheresoftware.b4a.BA.IterableList group21 = mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ ;
-final int groupLen21 = group21.getSize()
-;int index21 = 0;
+final anywheresoftware.b4a.BA.IterableList group16 = mostCurrent._starter._serverlist /*anywheresoftware.b4a.objects.collections.List*/ ;
+final int groupLen16 = group16.getSize()
+;int index16 = 0;
 ;
-for (; index21 < groupLen21;index21++){
-_lst = (nl.pdeg.bordondroid.main._bordstatus)(group21.Get(index21));
-RDebugUtils.currentLine=1245216;
- //BA.debugLineNum = 1245216;BA.debugLine="If lst.name = name Then";
+for (; index16 < groupLen16;index16++){
+_lst = (nl.pdeg.bordondroid.main._bordstatus)(group16.Get(index16));
+RDebugUtils.currentLine=1245209;
+ //BA.debugLineNum = 1245209;BA.debugLine="If lst.name = name Then";
 if ((_lst.name /*String*/ ).equals(_name)) { 
-RDebugUtils.currentLine=1245217;
- //BA.debugLineNum = 1245217;BA.debugLine="bordExists = True";
+RDebugUtils.currentLine=1245210;
+ //BA.debugLineNum = 1245210;BA.debugLine="bordExists = True";
 _bordexists = anywheresoftware.b4a.keywords.Common.True;
-RDebugUtils.currentLine=1245218;
- //BA.debugLineNum = 1245218;BA.debugLine="lst.timeStamp = DateTime.Now";
+RDebugUtils.currentLine=1245211;
+ //BA.debugLineNum = 1245211;BA.debugLine="lst.timeStamp = DateTime.Now";
 _lst.timeStamp /*long*/  = anywheresoftware.b4a.keywords.Common.DateTime.getNow();
-RDebugUtils.currentLine=1245219;
- //BA.debugLineNum = 1245219;BA.debugLine="lst.alive = True";
+RDebugUtils.currentLine=1245212;
+ //BA.debugLineNum = 1245212;BA.debugLine="lst.alive = True";
 _lst.alive /*boolean*/  = anywheresoftware.b4a.keywords.Common.True;
-RDebugUtils.currentLine=1245221;
- //BA.debugLineNum = 1245221;BA.debugLine="baseFile.CheckPlayers(strPlayers, name, clvServ";
+RDebugUtils.currentLine=1245214;
+ //BA.debugLineNum = 1245214;BA.debugLine="baseFile.CheckPlayers(strPlayers, name, clvServ";
 _basefile._checkplayers /*String*/ (null,_strplayers,_name,mostCurrent._clvserver);
  };
  }
 };
-RDebugUtils.currentLine=1245225;
- //BA.debugLineNum = 1245225;BA.debugLine="If Not(bordExists) Then";
+RDebugUtils.currentLine=1245218;
+ //BA.debugLineNum = 1245218;BA.debugLine="If Not(bordExists) Then";
 if (anywheresoftware.b4a.keywords.Common.Not(_bordexists)) { 
-RDebugUtils.currentLine=1245226;
- //BA.debugLineNum = 1245226;BA.debugLine="AddUnkownIp(\"\", name, strPlayers)";
+RDebugUtils.currentLine=1245219;
+ //BA.debugLineNum = 1245219;BA.debugLine="AddUnkownIp(\"\", name, strPlayers)";
 _addunkownip("",_name,_strplayers);
-RDebugUtils.currentLine=1245227;
- //BA.debugLineNum = 1245227;BA.debugLine="Return";
+RDebugUtils.currentLine=1245220;
+ //BA.debugLineNum = 1245220;BA.debugLine="Return";
 if (true) return "";
  };
-RDebugUtils.currentLine=1245229;
- //BA.debugLineNum = 1245229;BA.debugLine="End Sub";
+RDebugUtils.currentLine=1245222;
+ //BA.debugLineNum = 1245222;BA.debugLine="End Sub";
 return "";
 }
 public static anywheresoftware.b4a.objects.PanelWrapper  _genunitlist(String _name,boolean _alive,String _players) throws Exception{
@@ -1367,8 +1355,8 @@ RDebugUtils.currentLine=1179650;
  //BA.debugLineNum = 1179650;BA.debugLine="p.Initialize(Me)";
 _p.Initialize(mostCurrent.activityBA,BA.ObjectToString(main.getObject()));
 RDebugUtils.currentLine=1179651;
- //BA.debugLineNum = 1179651;BA.debugLine="p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 9";
-_p.SetLayout(anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),mostCurrent._clvserver._asview().getWidth(),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (95)));
+ //BA.debugLineNum = 1179651;BA.debugLine="p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 1";
+_p.SetLayout(anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (0)),mostCurrent._clvserver._asview().getWidth(),anywheresoftware.b4a.keywords.Common.DipToCurrent((int) (105)));
 RDebugUtils.currentLine=1179652;
  //BA.debugLineNum = 1179652;BA.debugLine="p.LoadLayout(\"clvBorden\")";
 _p.LoadLayout("clvBorden",mostCurrent.activityBA);
@@ -1381,27 +1369,27 @@ mostCurrent._lblbordname.setText(BA.ObjectToCharSequence(_name.trim()));
 RDebugUtils.currentLine=1179656;
  //BA.debugLineNum = 1179656;BA.debugLine="lblLastCheck.Text = $\"Laatste controle $Time{Date";
 mostCurrent._lbllastcheck.setText(BA.ObjectToCharSequence(("Laatste controle "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("time",(Object)(anywheresoftware.b4a.keywords.Common.DateTime.getNow()))+"")));
-RDebugUtils.currentLine=1179657;
- //BA.debugLineNum = 1179657;BA.debugLine="lblPLayer.Text = players";
-mostCurrent._lblplayer.setText(BA.ObjectToCharSequence(_players));
 RDebugUtils.currentLine=1179658;
- //BA.debugLineNum = 1179658;BA.debugLine="lblPLayer.Tag = \"players\"";
-mostCurrent._lblplayer.setTag((Object)("players"));
+ //BA.debugLineNum = 1179658;BA.debugLine="lblPLayer.Text = baseFile.SetPlayertext(players)";
+mostCurrent._lblplayer.setText(BA.ObjectToCharSequence(_basefile._setplayertext /*Object*/ (null,_players)));
 RDebugUtils.currentLine=1179659;
- //BA.debugLineNum = 1179659;BA.debugLine="BordDiedProgress.Show";
-mostCurrent._borddiedprogress._show /*String*/ (null);
+ //BA.debugLineNum = 1179659;BA.debugLine="lblPLayer.Tag = \"players\"";
+mostCurrent._lblplayer.setTag((Object)("players"));
 RDebugUtils.currentLine=1179660;
- //BA.debugLineNum = 1179660;BA.debugLine="If Not(alive) Then";
-if (anywheresoftware.b4a.keywords.Common.Not(_alive)) { 
+ //BA.debugLineNum = 1179660;BA.debugLine="BordDiedProgress.Show";
+mostCurrent._borddiedprogress._show /*String*/ (null);
 RDebugUtils.currentLine=1179661;
- //BA.debugLineNum = 1179661;BA.debugLine="lblViewBord.Enabled = False";
+ //BA.debugLineNum = 1179661;BA.debugLine="If Not(alive) Then";
+if (anywheresoftware.b4a.keywords.Common.Not(_alive)) { 
+RDebugUtils.currentLine=1179662;
+ //BA.debugLineNum = 1179662;BA.debugLine="lblViewBord.Enabled = False";
 mostCurrent._lblviewbord.setEnabled(anywheresoftware.b4a.keywords.Common.False);
  };
-RDebugUtils.currentLine=1179663;
- //BA.debugLineNum = 1179663;BA.debugLine="Return p";
-if (true) return _p;
 RDebugUtils.currentLine=1179664;
- //BA.debugLineNum = 1179664;BA.debugLine="End Sub";
+ //BA.debugLineNum = 1179664;BA.debugLine="Return p";
+if (true) return _p;
+RDebugUtils.currentLine=1179665;
+ //BA.debugLineNum = 1179665;BA.debugLine="End Sub";
 return null;
 }
 public static String  _checklastalivetime() throws Exception{

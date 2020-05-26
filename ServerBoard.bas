@@ -77,7 +77,7 @@ End Sub
 
 Sub ResumeConnection(resume As Boolean)
 	If resume Then
-		if mqttBase.GetClientConnected then Return
+		If mqttBase.GetClientConnected Then Return
 		lastMessageTime = DateTime.Now
 		mqttBase.Connect
 		Sleep(500)

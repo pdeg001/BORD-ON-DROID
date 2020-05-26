@@ -78,7 +78,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	End If
 	
 	If passedTopic.IndexOf("pubbord") > -1 Then
-		CallSub2(Main, "CheckIpExits", m)
+		CallSub2(Main, "CheckIpExists", m)
 	End If
 	Catch
 		Log("-")
