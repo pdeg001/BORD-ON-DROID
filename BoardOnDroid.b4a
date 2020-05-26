@@ -71,7 +71,7 @@ Sub Process_Globals
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
 	Type bordFound(name As String, ip As String)
 	Type locationBord(code As String, description As String, isdefault As String)
-	type pubBordData(data as List, from as String)
+	Type pubBordData(data As List, from As String)
 	Private tmrBordLastAlive As Timer
 	Private baseFile As Base
 	Private baseList As List
@@ -356,14 +356,24 @@ End Sub
 
 Sub CheckIpExits(bord As Message)
 	Dim bordExists As Boolean = False
-	Dim strPlayers As String
+	Dim strPlayers, nameP1, nameP2 As String
+	Dim caromP1, caromP2 As Int
 	If bord.Body.Length = 0 Then Return
 	Dim name As String = bord.Body
+	Dim cs As CSBuilder
 	
+	'cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF201)).Append("  ").Append(p1.Get("moyenne")).PopAll
 	'GET DATA FROM NAME
 	If name.IndexOf("|") > -1 Then
 		Dim strData() As String = Regex.Split("\|", name)
 		name = strData(0)
+		caromP1 = strData(3)
+		caromP2 = strData(4)
+		nameP1 = baseFile.NameToCamelCase(strData(1))
+		nameP2 = baseFile.NameToCamelCase(strData(2))
+		
+		
+		
 		strPlayers = $"${baseFile.NameToCamelCase(strData(1))} - ${baseFile.NameToCamelCase(strData(2))}"$
 	End If
 	
