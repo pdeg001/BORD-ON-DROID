@@ -65,13 +65,13 @@ Version=9.801
 	#FullScreen: false
 	#IncludeTitle: false
 #End Region
-
+'test
 Sub Process_Globals
 	Type Message (Body As String, From As String)
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
 	Type bordFound(name As String, ip As String)
 	Type locationBord(code As String, description As String, isdefault As String)
-	type pubBordData(data as List, from as String)
+	Type pubBordData(data As List, from As String)
 	Private tmrBordLastAlive As Timer
 	Private baseFile As Base
 	Private baseList As List
