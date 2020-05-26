@@ -62,6 +62,8 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	'	CallSubDelayed(ServerBoard, "BordDied")
 		Return
 	End If
+'	Log(m.Body)
+	
 	If m.Body = "data please" Then Return
 	
 	If m.From.IndexOf("game-ended") > -1 Then

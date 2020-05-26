@@ -8,6 +8,8 @@ Sub Class_Globals
 	Private baseList As List
 	Private baseFile As String
 	Private serializator As B4XSerializator
+	Private mqtt As MqttClient
+	Private pingMqtt as Boolean
 End Sub
 
 Public Sub Initialize
@@ -280,4 +282,31 @@ Private Sub SetFirstLetterUpperCase(str As String) As String
 	Loop
 	
 	Return str
+End Sub
+
+Sub ConnectAndReconnect
+	Do While pingMqtt
+		If mqtt.IsInitialized Then mqtt.Close
+		mqtt.Initialize("mqtt", $"${Starter.host}:${Starter.port}"$, "pdeg_" & Rnd(0, 999999999))
+		Dim mo As MqttConnectOptions
+		mo.Initialize("", "")
+		mqtt.Connect2(mo)
+
+		Wait For Mqtt_Connected (Success As Boolean)
+		If Success Then
+			Do While pingMqtt And mqtt.Connected
+				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
+'				Log($"Mqtt $DateTime{DateTime.Now}"$)
+				Sleep(5000)
+			Loop
+			
+			Log("Disconnected")
+			
+			If mqtt.IsInitialized Then mqtt.Close
+		Else
+			Log("Error connecting.")
+			If mqtt.IsInitialized Then mqtt.Close
+		End If
+		Sleep(5000)
+	Loop
 End Sub
