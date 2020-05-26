@@ -192,9 +192,9 @@ Private Sub SetImgSponsor
 	imgSponsor.SetBackgroundImage(bmp)
 End Sub
 
-Sub BordDied
-	Msgbox2Async("Verbinding verbroken", Application.LabelName, "OK", "", "", Application.Icon, False)
-End Sub
+'Sub BordDied
+'	Msgbox2Async("Verbinding verbroken", Application.LabelName, "OK", "", "", Application.Icon, False)
+'End Sub
 
 Sub HideWaitLabel
 	If imgNoData.Visible Then

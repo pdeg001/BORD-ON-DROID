@@ -54,7 +54,7 @@ Version=9.801
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
 	#VersionCode: 2
-	#VersionName: 1.1.0
+	#VersionName: 1.0.5
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -65,7 +65,7 @@ Version=9.801
 	#FullScreen: false
 	#IncludeTitle: false
 #End Region
-'test
+
 Sub Process_Globals
 	Type Message (Body As String, From As String)
 	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
@@ -79,20 +79,15 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
-'	Private clvServer As CustomListView
 	Private lblBordName As Label
-'	Private lblViewBord As Label
 	Private pnlBord As Panel
 	Private lblLastCheck As Label
 	Private pnlNobords As Panel
-'	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private lblVersion As Label
 	Private pnlLocationCOde As Panel
-''	Private edtLocationCode As EditText
 	Private btnCancel As Button
 	Private btnOk As Button
 	Private pnlLocation As Panel
-'	Private CustomListView1 As CustomListView
 	Private clvServer As CustomListView
 	Private lblCurrLocation As Label
 	Private lblNoBord As Label
@@ -101,11 +96,8 @@ Sub Globals
 	Private edtFloatDescription As B4XFloatTextField
 	Private B4XLoadingIndicator1 As B4XLoadingIndicator
 	Private B4XLoadingIndicator2 As B4XLoadingIndicator
-'	Private BordDiedProgress As B4XLoadingIndicator
 	Private connectTime As Long
-	
 	Private lblPLayer As Label
-	Private lblPlayer1 As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -348,6 +340,7 @@ Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 '	lblPLayer.Text = baseFile.CheckPlayers(players, name, clvServer)
 	lblPLayer.Text = baseFile.SetPlayertext(players)
+	'baseFile.shadowLayer(lblPLayer, 1dip, 2dip, 2dip, 0xFF291616)
 	lblPLayer.Tag = "players"
 '	BordDiedProgress.Show
 	If Not(alive) Then
@@ -358,8 +351,9 @@ End Sub
 
 Sub CheckIpExists(bord As Message)
 	Dim bordExists As Boolean = False
-	Dim strPlayers, nameP1, nameP2 As String
-	Dim caromP1, caromP2 As Int
+	Dim strPlayers As String
+'	Dim strPlayers, nameP1, nameP2 As String
+'	Dim caromP1, caromP2 As Int
 	If bord.Body.Length = 0 Then Return
 	Dim name As String = bord.Body
 	

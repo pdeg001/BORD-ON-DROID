@@ -8,8 +8,8 @@ Sub Class_Globals
 	Private baseList As List
 	Private baseFile As String
 	Private serializator As B4XSerializator
-	Private mqtt As MqttClient
-	Private pingMqtt As Boolean
+'	Private mqtt As MqttClient
+'	Private pingMqtt As Boolean
 	Private cs As CSBuilder
 End Sub
 
@@ -288,32 +288,32 @@ Private Sub SetFirstLetterUpperCase(str As String) As String
 	Return str
 End Sub
 
-Sub ConnectAndReconnect
-	Do While pingMqtt
-		If mqtt.IsInitialized Then mqtt.Close
-		mqtt.Initialize("mqtt", $"${Starter.host}:${Starter.port}"$, "pdeg_" & Rnd(0, 999999999))
-		Dim mo As MqttConnectOptions
-		mo.Initialize("", "")
-		mqtt.Connect2(mo)
-
-		Wait For Mqtt_Connected (Success As Boolean)
-		If Success Then
-			Do While pingMqtt And mqtt.Connected
-				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
-'				Log($"Mqtt $DateTime{DateTime.Now}"$)
-				Sleep(5000)
-			Loop
-			
-			Log("Disconnected")
-			
-			If mqtt.IsInitialized Then mqtt.Close
-		Else
-			Log("Error connecting.")
-			If mqtt.IsInitialized Then mqtt.Close
-		End If
-		Sleep(5000)
-	Loop
-End Sub
+'Sub ConnectAndReconnect
+'	Do While pingMqtt
+'		If mqtt.IsInitialized Then mqtt.Close
+'		mqtt.Initialize("mqtt", $"${Starter.host}:${Starter.port}"$, "pdeg_" & Rnd(0, 999999999))
+'		Dim mo As MqttConnectOptions
+'		mo.Initialize("", "")
+'		mqtt.Connect2(mo)
+'
+'		Wait For Mqtt_Connected (Success As Boolean)
+'		If Success Then
+'			Do While pingMqtt And mqtt.Connected
+'				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
+''				Log($"Mqtt $DateTime{DateTime.Now}"$)
+'				Sleep(5000)
+'			Loop
+'			
+'			Log("Disconnected")
+'			
+'			If mqtt.IsInitialized Then mqtt.Close
+'		Else
+'			Log("Error connecting.")
+'			If mqtt.IsInitialized Then mqtt.Close
+'		End If
+'		Sleep(5000)
+'	Loop
+'End Sub
 
 Sub SetPlayertext(data As String) As Object
 	Dim nameP1, nameP2, aanstoot As String
@@ -336,7 +336,7 @@ Sub SetPlayertext(data As String) As Object
 	If caromP1 > caromP2 Then
 		If aanstoot = "1" Then
 			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}   "$).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).pop
-			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}"$).Typeface(fnt).Size(iconSize).Append(icon).PopAll
+			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}"$).Typeface(fnt).Size(iconSize).Append(noIcon).PopAll
 		Else
 			cs.Color(Colors.Blue).Typeface(Typeface.DEFAULT).Append($"${strData(3)}${TAB}${TAB}${nameP1}"$).Size(iconSize).Append(noIcon).pop
 			cs.Color(Colors.Black).Typeface(Typeface.DEFAULT).Append($"${CRLF}${strData(4)}${TAB}${TAB}${nameP2}   "$).Color(iconColor).Typeface(fnt).Size(iconSize).Append(icon).PopAll
@@ -362,4 +362,8 @@ Sub SetPlayertext(data As String) As Object
 	Return cs
 End Sub
 
+Public Sub shadowLayer(lbl As View, Radius As Float, dx As Float, dy As Float, Color As Int)
+	Dim jo = lbl As JavaObject
+	jo.RunMethod("setShadowLayer", Array(Radius, dx, dy , Color))
 
+End Sub

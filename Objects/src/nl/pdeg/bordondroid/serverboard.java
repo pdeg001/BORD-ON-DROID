@@ -489,13 +489,6 @@ _resumeconnection(anywheresoftware.b4a.keywords.Common.True);
  //BA.debugLineNum = 66;BA.debugLine="End Sub";
 return "";
 }
-public static String  _borddied() throws Exception{
- //BA.debugLineNum = 189;BA.debugLine="Sub BordDied";
- //BA.debugLineNum = 190;BA.debugLine="Msgbox2Async(\"Verbinding verbroken\", Application.";
-anywheresoftware.b4a.keywords.Common.Msgbox2Async(BA.ObjectToCharSequence("Verbinding verbroken"),BA.ObjectToCharSequence(anywheresoftware.b4a.keywords.Common.Application.getLabelName()),"OK","","",anywheresoftware.b4a.keywords.Common.Application.getIcon(),processBA,anywheresoftware.b4a.keywords.Common.False);
- //BA.debugLineNum = 191;BA.debugLine="End Sub";
-return "";
-}
 public static void  _connectionlost() throws Exception{
 ResumableSub_ConnectionLost rsub = new ResumableSub_ConnectionLost(null);
 rsub.resume(processBA, null);
