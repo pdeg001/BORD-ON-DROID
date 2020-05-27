@@ -2,12 +2,13 @@ Objects/b4xlibs/**
 Objects/bin/**
 Objects/gen
 Objects/shell
-Objects/src
+Objects/src/**
 AutoBackups
 src
 # Compiled class file
 *.class
 *.java
+*.JAVA
 # Log file
 *.log
 *.dex
