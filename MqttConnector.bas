@@ -22,20 +22,23 @@ End Sub
 'End Sub
 
 Public Sub Connect ()
-	If connected Then client.Close
+	If client.Connected Then client.Close
 	
 	client.Initialize("client", $"tcp://${Starter.host}:${Starter.port}"$, phone.Model & Rnd(1, 10000000))
 	Dim mo As MqttConnectOptions
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
 	mo.SetLastWill(Starter.subDisconnectString, serializator.ConvertObjectToBytes(phone.Model), 0, False)
+	Log($"lastwill ${Starter.subDisconnectString}"$)
 	client.Connect2(mo)
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
+	Log($"connected : ${Success}"$)
 	If Success Then
 		connected = True
 		client.Subscribe(Starter.SubString, 0)
+		Log($"connected : ${Starter.SubString}"$)
 	Else
 		ProcessConnectError
 	End If
