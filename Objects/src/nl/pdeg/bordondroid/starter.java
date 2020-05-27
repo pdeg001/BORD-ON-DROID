@@ -291,7 +291,7 @@ case 16:
 this.state = 17;
 ;
  //BA.debugLineNum = 76;BA.debugLine="Log(\"Disconnected\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("25963794","Disconnected",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("45963794","Disconnected",0);
  //BA.debugLineNum = 78;BA.debugLine="CallSub(ServerBoard, \"ConnectionLost\")";
 anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(parent.mostCurrent._vvvvvvvv7.getObject()),"ConnectionLost");
  //BA.debugLineNum = 79;BA.debugLine="CallSub(Main, \"ShowNotConnectedToBroker\")";
@@ -324,7 +324,7 @@ case 24:
 //C
 this.state = 25;
  //BA.debugLineNum = 83;BA.debugLine="Log(\"Error connecting.\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("25963801","Error connecting.",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("45963801","Error connecting.",0);
  //BA.debugLineNum = 84;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
 if (true) break;
 
@@ -409,7 +409,7 @@ _v6 = new anywheresoftware.b4j.objects.MqttAsyncClientWrapper();
  //BA.debugLineNum = 8;BA.debugLine="Public const port As Int = 1883";
 _v7 = (int) (1883);
  //BA.debugLineNum = 9;BA.debugLine="Public const host As String = \"pdeg3005.mynetgear";
-_v0 = BA.__b (new byte[] {45,36,87,-13,96,102,85,-31,96,53,22,-18,56,54,26,-20,34,41,72,-14,48,111}, 75197);
+_v0 = BA.__b (new byte[] {45,37,-23,77,96,103,-21,95,96,52,-88,80,56,55,-92,82,34,40,-10,76,48,110}, 708989);
  //BA.debugLineNum = 10;BA.debugLine="Public connected As Boolean";
 _vv1 = false;
  //BA.debugLineNum = 11;BA.debugLine="Public DiscoveredServer As String";
@@ -423,7 +423,7 @@ _vv5 = (long) (20000);
  //BA.debugLineNum = 15;BA.debugLine="Public selectedBordName As String";
 _vv6 = "";
  //BA.debugLineNum = 16;BA.debugLine="Private mqttName As String = \"pdeg\"";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = BA.__b (new byte[] {45,37,-24,25}, 710198);
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = BA.__b (new byte[] {45,36,77,-81}, 85584);
  //BA.debugLineNum = 17;BA.debugLine="Private mqttBase As String";
 _vvvv7 = "";
  //BA.debugLineNum = 18;BA.debugLine="Private mqttUnit As String";
