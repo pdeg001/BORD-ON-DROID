@@ -36,7 +36,7 @@ Sub Process_Globals
 	Dim pingMqtt As Boolean
 	Public firstConnectTime As Long
 	Public mainPaused As Boolean
-	
+	Dim ph As Phone
 End Sub
 
 Sub Service_Create
@@ -45,12 +45,11 @@ Sub Service_Create
 	
 	baseFile = "bod.pdg"
 	baseFilePath = File.Combine(storeFolder, baseFile)
-	pingMqtt = True
-	ConnectAndReconnect
+'	pingMqtt = True
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
-
+	ConnectAndReconnect
 End Sub
 
 Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
@@ -64,24 +63,20 @@ End Sub
 Sub ConnectAndReconnect
 	Do While pingMqtt
 		If mqtt.IsInitialized Then mqtt.Close
-		mqtt.Initialize("mqtt", "tcp://pdeg3005.mynetgear.com:1883", "pdeg_" & Rnd(0, 999999999))
+		mqtt.Initialize("mqtt", $"tcp://${host}:${port}"$, "pdeg_" & Rnd(0, 999999999))
 		Dim mo As MqttConnectOptions
 		mo.Initialize("", "")
-'		Log("Trying to connect")
 		mqtt.Connect2(mo)
 		Wait For Mqtt_Connected (Success As Boolean)
+		
 		If Success Then
-			CallSub(Main, "getBaseList")
-			'CallSub(Main, "StartConnection")
-			Do While pingMqtt And mqtt.Connected
+			Do While pingMqtt And mqtt.Connected 
 				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
-'				Log($"Mqtt $DateTime{DateTime.Now}"$)
+				Log($"${ph.Model} $DateTime{DateTime.Now}"$)
 				Sleep(5000)
 			Loop
 			
 			Log("Disconnected")
-			''			brokerConnected = False
-			CallSub(ServerBoard, "ConnectionLost")
 			CallSub(Main, "ShowNotConnectedToBroker")
 			serverList.Initialize
 			If mqtt.IsInitialized Then mqtt.Close

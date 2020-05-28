@@ -34,10 +34,10 @@ Public Sub Connect ()
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-	Try
 		If Starter.SubString = "" Then
 			Return
 		End If
+	Try
 
 		If Success Then
 			connected = True
@@ -60,7 +60,7 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
-	Try
+'	Try
 	Dim passedTopic As String =$"${Topic}"$
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
 	'Dim m As Message = receivedObject
@@ -68,11 +68,11 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	Dim m As Message = receivedObject
 	Dim strFrom As String = $"${m.From}"$
 '	Log(m.Body)
+	'Log(Topic)
 	If strFrom.IndexOf("recvdied") > -1 Then
 	'	CallSubDelayed(ServerBoard, "BordDied")
 		Return
 	End If
-'	Log(m.Body)
 	
 	If m.Body = "data please" Then Return
 	
@@ -88,11 +88,12 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	End If
 	
 	If passedTopic.IndexOf("pubbord") > -1 Then
-		CallSub2(Main, "CheckIpExists", m)
+	'	Log($"Bord Exists $Time{DateTime.Now}"$)
+		CallSub2(Main, "CheckBordExists", m)
 	End If
-	Catch
-		Log("-")
-	End Try
+'	Catch
+'		Log("-")
+'	End Try
 End Sub
 
 Public Sub SendMessage(Body As String)

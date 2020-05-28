@@ -31,7 +31,7 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	Starter.mainPaused = False
+'	Starter.mainPaused = False
 	If Not (mqttBase.IsInitialized) Then
 		mqttBase.Initialize
 	End If
@@ -64,9 +64,17 @@ Sub ConnectionLost
 End Sub
 
 Sub tmrLastMessase_Tick
-	If (DateTime.Now-lastMessageTime) >= 120*1000 Then
+	If (DateTime.Now-lastMessageTime) >= 90*1000 Then
 		mqttBase.SendMessage("data please")
+		baseFile.createCustomToast("Verbinding met bord verbroken", Colors.Red)
 		lblSpelduur.TextColor = Colors.Red
+		Dim ph As PhoneVibrate
+		ph.Vibrate(100)
+		Dim index As Int = baseFile.GetServerlistIndexFromName(Starter.DiscoveredServer)
+		Dim bs As bordStatus
+		bs.Initialize
+		bs = Starter.serverList.Get(index)
+		bs.alive = False
 	End If
 End Sub
 
@@ -79,21 +87,21 @@ Sub Activity_Pause (UserClosed As Boolean)
 End Sub
 
 Sub ResumeConnection(resume As Boolean)
-	If resume Then
+	lastMessageTime = DateTime.Now
+'	If resume Then
 		If mqttBase.GetClientConnected Then Return
-		lastMessageTime = DateTime.Now
 		If mqttBase.GetClientConnected = False Then
 			mqttBase.Connect
 		End If
 		Sleep(500)
 		mqttBase.SendMessage("data please")
-		lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
+		lastMessageTimer.Initialize("tmrLastMessase", 90*1000)
 		lastMessageTimer.Enabled = True
 		lastMessageTime = DateTime.Now
-	Else
-		mqttBase.Disconnect
-		lastMessageTimer.Enabled = False
-	End If
+'	Else
+'		mqttBase.Disconnect
+'		lastMessageTimer.Enabled = False
+'	End If
 	
 	lastMessageTimer.Enabled = resume
 End Sub
@@ -108,9 +116,9 @@ End Sub
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
 		DisconnetMqtt
-		CallSubDelayed(Main, "setBordLastAliveTimer")
-		lastMessageTimer.Enabled = False
-		CallSubDelayed(Main, "ReconnectToLocation")
+'		CallSubDelayed(Main, "setBordLastAliveTimer")
+'		lastMessageTimer.Enabled = False
+'		CallSubDelayed(Main, "ReconnectToLocation")
 		Return False
 	Else
 		Return True
@@ -164,8 +172,11 @@ public Sub UpdateBordWhenClient(data As Message)
 	lblBeurt100.Text = aantal.SubString2(0,1)
 	lblBeurt10.Text = aantal.SubString2(1,2)
 	lblBeurt1.Text = aantal.SubString2(2,3)
-	lblSpelduur.Text = tijd'score.Get("spelduur")
-	lblSpelduur.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF253)).Append("  ").Append(tijd).PopAll
+'	lblSpelduur.Text = tijd'score.Get("spelduur")
+'	lblSpelduur.Text = cs.Initialize.Typeface(Typeface.FONTAWESOME).Append(Chr(0xF253)).Append("  ").Append(tijd).PopAll
+	cs.Initialize.Typeface(Typeface.LoadFromAssets("materialdesignicons-webfont.ttf")).Size(20).Append(Chr(0xf150))
+	cs.Append("  ").Typeface(Typeface.LoadFromAssets("Baloo2-Regular.ttf")).Size(20).Append(tijd).PopAll
+	lblSpelduur.Text = cs
 	
 	imgP1Play.Visible = False
 	imgP2Play.Visible = False

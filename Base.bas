@@ -8,8 +8,6 @@ Sub Class_Globals
 	Private baseList As List
 	Private baseFile As String
 	Private serializator As B4XSerializator
-'	Private mqtt As MqttClient
-	'Private pingMqtt As Boolean
 	Private cs As CSBuilder
 End Sub
 
@@ -118,19 +116,14 @@ Private Sub SetBordOffline(p As Panel, alive As Boolean)
 	
 	If p.IsInitialized = False Then Return
 	For Each v As View In p.GetAllViewsRecursive
-'		If v.Tag = "viewbord" Then
 		If v.Tag = "name" Then
 			lbl = v
 			If alive Then
-				lbl.Color = 0x6C00DD45
-			'	lbl.SetVisibleAnimated(200, True)
-				Sleep(0)
-				Exit
+				lbl.Color = 0xFF008080
+				lbl.TextColor = Colors.white
 			Else
-				lbl.SetColorAnimated(2000, 0x6C912223, 0x6CDD0001)
-			'	lbl.SetVisibleAnimated(200, False)
-				Sleep(0)
-				Exit
+				lbl.Color = Colors.Red
+				lbl.TextColor = Colors.White
 			End If
 		End If
 		
@@ -287,33 +280,6 @@ Private Sub SetFirstLetterUpperCase(str As String) As String
 	
 	Return str
 End Sub
-
-'Sub ConnectAndReconnect
-'	Do While pingMqtt
-'		If mqtt.IsInitialized Then mqtt.Close
-'		mqtt.Initialize("mqtt", $"${Starter.host}:${Starter.port}"$, "pdeg_" & Rnd(0, 999999999))
-'		Dim mo As MqttConnectOptions
-'		mo.Initialize("", "")
-'		mqtt.Connect2(mo)
-'
-'		Wait For Mqtt_Connected (Success As Boolean)
-'		If Success Then
-'			Do While pingMqtt And mqtt.Connected
-'				mqtt.Publish2("ping", Array As Byte(0), 1, False) 'change the ping topic as needed
-''				Log($"Mqtt $DateTime{DateTime.Now}"$)
-'				Sleep(5000)
-'			Loop
-'			
-'			Log("Disconnected")
-'			
-'			If mqtt.IsInitialized Then mqtt.Close
-'		Else
-'			Log("Error connecting.")
-'			If mqtt.IsInitialized Then mqtt.Close
-'		End If
-'		Sleep(5000)
-'	Loop
-'End Sub
 
 Sub SetPlayertext(data As String) As Object
 	Dim nameP1, nameP2, aanstoot As String

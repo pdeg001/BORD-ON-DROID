@@ -53,8 +53,8 @@ Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
-	#VersionCode: 2
-	#VersionName: 1.0.5
+	#VersionCode: 4
+	#VersionName: 1.0.9
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -68,14 +68,14 @@ Version=9.801
 
 Sub Process_Globals
 	Type Message (Body As String, From As String)
-	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean)
+	Type bordStatus(ip As String, name As String, timeStamp As Long, alive As Boolean, players As String)
 	Type bordFound(name As String, ip As String)
 	Type locationBord(code As String, description As String, isdefault As String)
 	Type pubBordData(data As List, from As String)
 	Private tmrBordLastAlive As Timer
 	Private baseFile As Base
 	Private baseList As List
-	Private mqttBase As MqttConnector
+	Private mqttBaseSubBord As MqttConnector
 End Sub
 
 Sub Globals
@@ -103,7 +103,8 @@ End Sub
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
 	
-	mqttBase.Initialize
+	
+	If FirstTime Then mqttBaseSubBord.Initialize
 	
 	Starter.appVersion = $"${Application.LabelName} v${Application.VersionName}"$
 	lblVersion.Text = Starter.appVersion
@@ -114,21 +115,35 @@ End Sub
 Sub Activity_Resume
 	ShowSelectLocationButton
 	If Starter.mainPaused Then
+		CheckBordInServerlist
 		ResumeConnection(True)
 		Starter.mainPaused = False
-		Starter.pingMqtt = True
+		ReconnectToLocation
+'		Starter.pingMqtt = True
 '		Starter.ConnectAndReconnect
-		mqttBase.Connect
+		'mqttBaseSubBord.Connect
 	Else
-		
+		getBaseList
 	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 '	Starter.serverList.Initialize
+
 	Starter.mainPaused = True
+	Starter.pingMqtt = False
 	ResumeConnection(False)
-	mqttBase.Disconnect
+	mqttBaseSubBord.Disconnect
+End Sub
+
+Private Sub CheckBordInServerlist
+	If Starter.serverList.Size > 0 Then
+		clvServer.Clear
+		For Each bs As bordStatus In Starter.serverList
+			clvServer.Add(genUnitList(bs.name, bs.alive, bs.players), "")
+		Next
+	End If
+	
 End Sub
 
 Sub setBordLastAliveTimer
@@ -140,11 +155,11 @@ Private Sub StartConnection
 	pnlLocationCOde.Visible = False
 	B4XLoadingIndicator1.Show
 	B4XLoadingIndicator2.Show
-	Sleep(10)
+	Sleep(0)
 	pnlNobords.Visible = True
 	clvServer.Clear
-	mqttBase.Initialize
-	mqttBase.Connect
+	mqttBaseSubBord.Initialize
+	mqttBaseSubBord.Connect
 
 	baseFile.GetBase
 
@@ -199,26 +214,26 @@ Private Sub getBaseList
 End Sub
 
 Sub ReconnectToLocation
-	mqttBase.Initialize
+	mqttBaseSubBord.Initialize
 	CallSub2(Starter, "SetLastWill", "bordpubdied")
 	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
 	CallSub2(Starter, "SetSubString2", "/pubbord")
 	CallSub2(Starter, "SetUnsubscribeString2", "")
-	mqttBase.Connect
+	mqttBaseSubBord.Connect
 End Sub
 
 'subscribe to get bord on location
 'Sub InitConnection
 Sub InitConnection
-	If mqttBase.connected Then mqttBase.Disconnect
-	Starter.serverList.Initialize
-	clvServer.Clear
+	If mqttBaseSubBord.connected Then mqttBaseSubBord.Disconnect
+'	Starter.serverList.Initialize
+'	clvServer.Clear
 	lblCurrLocation.Text = Starter.selectedLocationDescription
 	CallSub2(Starter, "SetLastWill", "bordpubdied")
 	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
 	CallSub2(Starter, "SetSubString2", "/pubbord")
 	CallSub2(Starter, "SetUnsubscribeString2", "")
-	Sleep(0)
+''	Sleep(0)
 	StartConnection
 End Sub
 
@@ -233,10 +248,10 @@ Sub clvServer_ItemClick (Index As Int, Value As Object)
 		Return
 	End If
 	
+	Starter.mainPaused = True
 	Starter.DiscoveredServer = unit
 	CallSub2(Starter, "SetLastWill", "recvdied")
 	CallSub2(Starter, "SetUnit", PrepTopicName(unit).ToLowerCase)
-	
 	DisconnectMqtt
 	Sleep(100)
 	StartActivity(ServerBoard)
@@ -248,9 +263,11 @@ Sub tmrBordAlive_Tick
 End Sub
 
 Sub checkConnectTime As Boolean
+	Return True
 	If connectTime <> -1 Then
+		Log("KWDKWMKDM")
 		pnlNobords.Visible = True
-		mqttBase.Disconnect
+		mqttBaseSubBord.Disconnect
 		tmrBordLastAlive.Enabled = False
 		pnlNobords.Visible = False
 		Msgbox2Async("Geen borden gevonden", Application.LabelName, "OKE", "", "", Application.Icon, False)
@@ -260,34 +277,23 @@ Sub checkConnectTime As Boolean
 End Sub
 
 Sub CheckLastAliveTime
+	'Return
+	
+	If clvServer.Size = 0 Then Return
 	Dim currTime As Long = DateTime.Now
-	Dim timeDiff As Long
-	Dim clvIndex, serverListIndex As Int
+'	Dim timeDiff As Long
+'	Dim clvIndex, serverListIndex As Int
 '	Dim bordAlive As Boolean = True
 	
 	If lblLastCheck.IsInitialized = False Then
 		lblNoBord.Visible = False
 		Return
 	End If
-	
 	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
+'	Log($"Time Diff $Time{DateTime.Now}"$)
 	
 	For Each bd As bordStatus In Starter.serverList
-		timeDiff = currTime-bd.timeStamp
-		'REMOVE SERVER
-		If timeDiff >= Starter.serverDiedRemove Then
-			clvIndex = baseFile.GetPanelIndexFromBordName(bd.name, clvServer)
-			serverListIndex = baseFile.GetServerlistIndexFromName(bd.name)
-			If clvIndex <> -1 Then
-				clvServer.RemoveAt(clvIndex)
-			End If
-			If serverListIndex <> -1 Then
-				Starter.serverList.RemoveAt(serverListIndex)
-			End If
-			Return
-		End If
-		
-'		BordDiedProgress.Show
+		Dim timeDiff As Long = currTime-bd.timeStamp
 		If timeDiff >= Starter.serverDied Then
 			bd.alive = False
 			baseFile.SetBordDiedByName(bd.name, clvServer, bd.alive)
@@ -301,6 +307,7 @@ End Sub
 Sub ShowNotConnectedToBroker
 	lblNoBord.Text = "Verbinding borden verbroken"
 	pnlNobords.SetVisibleAnimated(1000, True)
+	mqttBaseSubBord.Disconnect
 End Sub
 
 Sub ResumeConnection(resume As Boolean)
@@ -320,11 +327,11 @@ Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 End Sub
 
 Sub DisconnectMqtt
-	If mqttBase.connected Then
-		mqttBase.Disconnect
+	If mqttBaseSubBord.connected Then
+		mqttBaseSubBord.Disconnect
 	End If
 	If CheckClientConnected Then
-		mqttBase.Disconnect
+		mqttBaseSubBord.Disconnect
 	End If
 	
 End Sub
@@ -344,12 +351,13 @@ Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	lblPLayer.Tag = "players"
 '	BordDiedProgress.Show
 	If Not(alive) Then
-'		lblViewBord.Enabled = False
+		lblBordName.Color = Colors.Red
+		lblBordName.TextColor = Colors.White
 	End If
 	Return p
 End Sub
 
-Sub CheckIpExists(bord As Message)
+Sub CheckBordExists(bord As Message)
 	Dim bordExists As Boolean = False
 	Dim strPlayers As String
 '	Dim strPlayers, nameP1, nameP2 As String
@@ -367,16 +375,19 @@ Sub CheckIpExists(bord As Message)
 	
 	
 	connectTime = -1
-
 	If Starter.serverList.Size = 0 Then
-		'AddUnkownIp("", name, strPlayers)
 		AddUnkownIp("", name, strPlayers)
 		Return
 	End If
 	
 	For Each lst As bordStatus In Starter.serverList
+'	Dim lst As bordStatus
+'	For i = 0 To Starter.serverList.Size - 1	
+'		lst.Initialize
+'		lst =Starter.serverList.Get(i)
 		If lst.name = name Then
 			bordExists = True
+'			Log($"NEW TIMESTAMP $Time{DateTime.Now} ${lst.name}"$)
 			lst.timeStamp = DateTime.Now
 			lst.alive = True
 			'CHECK PLAYERS
@@ -390,24 +401,12 @@ Sub CheckIpExists(bord As Message)
 	End If
 End Sub
 
-'Sub ServerAlive
-'	Dim msNow As Long = DateTime.Now
-'	For Each lst As bordStatus In Starter.serverList
-'		If(msNow - lst.timeStamp) > Starter.serverDied And lst.alive = True Then
-'			lst.alive = False
-'			CheckIpInClv(lst)
-'			Return
-'		Else
-'			CheckIpInClv(lst)
-'		End If
-'	Next
-'End Sub
-
 Sub AddUnkownIp(ip As String, name As String, players As String)
 	Dim bordStatus As bordStatus
 	bordStatus.Initialize
 	bordStatus.ip = ip
 	bordStatus.name = name
+	bordStatus.players = players
 	bordStatus.timeStamp = DateTime.Now
 	bordStatus.alive = True
 	
@@ -433,7 +432,7 @@ Sub CheckIpInClv(bord As bordStatus, players As String)
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
 		If p.Tag = bord.name Then
-			baseFile.SetPanelLabelItemText(p, "lblLastCheck", $"Laatste controle $Time{DateTime.Now}"$)
+'			baseFile.SetPanelLabelItemText(p, "lblLastCheck", $"Laatste controle $Time{DateTime.Now}"$)
 			baseFile.SetBordDiedByName(bord.name, clvServer, bord.alive)
 		End If
 	Next
@@ -481,13 +480,13 @@ Sub btnOk_Click
 	Starter.SetSubString2("/pubbord")
 '	CallSub2(Starter, "SetUnsubscribeString2", "")
 	Starter.SetUnsubscribeString2("")
-	mqttBase.Initialize
+	mqttBaseSubBord.Initialize
 	Sleep(100)
-	mqttBase.Connect
+	mqttBaseSubBord.Connect
 	
 	Sleep(1000)
 	
-	If mqttBase.connected = False Then
+	If mqttBaseSubBord.connected = False Then
 		Msgbox2Async("Kan geen verbinding maken met locatie", Application.LabelName, "OKE", "", "", Application.Icon, False)
 		Wait For Msgbox_Result(Result As Int)
 	Else
@@ -499,7 +498,7 @@ Sub btnOk_Click
 		description = edtFloatDescription.Text
 		'ToastMessageShow("Verbonden met locatie", True)
 		'baseFile.createCustomToast("Verbonden met locatie", Colors.White)
-		mqttBase.Disconnect
+		mqttBaseSubBord.Disconnect
 		pnlLocationCOde.Visible = False
 		baseFile.SetBase(code, description, "1")
 		InitConnection
@@ -518,13 +517,13 @@ End Sub
 Sub pnlLocation_Click
 
 	If CheckClientConnected Then
-		mqttBase.Disconnect
+		mqttBaseSubBord.Disconnect
 	End If
 	StartActivity(locations)
 End Sub
 
 Private Sub CheckClientConnected As Boolean
-	Return CallSub(mqttBase, "GetClientConnected")
+	Return CallSub(mqttBaseSubBord, "GetClientConnected")
 End Sub
 
 Sub pnlLocationList_Click
@@ -544,7 +543,7 @@ Sub edtFloatCode_TextChanged (Old As String, New As String)
 End Sub
 
 Sub DeletedLocationActive
-	mqttBase.Disconnect
+	mqttBaseSubBord.Disconnect
 	clvServer.Clear
 	getBaseList
 End Sub
@@ -554,7 +553,7 @@ Sub ShowSelectLocationButton
 End Sub
 
 Sub ConnectionError
-	baseFile.ShowCustomToast("MQTT Fout", True, Colors.Red)
+	'baseFile.ShowCustomToast("MQTT Fout", True, Colors.Red)
 	
 End Sub
 
