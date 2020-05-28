@@ -39,18 +39,21 @@ Sub Activity_Create(FirstTime As Boolean)
 	CallSub(Starter, "SetSubString")
 	
 	Activity.LoadLayout("ServerBoard")
-	lastMessageTime = DateTime.Now
+'	lastMessageTime = DateTime.Now
 	SetImgSponsor
-	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
-	lastMessageTimer.Enabled = True
+'	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
+'	lastMessageTimer.Enabled = True
 	
-	
-	mqttBase.Connect
+'	Log($"connect client : " $Time{DateTime.Now}${CRLF}${Starter.SubString}"$)
+'	If mqttBase.GetClientConnected = False Then
+'		mqttBase.Connect
+'	End If
 	
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
-	Sleep(1000)
-	mqttBase.SendMessage("data please")
+'	Sleep(1000)
+'	Log($"connect client : data please" $Time{DateTime.Now}"$)
+'	mqttBase.SendMessage("data please")
 End Sub
 
 Sub ConnectionLost
@@ -79,12 +82,17 @@ Sub ResumeConnection(resume As Boolean)
 	If resume Then
 		If mqttBase.GetClientConnected Then Return
 		lastMessageTime = DateTime.Now
-		mqttBase.Connect
+		If mqttBase.GetClientConnected = False Then
+			mqttBase.Connect
+		End If
 		Sleep(500)
 		mqttBase.SendMessage("data please")
 		lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
+		lastMessageTimer.Enabled = True
+		lastMessageTime = DateTime.Now
 	Else
-		mqttBase .Disconnect
+		mqttBase.Disconnect
+		lastMessageTimer.Enabled = False
 	End If
 	
 	lastMessageTimer.Enabled = resume

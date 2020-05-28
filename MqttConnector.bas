@@ -29,19 +29,26 @@ Public Sub Connect ()
 	mo.Initialize("", "")
 	'this message will be sent if the client is disconnected unexpectedly.
 	mo.SetLastWill(Starter.subDisconnectString, serializator.ConvertObjectToBytes(phone.Model), 0, False)
-	Log($"lastwill ${Starter.subDisconnectString}"$)
+'	Log($"lastwill ${Starter.subDisconnectString}"$)
 	client.Connect2(mo)
 End Sub
 
 Private Sub client_Connected (Success As Boolean)
-	Log($"connected : ${Success}"$)
-	If Success Then
-		connected = True
-		client.Subscribe(Starter.SubString, 0)
-		Log($"connected : ${Starter.SubString}"$)
-	Else
+	Try
+		If Starter.SubString = "" Then
+			Return
+		End If
+
+		If Success Then
+			connected = True
+			client.Subscribe(Starter.SubString, 0)
+		Else
+			ProcessConnectError
+		End If
+	Catch
+		Log($"Error caught : " ${LastException}"$)
 		ProcessConnectError
-	End If
+	End Try
 End Sub
 
 Public Sub Disconnect

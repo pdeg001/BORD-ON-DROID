@@ -9,7 +9,7 @@ Sub Class_Globals
 	Private baseFile As String
 	Private serializator As B4XSerializator
 '	Private mqtt As MqttClient
-'	Private pingMqtt As Boolean
+	'Private pingMqtt As Boolean
 	Private cs As CSBuilder
 End Sub
 
