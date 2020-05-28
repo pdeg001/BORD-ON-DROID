@@ -30,6 +30,17 @@
 			</intent-filter>
 			
 		</activity>
+		<service android:name=".starter">
+		</service>
+		<receiver android:name=".starter$starter_BR">
+		</receiver>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".serverboard"
+			android:label="Bord Op Droid"
+			android:screenOrientation="landscape">
+		</activity>
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
@@ -44,16 +55,5 @@
 			android:label="Bord Op Droid"
 			android:screenOrientation="portrait">
 		</activity>
-		<activity
-			android:windowSoftInputMode="stateHidden"
-			android:launchMode="singleTop"
-			android:name=".serverboard"
-			android:label="Bord Op Droid"
-			android:screenOrientation="landscape">
-		</activity>
-		<service android:name=".starter">
-		</service>
-		<receiver android:name=".starter$starter_BR">
-		</receiver>
 	</application>
 </manifest>

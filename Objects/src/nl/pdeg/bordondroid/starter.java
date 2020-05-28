@@ -125,42 +125,42 @@ public class starter extends  android.app.Service{
 	public android.os.IBinder onBind(android.content.Intent intent) {
 		return null;
 	}public anywheresoftware.b4a.keywords.Common __c = null;
-public static anywheresoftware.b4j.objects.MqttAsyncClientWrapper _vv2 = null;
-public static int _vv3 = 0;
-public static String _vv4 = "";
-public static boolean _vv5 = false;
-public static String _vv6 = "";
-public static anywheresoftware.b4a.objects.collections.List _vv7 = null;
-public static long _vv0 = 0L;
-public static long _vvv1 = 0L;
+public static anywheresoftware.b4j.objects.MqttAsyncClientWrapper _v5 = null;
+public static int _v6 = 0;
+public static String _v7 = "";
+public static boolean _v0 = false;
+public static String _vv1 = "";
+public static anywheresoftware.b4a.objects.collections.List _vv2 = null;
+public static long _vv3 = 0L;
+public static long _vv4 = 0L;
+public static String _vv5 = "";
+public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1 = "";
+public static String _vvvv7 = "";
+public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = "";
+public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv5 = "";
+public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv7 = "";
+public static anywheresoftware.b4a.objects.RuntimePermissions _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2 = null;
+public static boolean _vv6 = false;
+public static boolean _vv7 = false;
+public static int _vv0 = 0;
+public static String _vvvv0 = "";
+public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6 = "";
+public static String _vvv1 = "";
 public static String _vvv2 = "";
-public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv4 = "";
-public static String _v6 = "";
-public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3 = "";
-public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = "";
-public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2 = "";
-public static anywheresoftware.b4a.objects.RuntimePermissions _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv5 = null;
-public static boolean _vvv3 = false;
-public static boolean _vvv4 = false;
-public static int _vvv5 = 0;
-public static String _v5 = "";
-public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1 = "";
+public static String _vvv3 = "";
+public static String _vvv4 = "";
+public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3 = "";
+public static boolean _vvv5 = false;
 public static String _vvv6 = "";
-public static String _vvv7 = "";
-public static String _vvv0 = "";
-public static String _vvvv1 = "";
-public static String _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6 = "";
-public static boolean _vvvv2 = false;
-public static String _vvvv3 = "";
-public static boolean _vvvv4 = false;
-public static long _vvvv5 = 0L;
-public static boolean _vvvv6 = false;
-public static anywheresoftware.b4a.phone.Phone _vvvv7 = null;
-public b4a.example.dateutils _vvvvvvvv3 = null;
-public nl.pdeg.bordondroid.main _vvvvvvvv4 = null;
-public nl.pdeg.bordondroid.locations _vvvvvvvv5 = null;
-public nl.pdeg.bordondroid.selectlocation _vvvvvvvv6 = null;
-public nl.pdeg.bordondroid.serverboard _vvvvvvvv7 = null;
+public static boolean _vvv7 = false;
+public static long _vvv0 = 0L;
+public static boolean _vvvv1 = false;
+public static anywheresoftware.b4a.phone.Phone _vvvv2 = null;
+public b4a.example.dateutils _vvvvvv4 = null;
+public nl.pdeg.bordondroid.main _vvvvvv5 = null;
+public nl.pdeg.bordondroid.serverboard _vvvvvv7 = null;
+public nl.pdeg.bordondroid.locations _vvvvvv0 = null;
+public nl.pdeg.bordondroid.selectlocation _vvvvvvv1 = null;
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
  //BA.debugLineNum = 49;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
  //BA.debugLineNum = 50;BA.debugLine="Return True";
@@ -168,7 +168,7 @@ if (true) return anywheresoftware.b4a.keywords.Common.True;
  //BA.debugLineNum = 51;BA.debugLine="End Sub";
 return false;
 }
-public static void  _vvvv0() throws Exception{
+public static void  _vvvv3() throws Exception{
 ResumableSub_ConnectAndReconnect rsub = new ResumableSub_ConnectAndReconnect(null);
 rsub.resume(processBA, null);
 }
@@ -197,7 +197,7 @@ if (true) break;
 case 1:
 //do while
 this.state = 32;
-while (parent._vvvv4) {
+while (parent._vvv7) {
 this.state = 3;
 if (true) break;
 }
@@ -212,14 +212,14 @@ if (true) break;
 case 4:
 //if
 this.state = 9;
-if (parent._vv2.IsInitialized()) { 
+if (parent._v5.IsInitialized()) { 
 this.state = 6;
 ;}if (true) break;
 
 case 6:
 //C
 this.state = 9;
-parent._vv2.Close();
+parent._v5.Close();
 if (true) break;
 
 case 9:
@@ -227,13 +227,13 @@ case 9:
 this.state = 10;
 ;
  //BA.debugLineNum = 60;BA.debugLine="mqtt.Initialize(\"mqtt\", $\"tcp://${host}:${port}\"";
-parent._vv2.Initialize(processBA,"mqtt",("tcp://"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent._vv4))+":"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent._vv3))+""),"pdeg_"+BA.NumberToString(anywheresoftware.b4a.keywords.Common.Rnd((int) (0),(int) (999999999))));
+parent._v5.Initialize(processBA,"mqtt",("tcp://"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent._v7))+":"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent._v6))+""),"pdeg_"+BA.NumberToString(anywheresoftware.b4a.keywords.Common.Rnd((int) (0),(int) (999999999))));
  //BA.debugLineNum = 61;BA.debugLine="Dim mo As MqttConnectOptions";
 _mo = new anywheresoftware.b4j.objects.MqttAsyncClientWrapper.MqttConnectOptionsWrapper();
  //BA.debugLineNum = 62;BA.debugLine="mo.Initialize(\"\", \"\")";
 _mo.Initialize("","");
  //BA.debugLineNum = 63;BA.debugLine="mqtt.Connect2(mo)";
-parent._vv2.Connect2((org.eclipse.paho.client.mqttv3.MqttConnectOptions)(_mo.getObject()));
+parent._v5.Connect2((org.eclipse.paho.client.mqttv3.MqttConnectOptions)(_mo.getObject()));
  //BA.debugLineNum = 64;BA.debugLine="Wait For Mqtt_Connected (Success As Boolean)";
 anywheresoftware.b4a.keywords.Common.WaitFor("mqtt_connected", processBA, this, null);
 this.state = 33;
@@ -264,7 +264,7 @@ if (true) break;
 case 13:
 //do while
 this.state = 16;
-while (parent._vvvv4 && parent._vv2.getConnected()) {
+while (parent._vvv7 && parent._v5.getConnected()) {
 this.state = 15;
 if (true) break;
 }
@@ -274,9 +274,9 @@ case 15:
 //C
 this.state = 13;
  //BA.debugLineNum = 68;BA.debugLine="mqtt.Publish2(\"ping\", Array As Byte(0), 1, Fal";
-parent._vv2.Publish2("ping",new byte[]{(byte) (0)},(int) (1),anywheresoftware.b4a.keywords.Common.False);
+parent._v5.Publish2("ping",new byte[]{(byte) (0)},(int) (1),anywheresoftware.b4a.keywords.Common.False);
  //BA.debugLineNum = 69;BA.debugLine="Log($\"${ph.Model} $DateTime{DateTime.Now}\"$)";
-anywheresoftware.b4a.keywords.Common.LogImpl("7536652",(""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent._vvvv7.getModel()))+" "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("datetime",(Object)(anywheresoftware.b4a.keywords.Common.DateTime.getNow()))+""),0);
+anywheresoftware.b4a.keywords.Common.LogImpl("72686988",(""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(parent._vvvv2.getModel()))+" "+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("datetime",(Object)(anywheresoftware.b4a.keywords.Common.DateTime.getNow()))+""),0);
  //BA.debugLineNum = 70;BA.debugLine="Sleep(5000)";
 anywheresoftware.b4a.keywords.Common.Sleep(processBA,this,(int) (5000));
 this.state = 34;
@@ -292,25 +292,25 @@ case 16:
 this.state = 17;
 ;
  //BA.debugLineNum = 73;BA.debugLine="Log(\"Disconnected\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("7536656","Disconnected",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("72686992","Disconnected",0);
  //BA.debugLineNum = 74;BA.debugLine="CallSub(Main, \"ShowNotConnectedToBroker\")";
-anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(parent.mostCurrent._vvvvvvvv4.getObject()),"ShowNotConnectedToBroker");
+anywheresoftware.b4a.keywords.Common.CallSubNew(processBA,(Object)(parent.mostCurrent._vvvvvv5.getObject()),"ShowNotConnectedToBroker");
  //BA.debugLineNum = 75;BA.debugLine="serverList.Initialize";
-parent._vv7.Initialize();
+parent._vv2.Initialize();
  //BA.debugLineNum = 76;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
 if (true) break;
 
 case 17:
 //if
 this.state = 22;
-if (parent._vv2.IsInitialized()) { 
+if (parent._v5.IsInitialized()) { 
 this.state = 19;
 ;}if (true) break;
 
 case 19:
 //C
 this.state = 22;
-parent._vv2.Close();
+parent._v5.Close();
 if (true) break;
 
 case 22:
@@ -323,21 +323,21 @@ case 24:
 //C
 this.state = 25;
  //BA.debugLineNum = 78;BA.debugLine="Log(\"Error connecting.\")";
-anywheresoftware.b4a.keywords.Common.LogImpl("7536661","Error connecting.",0);
+anywheresoftware.b4a.keywords.Common.LogImpl("72686997","Error connecting.",0);
  //BA.debugLineNum = 79;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
 if (true) break;
 
 case 25:
 //if
 this.state = 30;
-if (parent._vv2.IsInitialized()) { 
+if (parent._v5.IsInitialized()) { 
 this.state = 27;
 ;}if (true) break;
 
 case 27:
 //C
 this.state = 30;
-parent._vv2.Close();
+parent._v5.Close();
 if (true) break;
 
 case 30:
@@ -373,106 +373,106 @@ if (true) break;
 }
 public static void  _mqtt_connected(boolean _success) throws Exception{
 }
-public static String  _vvvvv1() throws Exception{
+public static String  _vvvv4() throws Exception{
  //BA.debugLineNum = 130;BA.debugLine="Public Sub GetBase As String";
  //BA.debugLineNum = 131;BA.debugLine="Return mqttGetUnits '$\"${mqttName}/${mqttBase}/\"$";
-if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0;
+if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv5;
  //BA.debugLineNum = 132;BA.debugLine="End Sub";
 return "";
 }
 public static String  _getbasefilepath() throws Exception{
  //BA.debugLineNum = 134;BA.debugLine="Public Sub GetBaseFilePath As String";
  //BA.debugLineNum = 135;BA.debugLine="Return baseFilePath";
-if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1;
+if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6;
  //BA.debugLineNum = 136;BA.debugLine="End Sub";
 return "";
 }
-public static String  _vvvvv2() throws Exception{
+public static String  _vvvv5() throws Exception{
  //BA.debugLineNum = 89;BA.debugLine="Public Sub GetLastWill As String";
  //BA.debugLineNum = 90;BA.debugLine="Return mqttLastWill";
-if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2;
+if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv7;
  //BA.debugLineNum = 91;BA.debugLine="End Sub";
 return "";
 }
 public static String  _getunit() throws Exception{
  //BA.debugLineNum = 118;BA.debugLine="Public Sub GetUnit As String";
  //BA.debugLineNum = 119;BA.debugLine="Return mqttUnit";
-if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3;
+if (true) return _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0;
  //BA.debugLineNum = 120;BA.debugLine="End Sub";
 return "";
 }
 public static String  _process_globals() throws Exception{
  //BA.debugLineNum = 6;BA.debugLine="Sub Process_Globals";
  //BA.debugLineNum = 7;BA.debugLine="Dim mqtt As MqttClient";
-_vv2 = new anywheresoftware.b4j.objects.MqttAsyncClientWrapper();
+_v5 = new anywheresoftware.b4j.objects.MqttAsyncClientWrapper();
  //BA.debugLineNum = 8;BA.debugLine="Public const port As Int = 1883";
-_vv3 = (int) (1883);
+_v6 = (int) (1883);
  //BA.debugLineNum = 9;BA.debugLine="Public const host As String = \"pdeg3005.mynetgear";
-_vv4 = BA.__b (new byte[] {43,35,94,102,106,97,92,116,102,62,31,123,62,49,31,121,36,46,65,107,54,104}, 509888);
+_v7 = BA.__b (new byte[] {43,34,111,-90,106,96,109,-76,102,63,46,-69,62,48,46,-71,36,47,112,-85,54,105}, 21124);
  //BA.debugLineNum = 10;BA.debugLine="Public connected As Boolean";
-_vv5 = false;
+_v0 = false;
  //BA.debugLineNum = 11;BA.debugLine="Public DiscoveredServer As String";
-_vv6 = "";
+_vv1 = "";
  //BA.debugLineNum = 12;BA.debugLine="Public serverList As List";
-_vv7 = new anywheresoftware.b4a.objects.collections.List();
+_vv2 = new anywheresoftware.b4a.objects.collections.List();
  //BA.debugLineNum = 13;BA.debugLine="Public serverDied As Long = 10000";
-_vv0 = (long) (10000);
+_vv3 = (long) (10000);
  //BA.debugLineNum = 14;BA.debugLine="Public serverDiedRemove As Long = 20000";
-_vvv1 = (long) (20000);
+_vv4 = (long) (20000);
  //BA.debugLineNum = 15;BA.debugLine="Public selectedBordName As String";
-_vvv2 = "";
+_vv5 = "";
  //BA.debugLineNum = 16;BA.debugLine="Private mqttName As String = \"pdeg\"";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv4 = BA.__b (new byte[] {43,35,-21,-67}, 716232);
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1 = BA.__b (new byte[] {43,34,-29,69}, 271758);
  //BA.debugLineNum = 17;BA.debugLine="Private mqttBase As String";
-_v6 = "";
+_vvvv7 = "";
  //BA.debugLineNum = 18;BA.debugLine="Private mqttUnit As String";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3 = "";
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = "";
  //BA.debugLineNum = 19;BA.debugLine="Private mqttGetUnits As String";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = "";
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv5 = "";
  //BA.debugLineNum = 20;BA.debugLine="Private mqttLastWill As String";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2 = "";
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv7 = "";
  //BA.debugLineNum = 21;BA.debugLine="Private rp As RuntimePermissions";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv5 = new anywheresoftware.b4a.objects.RuntimePermissions();
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2 = new anywheresoftware.b4a.objects.RuntimePermissions();
  //BA.debugLineNum = 22;BA.debugLine="Public mqttGetBordsActive, mqttGetBordDataActive";
-_vvv3 = false;
-_vvv4 = false;
+_vv6 = false;
+_vv7 = false;
  //BA.debugLineNum = 23;BA.debugLine="Public diedIndex As Int = -1";
-_vvv5 = (int) (-1);
+_vv0 = (int) (-1);
  //BA.debugLineNum = 24;BA.debugLine="Private baseFile, baseFilePath As String";
-_v5 = "";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1 = "";
+_vvvv0 = "";
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6 = "";
  //BA.debugLineNum = 25;BA.debugLine="Public SubString, subDisconnectString, selectedLo";
-_vvv6 = "";
-_vvv7 = "";
-_vvv0 = "";
-_vvvv1 = "";
+_vvv1 = "";
+_vvv2 = "";
+_vvv3 = "";
+_vvv4 = "";
  //BA.debugLineNum = 26;BA.debugLine="Private storeFolder As String";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6 = "";
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3 = "";
  //BA.debugLineNum = 27;BA.debugLine="Public testBaseName As Boolean = False";
-_vvvv2 = anywheresoftware.b4a.keywords.Common.False;
+_vvv5 = anywheresoftware.b4a.keywords.Common.False;
  //BA.debugLineNum = 28;BA.debugLine="Public appVersion As String";
-_vvvv3 = "";
+_vvv6 = "";
  //BA.debugLineNum = 30;BA.debugLine="Dim pingMqtt As Boolean";
-_vvvv4 = false;
+_vvv7 = false;
  //BA.debugLineNum = 31;BA.debugLine="Public firstConnectTime As Long";
-_vvvv5 = 0L;
+_vvv0 = 0L;
  //BA.debugLineNum = 32;BA.debugLine="Public mainPaused As Boolean";
-_vvvv6 = false;
+_vvvv1 = false;
  //BA.debugLineNum = 33;BA.debugLine="Dim ph As Phone";
-_vvvv7 = new anywheresoftware.b4a.phone.Phone();
+_vvvv2 = new anywheresoftware.b4a.phone.Phone();
  //BA.debugLineNum = 34;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_create() throws Exception{
  //BA.debugLineNum = 36;BA.debugLine="Sub Service_Create";
  //BA.debugLineNum = 37;BA.debugLine="serverList.Initialize";
-_vv7.Initialize();
+_vv2.Initialize();
  //BA.debugLineNum = 38;BA.debugLine="storeFolder = rp.GetSafeDirDefaultExternal(\"bod\")";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6 = _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv5.GetSafeDirDefaultExternal("bod");
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3 = _vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2.GetSafeDirDefaultExternal("bod");
  //BA.debugLineNum = 40;BA.debugLine="baseFile = \"bod.pdg\"";
-_v5 = "bod.pdg";
+_vvvv0 = "bod.pdg";
  //BA.debugLineNum = 41;BA.debugLine="baseFilePath = File.Combine(storeFolder, baseFile";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1 = anywheresoftware.b4a.keywords.Common.File.Combine(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6,_v5);
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6 = anywheresoftware.b4a.keywords.Common.File.Combine(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3,_vvvv0);
  //BA.debugLineNum = 43;BA.debugLine="End Sub";
 return "";
 }
@@ -484,18 +484,18 @@ return "";
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
  //BA.debugLineNum = 45;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
  //BA.debugLineNum = 46;BA.debugLine="ConnectAndReconnect";
-_vvvv0();
+_vvvv3();
  //BA.debugLineNum = 47;BA.debugLine="End Sub";
 return "";
 }
 public static String  _setlastwill(String _lastwill) throws Exception{
  //BA.debugLineNum = 85;BA.debugLine="Public Sub SetLastWill(lastWill As String)";
  //BA.debugLineNum = 86;BA.debugLine="mqttLastWill = lastWill";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv2 = _lastwill;
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv7 = _lastwill;
  //BA.debugLineNum = 87;BA.debugLine="End Sub";
 return "";
 }
-public static String  _vvvvv3() throws Exception{
+public static String  _vvvv6() throws Exception{
  //BA.debugLineNum = 138;BA.debugLine="Public Sub SetLs";
  //BA.debugLineNum = 141;BA.debugLine="End Sub";
 return "";
@@ -503,35 +503,35 @@ return "";
 public static String  _setsubbase(String _basename) throws Exception{
  //BA.debugLineNum = 106;BA.debugLine="Public Sub SetSubBase(baseName As String)";
  //BA.debugLineNum = 107;BA.debugLine="mqttBase = baseName";
-_v6 = _basename;
+_vvvv7 = _basename;
  //BA.debugLineNum = 108;BA.debugLine="End Sub";
 return "";
 }
 public static String  _setsubstring() throws Exception{
  //BA.debugLineNum = 93;BA.debugLine="Public Sub SetSubString";
  //BA.debugLineNum = 94;BA.debugLine="SubString = $\"${mqttName}/${mqttBase}/recvdata_${";
-_vvv6 = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv4))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_v6))+"/recvdata_"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3))+"");
+_vvv1 = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvv7))+"/recvdata_"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0))+"");
  //BA.debugLineNum = 95;BA.debugLine="End Sub";
 return "";
 }
 public static String  _setsubstring2(String _unit) throws Exception{
  //BA.debugLineNum = 97;BA.debugLine="Public Sub SetSubString2(unit As String)";
  //BA.debugLineNum = 98;BA.debugLine="SubString = $\"${mqttName}/${mqttBase}${unit}\"$";
-_vvv6 = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv4))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_v6))+""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_unit))+"");
+_vvv1 = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvv7))+""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_unit))+"");
  //BA.debugLineNum = 99;BA.debugLine="End Sub";
 return "";
 }
 public static String  _setunit(String _name) throws Exception{
  //BA.debugLineNum = 114;BA.debugLine="Public Sub SetUnit(name As String)";
  //BA.debugLineNum = 115;BA.debugLine="mqttUnit = name";
-_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv3 = _name;
+_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv0 = _name;
  //BA.debugLineNum = 116;BA.debugLine="End Sub";
 return "";
 }
 public static String  _setunsubscribestring2(String _unit) throws Exception{
  //BA.debugLineNum = 101;BA.debugLine="Public Sub SetUnsubscribeString2(unit As String)";
  //BA.debugLineNum = 102;BA.debugLine="subDisconnectString =  $\"${mqttName}/${mqttBase}$";
-_vvv7 = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv4))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_v6))+""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_unit))+"/disconnect");
+_vvv2 = (""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv1))+"/"+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_vvvv7))+""+anywheresoftware.b4a.keywords.Common.SmartStringFormatter("",(Object)(_unit))+"/disconnect");
  //BA.debugLineNum = 103;BA.debugLine="End Sub";
 return "";
 }
