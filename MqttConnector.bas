@@ -52,10 +52,10 @@ Private Sub client_Connected (Success As Boolean)
 End Sub
 
 Public Sub Disconnect
+	connected = False
 	If client.connected Then
 '		client.Unsubscribe(Starter.SubString)
 		client.Close
-		connected = False
 	End If
 End Sub
 

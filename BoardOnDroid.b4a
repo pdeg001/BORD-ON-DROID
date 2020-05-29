@@ -53,8 +53,8 @@ Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
-	#VersionCode: 4
-	#VersionName: 1.0.9
+	#VersionCode: 5
+	#VersionName: 1.1.0
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -98,6 +98,7 @@ Sub Globals
 	Private B4XLoadingIndicator2 As B4XLoadingIndicator
 	Private connectTime As Long
 	Private lblPLayer As Label
+	Private pnlReload As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -556,4 +557,12 @@ Sub ConnectionError
 	'baseFile.ShowCustomToast("MQTT Fout", True, Colors.Red)
 	
 End Sub
+
+Sub pnlReload_Click
+	clvServer.Clear
+	Starter.serverList.Initialize
+	mqttBaseSubBord.Disconnect
+	getBaseList
+End Sub
+
 
