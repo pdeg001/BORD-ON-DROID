@@ -115,6 +115,7 @@ End Sub
 
 Private Sub Activity_KeyPress(KeyCode As Int) As Boolean
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		lastMessageTimer.Enabled = False
 		DisconnetMqtt
 '		CallSubDelayed(Main, "setBordLastAliveTimer")
 '		lastMessageTimer.Enabled = False

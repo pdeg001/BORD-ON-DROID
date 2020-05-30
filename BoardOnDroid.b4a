@@ -53,8 +53,8 @@ Version=9.801
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
-	#VersionCode: 5
-	#VersionName: 1.1.0
+	#VersionCode: 6
+	#VersionName: 1.1.1
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -76,6 +76,7 @@ Sub Process_Globals
 	Private baseFile As Base
 	Private baseList As List
 	Private mqttBaseSubBord As MqttConnector
+	Private timeOut As Timer
 End Sub
 
 Sub Globals
@@ -99,12 +100,14 @@ Sub Globals
 	Private connectTime As Long
 	Private lblPLayer As Label
 	Private pnlReload As Panel
+	Private lblAliveIndicator As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
 	
-	
+	timeOut.Initialize("timeOut", 20*1000)
+	tmrBordLastAlive.Initialize("tmrBordAlive", 10000)
 	If FirstTime Then mqttBaseSubBord.Initialize
 	
 	Starter.appVersion = $"${Application.LabelName} v${Application.VersionName}"$
@@ -115,7 +118,12 @@ End Sub
 
 Sub Activity_Resume
 	ShowSelectLocationButton
+	If Starter.locationSelected Then
+		CheckConnected
+		Return
+	End If
 	If Starter.mainPaused Then
+		
 		CheckBordInServerlist
 		ResumeConnection(True)
 		Starter.mainPaused = False
@@ -124,17 +132,43 @@ Sub Activity_Resume
 '		Starter.ConnectAndReconnect
 		'mqttBaseSubBord.Connect
 	Else
+		ResumeConnection(True)
 		getBaseList
 	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 '	Starter.serverList.Initialize
-
 	Starter.mainPaused = True
 	Starter.pingMqtt = False
 	ResumeConnection(False)
 	mqttBaseSubBord.Disconnect
+End Sub
+
+Private Sub CheckConnected
+	If clvServer.Size > 0 And Starter.selectedLocationCode = lblCurrLocation.Text Then
+		mqttBaseSubBord.Connect
+		tmrBordLastAlive.Enabled = True
+		Return
+	End If
+	Starter.serverList.Initialize
+	clvServer.Clear
+	lblCurrLocation.Text = Starter.selectedLocationDescription
+	B4XLoadingIndicator1.Show
+	B4XLoadingIndicator2.Show
+	pnlNobords.Visible = True
+	Starter.locationSelected = False
+	ResumeConnection(True)
+	ReconnectToLocation
+End Sub
+
+Private Sub timeOut_Tick
+	Msgbox2Async("Geen borden gevonden of aktief", Application.LabelName, "OKE", "","", Application.Icon, False)
+	If pnlNobords.Visible Then
+		pnlNobords.SetVisibleAnimated(1500, False)
+		DisconnectMqtt
+		timeOut.Enabled = False
+	End If
 End Sub
 
 Private Sub CheckBordInServerlist
@@ -153,10 +187,11 @@ Sub setBordLastAliveTimer
 End Sub
 
 Private Sub StartConnection
+	timeOut.Enabled = True
 	pnlLocationCOde.Visible = False
 	B4XLoadingIndicator1.Show
 	B4XLoadingIndicator2.Show
-	Sleep(0)
+''	Sleep(0)
 	pnlNobords.Visible = True
 	clvServer.Clear
 	mqttBaseSubBord.Initialize
@@ -164,7 +199,7 @@ Private Sub StartConnection
 
 	baseFile.GetBase
 
-	tmrBordLastAlive.Initialize("tmrBordAlive", 10000)
+'	tmrBordLastAlive.Initialize("tmrBordAlive", 10000)
 	tmrBordLastAlive.Enabled = True
 	connectTime = DateTime.Now
 	
@@ -191,7 +226,7 @@ Private Sub getBaseList
 	If listSize > 1 Then
 		'edtFloatCode.RequestFocusAndShowKeyboard
 		pnlLocationList.SetVisibleAnimated(500, True)
-		Sleep(200)
+''		Sleep(200)
 	Else
 		pnlLocationList.SetVisibleAnimated(500, False)
 		'Sleep(200)
@@ -201,6 +236,8 @@ Private Sub getBaseList
 		
 	If baseList.IsInitialized = False Then
 		pnlLocationCOde.Visible = True
+	Else If clvServer.Size > 0 Then
+'		Log("P")	
 	Else If baseList.Size = 1 Then
 		Dim loc As locationBord
 		loc.Initialize
@@ -214,7 +251,18 @@ Private Sub getBaseList
 	End If
 End Sub
 
+Public Sub StartSelectedLocation
+	Dim loc As locationBord
+	loc.Initialize
+	loc = baseList.Get(0)
+'	Starter.selectedLocationCode = loc.code
+'	Starter.selectedLocationDescription = loc.description
+	lblCurrLocation.Text = loc.description
+	InitConnection
+End Sub
+
 Sub ReconnectToLocation
+	timeOut.Enabled = True
 	mqttBaseSubBord.Initialize
 	CallSub2(Starter, "SetLastWill", "bordpubdied")
 	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
@@ -312,6 +360,7 @@ Sub ShowNotConnectedToBroker
 End Sub
 
 Sub ResumeConnection(resume As Boolean)
+	tmrBordLastAlive.Interval = 10*1000
 	tmrBordLastAlive.Enabled = resume
 End Sub
 
@@ -359,6 +408,12 @@ Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 End Sub
 
 Sub CheckBordExists(bord As Message)
+	timeOut.Enabled = False
+	If lblAliveIndicator.Visible Then
+		lblAliveIndicator.SetVisibleAnimated(500, False)
+	Else
+		lblAliveIndicator.SetVisibleAnimated(500, True)
+	End If
 	Dim bordExists As Boolean = False
 	Dim strPlayers As String
 '	Dim strPlayers, nameP1, nameP2 As String
@@ -562,7 +617,8 @@ Sub pnlReload_Click
 	clvServer.Clear
 	Starter.serverList.Initialize
 	mqttBaseSubBord.Disconnect
-	getBaseList
+	InitConnection
+	'getBaseList
 End Sub
 
 

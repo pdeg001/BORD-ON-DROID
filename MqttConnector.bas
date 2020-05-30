@@ -68,7 +68,7 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	Dim m As Message = receivedObject
 	Dim strFrom As String = $"${m.From}"$
 '	Log(m.Body)
-	'Log(Topic)
+'Log(Topic)
 	If strFrom.IndexOf("recvdied") > -1 Then
 	'	CallSubDelayed(ServerBoard, "BordDied")
 		Return
