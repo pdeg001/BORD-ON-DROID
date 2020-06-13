@@ -14,7 +14,6 @@ anywheresoftware.b4a.keywords.LayoutBuilder.setScaleRate((100d / 100 * height)/(
 ;}else{ 
 ;
 anywheresoftware.b4a.keywords.LayoutBuilder.setScaleRate(1d);
-//BA.debugLineNum = 9;BA.debugLine="End If"[ServerBoard/General script]
 ;};
 //BA.debugLineNum = 10;BA.debugLine="AutoScaleAll"[ServerBoard/General script]
 anywheresoftware.b4a.keywords.LayoutBuilder.scaleAll(views);

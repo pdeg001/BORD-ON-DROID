@@ -39,6 +39,7 @@ Library4=json
 Library5=xui views
 Library6=phone
 Library7=runtimepermissions
+Library8=b4xloadingindicatorpdeg
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~'SetActivityAttribute(Main, "android:excludeFromRecents", "true")~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:icon, "@mipmap/ic_launcher")~\n~CreateResource(mipmap-anydpi-v26, ic_launcher.xml,~\n~<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">~\n~    <background android:drawable="@mipmap/background"/>~\n~    <foreground android:drawable="@mipmap/foreground"/>~\n~</adaptive-icon>~\n~)~\n~SetActivityAttribute("serverBoard",~\n~    android:screenOrientation,~\n~    "landscape"~\n~)~\n~SetActivityAttribute("Main",~\n~    android:screenOrientation,~\n~    "portrait"~\n~)~\n~'End of default text.~\n~
 Module1=Base
 Module2=locations
@@ -47,14 +48,14 @@ Module4=SelectLocation
 Module5=ServerBoard
 Module6=Starter
 NumberOfFiles=16
-NumberOfLibraries=7
+NumberOfLibraries=8
 NumberOfModules=6
-Version=9.801
+Version=9.85
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
-	#VersionCode: 6
-	#VersionName: 1.1.1
+	#VersionCode: 8
+	#VersionName: 1.1.3
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -103,10 +104,14 @@ Sub Globals
 	Private lblPLayer As Label
 	Private pnlReload As Panel
 	Private lblAliveIndicator As Label
+	Private B4XLoadingIndicatorBiljartBall1 As B4XLoadingIndicatorBiljartBall
+	Private B4XLoadingIndicatorBiljartBall2 As B4XLoadingIndicatorBiljartBall
+	Private lblLastUpdate As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	Log(GetDeviceLayoutValues.ApproximateScreenSize)
 	
 	timeOutSeconds.Initialize("timeOutSeconds", 1000)
 	timeOut.Initialize("timeOut", 20*1000)
@@ -121,6 +126,7 @@ End Sub
 
 Sub Activity_Resume
 	ShowSelectLocationButton
+	
 	If Starter.locationSelected Then
 		CheckConnected
 		Return
@@ -141,11 +147,23 @@ Sub Activity_Resume
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
+	timeOutSeconds.Enabled = False
+	timeOut.Enabled = False
+	If pnlNobords.Visible Then
+	pnlNobords.SetVisibleAnimated(0, False)
+	End If
+	
 '	Starter.serverList.Initialize
 	Starter.mainPaused = True
 	Starter.pingMqtt = False
 	ResumeConnection(False)
 	mqttBaseSubBord.Disconnect
+	
+	If UserClosed Then
+		Starter.mainPaused = False
+		Activity.Finish
+	End If
+	
 End Sub
 
 Private Sub CheckConnected
@@ -158,8 +176,8 @@ Private Sub CheckConnected
 	Starter.serverList.Initialize
 	clvServer.Clear
 	lblCurrLocation.Text = Starter.selectedLocationDescription
-	B4XLoadingIndicator1.Show
-	B4XLoadingIndicator2.Show
+	B4XLoadingIndicatorBiljartBall1.Show
+	B4XLoadingIndicatorBiljartBall2.Show
 	pnlNobords.Visible = True
 	timeOutSeconds.Enabled = True
 	Starter.locationSelected = False
@@ -171,6 +189,11 @@ Private Sub timeOutSeconds_Tick
 	Dim dispSeconds As String
 	
 	secondsLeft = secondsLeft -1
+	If secondsLeft <= 0 Then
+		timeOut_Tick
+		Return
+	End If
+	
 	If secondsLeft < 10 Then
 		dispSeconds = $"0${secondsLeft}"$
 	Else	
@@ -184,6 +207,7 @@ End Sub
 Private Sub timeOut_Tick
 	timeOutSeconds.Enabled = False
 	timeOut.Enabled = False
+	lblAliveIndicator.Visible = False
 	lblNoBord.Text = $"Wachten op borden"$
 	Msgbox2Async("Geen borden gevonden of aktief", Application.LabelName, "OKE", "","", Application.Icon, False)
 	If pnlNobords.Visible Then
@@ -202,10 +226,10 @@ Private Sub CheckBordInServerlist
 	
 End Sub
 
-Sub setBordLastAliveTimer
-	tmrBordLastAlive.Enabled = True
-'	ReconnectToLocation
-End Sub
+'Sub setBordLastAliveTimer
+'	tmrBordLastAlive.Enabled = True
+''	ReconnectToLocation
+'End Sub
 
 Private Sub StartConnection
 	
@@ -214,8 +238,8 @@ Private Sub StartConnection
 	timeOut.Enabled = True
 	timeOutSeconds.Enabled = True
 	pnlLocationCOde.Visible = False
-	B4XLoadingIndicator1.Show
-	B4XLoadingIndicator2.Show
+	B4XLoadingIndicatorBiljartBall1.Show
+	B4XLoadingIndicatorBiljartBall2.Show
 ''	Sleep(0)
 	pnlNobords.Visible = True
 	clvServer.Clear
@@ -240,7 +264,12 @@ Private Sub getBaseList
 	baseList.Initialize
 	baseList = baseFile.GetBase
 	
-	If CallSub(baseFile, "CheckBaseListExists") = False Then
+'	If CallSub(baseFile, "CheckBaseListExists") = False Then
+'		pnlLocationCOde.Visible = True
+'		Return
+'	End If
+	
+	If baseList.Size = 0 Then
 		pnlLocationCOde.Visible = True
 		Return
 	End If
@@ -249,12 +278,9 @@ Private Sub getBaseList
 		listSize = baseList.Size
 	End If
 	If listSize > 1 Then
-		'edtFloatCode.RequestFocusAndShowKeyboard
 		pnlLocationList.SetVisibleAnimated(500, True)
-''		Sleep(200)
 	Else
 		pnlLocationList.SetVisibleAnimated(500, False)
-		'Sleep(200)
 	End If
 	
 	lblNoBord.Text = "Wachten op borden"
@@ -413,6 +439,8 @@ End Sub
 
 Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	Dim p As Panel
+	Dim currPlayerText As String
+	
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 125dip) '190
 	p.LoadLayout("clvBorden")
@@ -421,6 +449,7 @@ Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	lblBordName.Text = name.Trim
 	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 '	lblPLayer.Text = baseFile.CheckPlayers(players, name, clvServer)
+	lblLastUpdate.Text = baseFile.SetLastUpdateText
 	lblPLayer.Text = baseFile.SetPlayertext(players)
 	'baseFile.shadowLayer(lblPLayer, 1dip, 2dip, 2dip, 0xFF291616)
 	lblPLayer.Tag = "players"
@@ -434,6 +463,7 @@ End Sub
 
 Sub CheckBordExists(bord As Message)
 	timeOut.Enabled = False
+	timeOutSeconds.Enabled = False
 	If lblAliveIndicator.Visible Then
 		lblAliveIndicator.SetVisibleAnimated(500, False)
 	Else

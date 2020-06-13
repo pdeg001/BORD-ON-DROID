@@ -249,13 +249,70 @@ Sub CheckPlayers(players As String, bordName As String, clv As CustomListView)
 	For Each v As View In pnl.GetAllViewsRecursive
 		If v.Tag = "players" Then
 			lbl = v
+			If $"${SetPlayertext(players)}"$ <> $"${lbl.Text}"$ Then
+				SetLastUpdate(pnl)
+			End If
 			lbl.Text = SetPlayertext(players)
+			'Log($"PLAYERS NEW : ${lbl.Text}"$)
 		End If
 	Next
 End Sub
 
+Sub SetLastUpdate(p As Panel)
+	Dim lbl As Label
+	
+	For Each v As View In p.GetAllViewsRecursive
+		If v.Tag = "lbllastupdate" Then
+			lbl = v
+			lbl.Text = SetLastUpdateText 'cs '$"$Time{DateTime.Now}"$
+		End If
+	Next
+End Sub
+
+Sub SetLastUpdateText As Object
+	Dim fnt As Typeface = Typeface.LoadFromAssets("materialdesignicons-webfont.ttf")
+	Dim iconSize As Int = 14
+	Dim icon As String = Chr(0xf150)
+	
+	cs.Initialize
+	Return cs.Color(Colors.White).Typeface(Typeface.MONOSPACE).Append($"${GetTimeNow} "$).Color(Colors.White).Typeface(fnt).Size(iconSize).Append(icon).PopAll
+End Sub
+
+Sub GetTimeNow As String
+	Dim hour As String = DateTime.GetHour(DateTime.Now)
+	Dim minute As String = DateTime.GetMinute(DateTime.Now)
+	
+	Return $"${padString(hour, "0", 0, 2)}:${padString(minute, "0", 0, 2)}"$
+End Sub
+
+'padText e.g. "9", padChar e.g. "0", padSide 0=left 1=right, padCount e.g. 2
+Public Sub padString(padText As String ,padChr As String, padSide As Int, padCount As Int) As String
+	Dim padStr As String
+	
+	If padText.Length = padCount Then
+		Return padText
+	End If
+	
+	For i = 1 To padCount-padText.Length
+		padStr = padStr&padChr
+	Next
+	
+	If padSide = 0 Then
+		Return padStr&padText
+	Else
+		Return padText&padStr
+	End If
+	
+End Sub
+
 Sub NameToCamelCase(name As String) As String
 	Dim nameList() As String = Regex.Split(" ", name)
+	
+
+	If nameList.Length = 1 Then
+		nameList(0) = SetFirstLetterUpperCase(ReplaceCRLF(nameList(0)))
+		Return $"${nameList(0)}"$
+	End If
 	If nameList.Length = 2 Then
 		nameList(0) = SetFirstLetterUpperCase(nameList(0))
 		nameList(1) = SetFirstLetterUpperCase(nameList(1))
@@ -268,6 +325,11 @@ Sub NameToCamelCase(name As String) As String
 	End If
 
 	Return name
+End Sub
+
+Private Sub ReplaceCRLF(name As String) As String
+	Return name.Replace(CRLF, " ")
+	
 End Sub
 
 Private Sub SetFirstLetterUpperCase(str As String) As String
