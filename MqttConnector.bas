@@ -9,17 +9,10 @@ Sub Class_Globals
 	Public connected As Boolean
 	Private serializator As B4XSerializator
 	Private phone As Phone
-'	Private subBordDataDisconnect As String
-''	Private subBord As String
 End Sub
 
 Public Sub Initialize
 End Sub
-
-'Public Sub SetSub
-'	subBord = CallSub(Starter, "GetSubString")
-'	subBordDataDisconnect = $"${subBord}/disconnect"$
-'End Sub
 
 Public Sub Connect ()
 	If client.Connected Then client.Close
@@ -60,19 +53,16 @@ Public Sub Disconnect
 End Sub
 
 Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
-'	Try
 	Dim passedTopic As String =$"${Topic}"$
 	Dim receivedObject As Object = serializator.ConvertBytesToObject(Payload)
-	'Dim m As Message = receivedObject
-	'Dim m As pubBordData = receivedObject
 	Dim m As Message = receivedObject
 	Dim strFrom As String = $"${m.From}"$
-'	Log(m.Body)
-'Log(Topic)
+
 	If strFrom.IndexOf("recvdied") > -1 Then
-	'	CallSubDelayed(ServerBoard, "BordDied")
 		Return
 	End If
+	
+'	Log(m.Body)
 	
 	If m.Body = "data please" Then Return
 	
@@ -88,12 +78,8 @@ Private Sub client_MessageArrived (Topic As Object, Payload() As Byte)
 	End If
 	
 	If passedTopic.IndexOf("pubbord") > -1 Then
-	'	Log($"Bord Exists $Time{DateTime.Now}"$)
 		CallSub2(Main, "CheckBordExists", m)
 	End If
-'	Catch
-'		Log("-")
-'	End Try
 End Sub
 
 Public Sub SendMessage(Body As String)

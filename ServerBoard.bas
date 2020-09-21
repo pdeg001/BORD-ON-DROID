@@ -31,7 +31,6 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-'	Starter.mainPaused = False
 	If Not (mqttBase.IsInitialized) Then
 		mqttBase.Initialize
 	End If
@@ -39,29 +38,17 @@ Sub Activity_Create(FirstTime As Boolean)
 	CallSub(Starter, "SetSubString")
 	
 	Activity.LoadLayout("ServerBoard")
-'	lastMessageTime = DateTime.Now
 	SetImgSponsor
-'	lastMessageTimer.Initialize("tmrLastMessase", 120*1000)
-'	lastMessageTimer.Enabled = True
-	
-'	Log($"connect client : " $Time{DateTime.Now}${CRLF}${Starter.SubString}"$)
-'	If mqttBase.GetClientConnected = False Then
-'		mqttBase.Connect
-'	End If
-	
 	lblTafelNaam.Text = Starter.DiscoveredServer
 	
-'	Sleep(1000)
-'	Log($"connect client : data please" $Time{DateTime.Now}"$)
-'	mqttBase.SendMessage("data please")
 End Sub
 
-Sub ConnectionLost
-	baseFile.createCustomToast("Verbinding met bord verloren", Colors.Red)
-	Sleep(2000)
-	lastMessageTimer.Enabled = False
-	DisconnetMqtt
-End Sub
+'Sub ConnectionLost
+'	baseFile.createCustomToast("Verbinding met bord verloren", Colors.Red)
+'	Sleep(2000)
+'	lastMessageTimer.Enabled = False
+'	DisconnetMqtt
+'End Sub
 
 Sub tmrLastMessase_Tick
 	If (DateTime.Now-lastMessageTime) >= 90*1000 Then
@@ -196,8 +183,8 @@ End Sub
 Private Sub SetImgSponsor
 	Dim bmp As Bitmap
 	Dim bmpName As String
-	Dim nuleen As Int = Rnd(0,3)
-	
+	Dim nuleen As Int = Rnd(0,4)
+
 	If nuleen = 0 Then
 		bmpName = "sven1.jpg"
 	End If
@@ -207,7 +194,11 @@ Private Sub SetImgSponsor
 	If nuleen = 2 Then
 		bmpName = "biljarter.png"
 	End If
+	If nuleen = 3 Then
+		bmpName = "rob.jpg"
+	End If
 	
+	bmpName = "rva.png"
 	bmp = LoadBitmapResize(File.DirAssets, bmpName, imgSponsor.Width, imgSponsor.Height, True)
 	imgSponsor.SetBackgroundImage(bmp)
 End Sub

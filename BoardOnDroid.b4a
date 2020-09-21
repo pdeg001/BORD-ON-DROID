@@ -1,12 +1,14 @@
 ﻿Build1=Default,nl.pdeg.bordondroid
 File1=Baloo2-Regular.ttf
 File10=mouse.png
-File11=selectlocation.bal
-File12=ServerBoard.bal
-File13=sven_oud.jpg
-File14=sven1.jpg
-File15=uwlogo.jpg
-File16=wacht_op_data.png
+File11=rob.jpg
+File12=rva.png
+File13=selectlocation.bal
+File14=ServerBoard.bal
+File15=sven_oud.jpg
+File16=sven1.jpg
+File17=uwlogo.jpg
+File18=wacht_op_data.png
 File2=biljarter.png
 File3=clvBorden.bal
 File4=clvLocation.bal
@@ -17,12 +19,14 @@ File8=main.bal
 File9=materialdesignicons-webfont.ttf
 FileGroup1=font
 FileGroup10=img
-FileGroup11=Default Group
-FileGroup12=Default Group
-FileGroup13=img
-FileGroup14=img
+FileGroup11=img
+FileGroup12=img
+FileGroup13=Default Group
+FileGroup14=Default Group
 FileGroup15=img
 FileGroup16=img
+FileGroup17=img
+FileGroup18=img
 FileGroup2=img
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -33,6 +37,7 @@ FileGroup8=Default Group
 FileGroup9=font
 Group=Default Group
 Library1=core
+Library10=accessibility
 Library2=jmqtt
 Library3=randomaccessfile
 Library4=json
@@ -40,22 +45,24 @@ Library5=xui views
 Library6=phone
 Library7=runtimepermissions
 Library8=b4xloadingindicatorpdeg
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~'SetActivityAttribute(Main, "android:excludeFromRecents", "true")~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:icon, "@mipmap/ic_launcher")~\n~CreateResource(mipmap-anydpi-v26, ic_launcher.xml,~\n~<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">~\n~    <background android:drawable="@mipmap/background"/>~\n~    <foreground android:drawable="@mipmap/foreground"/>~\n~</adaptive-icon>~\n~)~\n~SetActivityAttribute("serverBoard",~\n~    android:screenOrientation,~\n~    "landscape"~\n~)~\n~SetActivityAttribute("Main",~\n~    android:screenOrientation,~\n~    "portrait"~\n~)~\n~'End of default text.~\n~
+Library9=xui
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>~\n~	<uses-permission android:name="android.permission.INTERNET"/>~\n~	)~\n~'SetActivityAttribute(Main, "android:excludeFromRecents", "true")~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~SetApplicationAttribute(android:icon, "@mipmap/ic_launcher")~\n~CreateResource(mipmap-anydpi-v26, ic_launcher.xml,~\n~<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">~\n~    <background android:drawable="@mipmap/background"/>~\n~    <foreground android:drawable="@mipmap/foreground"/>~\n~</adaptive-icon>~\n~)~\n~SetActivityAttribute("serverBoard",~\n~    android:screenOrientation,~\n~    "landscape"~\n~)~\n~SetActivityAttribute("Main",~\n~    android:screenOrientation,~\n~    "portrait"~\n~)~\n~'End of default text.~\n~
 Module1=Base
-Module2=locations
-Module3=MqttConnector
-Module4=SelectLocation
-Module5=ServerBoard
-Module6=Starter
-NumberOfFiles=16
-NumberOfLibraries=8
-NumberOfModules=6
-Version=9.85
+Module2=ClassSetFontSize
+Module3=locations
+Module4=MqttConnector
+Module5=SelectLocation
+Module6=ServerBoard
+Module7=Starter
+NumberOfFiles=18
+NumberOfLibraries=10
+NumberOfModules=7
+Version=10.2
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Bord Op Droid
-	#VersionCode: 8
-	#VersionName: 1.1.3
+	#VersionCode: 12
+	#VersionName: 1.1.7
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -80,6 +87,7 @@ Sub Process_Globals
 	Private timeOut As Timer
 	Private timeOutSeconds As Timer
 	Private secondsLeft As Int
+	Private clsFunc As ClassSetFontSize
 End Sub
 
 Sub Globals
@@ -98,8 +106,8 @@ Sub Globals
 	Private pnlLocationList As Panel
 	Private edtFloatCode As B4XFloatTextField
 	Private edtFloatDescription As B4XFloatTextField
-	Private B4XLoadingIndicator1 As B4XLoadingIndicator
-	Private B4XLoadingIndicator2 As B4XLoadingIndicator
+'	Private B4XLoadingIndicator1 As B4XLoadingIndicator
+'	Private B4XLoadingIndicator2 As B4XLoadingIndicator
 	Private connectTime As Long
 	Private lblPLayer As Label
 	Private pnlReload As Panel
@@ -107,11 +115,15 @@ Sub Globals
 	Private B4XLoadingIndicatorBiljartBall1 As B4XLoadingIndicatorBiljartBall
 	Private B4XLoadingIndicatorBiljartBall2 As B4XLoadingIndicatorBiljartBall
 	Private lblLastUpdate As Label
+	Private lblHeaderBg As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	clsFunc.Initialize
 	Activity.LoadLayout("main")
-	Log(GetDeviceLayoutValues.ApproximateScreenSize)
+'	Log(GetDeviceLayoutValues.ApproximateScreenSize)
+'	lblNoBord.TextSize = lblNoBord.TextSize / access.GetUserFontScale
+	clsFunc.ResetUserFontScale(Activity)
 	
 	timeOutSeconds.Initialize("timeOutSeconds", 1000)
 	timeOut.Initialize("timeOut", 20*1000)
@@ -326,14 +338,12 @@ End Sub
 'Sub InitConnection
 Sub InitConnection
 	If mqttBaseSubBord.connected Then mqttBaseSubBord.Disconnect
-'	Starter.serverList.Initialize
-'	clvServer.Clear
 	lblCurrLocation.Text = Starter.selectedLocationDescription
 	CallSub2(Starter, "SetLastWill", "bordpubdied")
 	CallSub2(Starter, "SetSubBase", Starter.selectedLocationCode)
 	CallSub2(Starter, "SetSubString2", "/pubbord")
 	CallSub2(Starter, "SetUnsubscribeString2", "")
-''	Sleep(0)
+	
 	StartConnection
 End Sub
 
@@ -364,16 +374,16 @@ End Sub
 
 Sub checkConnectTime As Boolean
 	Return True
-	If connectTime <> -1 Then
-		Log("KWDKWMKDM")
-		pnlNobords.Visible = True
-		mqttBaseSubBord.Disconnect
-		tmrBordLastAlive.Enabled = False
-		pnlNobords.Visible = False
-		Msgbox2Async("Geen borden gevonden", Application.LabelName, "OKE", "", "", Application.Icon, False)
-		Return False
-	End If
-	Return True
+'	If connectTime <> -1 Then
+'		Log("KWDKWMKDM")
+'		pnlNobords.Visible = True
+'		mqttBaseSubBord.Disconnect
+'		tmrBordLastAlive.Enabled = False
+'		pnlNobords.Visible = False
+'		Msgbox2Async("Geen borden gevonden", Application.LabelName, "OKE", "", "", Application.Icon, False)
+'		Return False
+'	End If
+'	Return True
 End Sub
 
 Sub CheckLastAliveTime
@@ -439,25 +449,20 @@ End Sub
 
 Sub genUnitList(name As String, alive As Boolean, players As String) As Panel
 	Dim p As Panel
-	Dim currPlayerText As String
-	
 	p.Initialize(Me)
 	p.SetLayout(0dip, 0dip, clvServer.AsView.Width, 125dip) '190
 	p.LoadLayout("clvBorden")
 	p.Tag = name
 	
-	lblBordName.Text = name.Trim
-	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
-'	lblPLayer.Text = baseFile.CheckPlayers(players, name, clvServer)
-	lblLastUpdate.Text = baseFile.SetLastUpdateText
+	lblBordName.Text = $"${name.Trim}"$
 	lblPLayer.Text = baseFile.SetPlayertext(players)
-	'baseFile.shadowLayer(lblPLayer, 1dip, 2dip, 2dip, 0xFF291616)
 	lblPLayer.Tag = "players"
-'	BordDiedProgress.Show
 	If Not(alive) Then
+		lblHeaderBg.Color = Colors.Red
 		lblBordName.Color = Colors.Red
 		lblBordName.TextColor = Colors.White
 	End If
+	clsFunc.ResetUserFontScale(p)
 	Return p
 End Sub
 
@@ -471,11 +476,9 @@ Sub CheckBordExists(bord As Message)
 	End If
 	Dim bordExists As Boolean = False
 	Dim strPlayers As String
-'	Dim strPlayers, nameP1, nameP2 As String
-'	Dim caromP1, caromP2 As Int
+
 	If bord.Body.Length = 0 Then Return
 	Dim name As String = bord.Body
-	
 	
 	'GET DATA FROM NAME
 	strPlayers = name'baseFile.SetPlayertext(name)
@@ -492,13 +495,8 @@ Sub CheckBordExists(bord As Message)
 	End If
 	
 	For Each lst As bordStatus In Starter.serverList
-'	Dim lst As bordStatus
-'	For i = 0 To Starter.serverList.Size - 1	
-'		lst.Initialize
-'		lst =Starter.serverList.Get(i)
 		If lst.name = name Then
 			bordExists = True
-'			Log($"NEW TIMESTAMP $Time{DateTime.Now} ${lst.name}"$)
 			lst.timeStamp = DateTime.Now
 			lst.alive = True
 			'CHECK PLAYERS
@@ -531,14 +529,12 @@ Sub AddUnkownIp(ip As String, name As String, players As String)
 		pnlNobords.SetVisibleAnimated(500, True)	
 	End If
 	
-'	lblLastCheck.Text = $"Laatste controle $Time{DateTime.Now}"$
 	Sleep(400)
 	
 End Sub
 
 Sub CheckIpInClv(bord As bordStatus, players As String)
 	Dim p As Panel
-''	Dim lbl As Label
 	
 	For i = 0 To clvServer.GetSize-1
 		p = clvServer.GetPanel(i)
@@ -676,5 +672,3 @@ Sub pnlReload_Click
 	InitConnection
 	'getBaseList
 End Sub
-
-

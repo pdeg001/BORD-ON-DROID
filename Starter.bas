@@ -37,7 +37,7 @@ Sub Process_Globals
 	Public firstConnectTime As Long
 	Public mainPaused As Boolean
 	Dim ph As Phone
-	Public locationSelected as Boolean
+	Public locationSelected As Boolean
 End Sub
 
 Sub Service_Create

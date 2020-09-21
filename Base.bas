@@ -116,7 +116,7 @@ Private Sub SetBordOffline(p As Panel, alive As Boolean)
 	
 	If p.IsInitialized = False Then Return
 	For Each v As View In p.GetAllViewsRecursive
-		If v.Tag = "name" Then
+	If v.Tag = "name" or v.Tag = "lblHeaderBg" Then
 			lbl = v
 			If alive Then
 				lbl.Color = 0xFF008080
@@ -194,39 +194,39 @@ Sub GetBordAlive(Name As String) As Boolean
 	Return False
 End Sub
 
-Sub SetPanelLabelItemText(p As Panel, strTag As String, itemText As String)
-	Dim lbl As Label
-	
-	For Each v As B4XView In p.GetAllViewsRecursive
-		If v.Tag = "" Then Continue
-		
-		If v.Tag = strTag And v Is Label Then
-			lbl = v
-			lbl.Text = itemText
-			Exit
-		End If
-	Next
-End Sub
+'Sub SetPanelLabelItemText(p As Panel, strTag As String, itemText As String)
+'	Dim lbl As Label
+'	
+'	For Each v As B4XView In p.GetAllViewsRecursive
+'		If v.Tag = "" Then Continue
+'		
+'		If v.Tag = strTag And v Is Label Then
+'			lbl = v
+'			lbl.Text = itemText
+'			Exit
+'		End If
+'	Next
+'End Sub
 
 'bord name is unique
-Sub GetPanelIndexFromBordName(Name As String, clv As CustomListView) As Int
-	Dim pnl As Panel
-	Dim lbl As Label
-	For i = 0 To clv.Size - 1
-		pnl = clv.GetPanel(i)
-		
-		For Each v As View In pnl.GetAllViewsRecursive
-			If v.Tag = "name" Then
-				lbl = v
-				If lbl.Text = Name Then
-					Return clv.GetItemFromView(pnl)
-					Exit
-				End If
-			End If
-		Next
-	Next
-	Return -1
-End Sub
+'Sub GetPanelIndexFromBordName(Name As String, clv As CustomListView) As Int
+'	Dim pnl As Panel
+'	Dim lbl As Label
+'	For i = 0 To clv.Size - 1
+'		pnl = clv.GetPanel(i)
+'		
+'		For Each v As View In pnl.GetAllViewsRecursive
+'			If v.Tag = "name" Then
+'				lbl = v
+'				If lbl.Text = Name Then
+'					Return clv.GetItemFromView(pnl)
+'					Exit
+'				End If
+'			End If
+'		Next
+'	Next
+'	Return -1
+'End Sub
 
 Sub GetServerlistIndexFromName(Name As String) As Int
 	Dim bd As bordStatus

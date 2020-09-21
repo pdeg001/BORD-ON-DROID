@@ -11,6 +11,7 @@ Version=9.801
 
 Sub Process_Globals
 	Dim baseFile As Base
+	Private clsFunc As ClassSetFontSize
 End Sub
 
 Sub Globals
@@ -26,8 +27,10 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
+	clsFunc.Initialize
 	Starter.mainPaused = False
 	Activity.LoadLayout("selectlocation")
+	clsFunc.ResetUserFontScale(Activity)
 	lblVersion.Text = Starter.appVersion
 	baseFile.Initialize
 	CreateLocation
@@ -73,7 +76,7 @@ Sub CreateLocatie(code As String, description As String) As Panel
 	lblDescription.Text = description
 	
 	lblEye.Visible = code = Starter.selectedLocationCode
-	
+	clsFunc.ResetUserFontScale(p)
 	Return p
 End Sub
 
